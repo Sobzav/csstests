@@ -1,0 +1,4 @@
+$ cat .gitignore
+*~
+# ignore all files in the generateddata/ directory
+generateddata/
