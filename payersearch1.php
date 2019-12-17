@@ -27,7 +27,6 @@ if ($mysqli->connect_errno) {
     printf("Connect failed: %s\n", $mysqli->connect_errno);
     exit();
 }
- 
 
 // сохраняем запрос SELECT в строку
 $query = 'SELECT 
@@ -77,7 +76,7 @@ if ($result = $mysqli->query($query)) {
     while ($row = $result->fetch_array(MYSQLI_NUM)) {
 
         // открываем строку в html
-        $output .=         '<div class="divTableRow">';
+        $output .=  '<div class="divTableRow">';
 
         // перебираем значения из строки $row
         // сохраняем каждое в $val
