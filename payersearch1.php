@@ -2,10 +2,10 @@
 <style type="text/css">
     {box-sizing: border-box;}
 
-   .divTable {display: table; background-color: #F5F5F5; border-collapse: collapse; width: auto;}
-   .divTableHeading {display: table-header-group; font-weight:bold; background-color: #DCDCDC;}
-   .divTableRow {display: table-row;}
-   .divTableCell {display: table-cell;  text-align: center;  border: none;  border: 0px solid #ccc;  width: auto; vertical-align: middle; padding: 10px; border: 3px solid #fff;}
+.divTable {display: table; background-color: #F5F5F5; border-collapse: collapse; width: auto;}
+.divTableHeading {display: table-header-group; font-weight:bold; background-color: #DCDCDC;}
+.divTableRow {display: table-row;}
+.divTableCell {display: table-cell;  text-align: center;  border: none;  border: 0px solid #ccc;  width: auto; vertical-align: middle; padding: 10px; border: 3px solid #fff;}
 
   </style>
 <?php
