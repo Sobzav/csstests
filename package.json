@@ -1,28 +1,22 @@
 {
-  "name": "sz.ru",
-  "version": "1.0.0",
-  "description": "glpsassinstall",
-  "main": "index.js",
-  "dependencies": {
-    "bower": "^1.8.8",
-    "bulma": "^0.8.0",
-    "tailwindcss": "^1.1.4"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Sobzav/localtogithub.git"
-  },
-  "keywords": [
-    "sz"
-  ],
-  "author": "BSV",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Sobzav/localtogithub/issues"
-  },
-  "homepage": "https://github.com/Sobzav/localtogithub#readme"
+    "name": "mybulma",
+    "version": "1.0.0",
+    "description": "bulma sobzav",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "css-build": "node-sass --omit-source-map-url sass/mystyles.scss css/mystyles.css",
+        "css-watch": "npm run css-build -- --watch",
+        "start": "npm run css-watch"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Sobzav/localtogithub.git"
+    },
+    "author": "BSV",
+    "license": "ISC",
+    "devDependencies": {
+        "bulma": "^0.8.0",
+        "node-sass": "^4.13.0"
+    }
 }

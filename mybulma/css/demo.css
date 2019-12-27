@@ -1,0 +1,35 @@
+html {
+    font-size: 15px;
+}
+
+body {
+    /* font-size: */
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+body>.columns {
+    display: -webkit-flex;
+    display: -moz-box;
+    display: flex;
+    margin: 0;
+    height: 100%;
+    min-height: 100%;
+    background-color: white;
+}
+
+body>.columns>.column {
+    height: 100%;
+    min-height: 100%;
+    max-width: 100%;
+    overflow-y: auto;
+}
+
+body>.columns>.column:first-child {
+    display: block;
+    -webkit-flex: none;
+    -moz-box-flex: 0;
+    flex: none;
+    width: 16.6666666667%;
+}
