@@ -264,17 +264,11 @@
     -webkit-transform: rotate(135deg);
     transform: rotate(135deg)
 }
-/* Сдвигаем контент описания товаров в выпадающем списке левого меню */
-.menu.is-collapsed .menu-item.has-dropdown.is-active .media .media-content {
-    margin-left: -100%;
-}
-/* Убираем картинку из видимости */
-.menu.is-collapsed .menu-item.has-dropdown.is-active img {
-    width: 0px;
-}
 
-.menu .menu-item.has-dropdown .menu-title {
-    /* display:-webkit-box; */
+/* Убираем картинку из видимости */
+.menu.is-collapsed a.menu-item figure.media-left {
+    margin-right: 0rem!important;
+    display: none;
 }
 
 .menu a.menu-title {
