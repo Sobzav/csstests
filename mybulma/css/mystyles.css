@@ -21,6 +21,10 @@
   -ms-user-select: none;
   user-select: none; }
 
+.input, .select, .button {
+  margin: 0.1em 0 0.1em 0;
+}
+
 .select:not(.is-multiple):not(.is-loading)::after, .navbar-link:not(.is-arrowless)::after {
   border: 3px solid transparent;
   border-radius: 2px;
