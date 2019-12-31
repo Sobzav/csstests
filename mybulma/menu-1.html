@@ -1,17 +1,20 @@
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
-        <link href="css/menu.css" rel="stylesheet">
-        <link href="css/mystyles.css" rel="stylesheet">
-        <!-- <link href="css/bulma.min.css" rel="stylesheet"> -->
-        <link href="//db.onlinewebfonts.com/c/13a5696f441e528e69b058fd42e94f85?family=Esqadero+FF+CY+4F" rel="stylesheet" type="text/css"/>
-        <!-- Подключаем шрифтовые иконки для меню -->
-        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
-            integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
-        <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
-        <title> Упаковка </title>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css">
+    <link href="css/menu.css" rel="stylesheet">
+    <link href="css/mystyles.css" rel="stylesheet">
+    <!-- <link href="css/bulma.min.css" rel="stylesheet"> -->
+    <link href="//db.onlinewebfonts.com/c/13a5696f441e528e69b058fd42e94f85?family=Esqadero+FF+CY+4F" rel="stylesheet"
+        type="text/css" />
+    <!-- Подключаем шрифтовые иконки для меню -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+    <title> Упаковка </title>
+
     <head>
 
     <body>
@@ -29,10 +32,10 @@
 
                 <!-- шапка меню -->
                 <section class="section has-text-centered">
-                        <!-- <span class="icon is-large"><i class="fa-2x fas fa-home"></i></span> -->
-                        <figure class="image is-3by1">
-                            <img src="https://www.soberizavod.ru/local/templates/soberizavod/img/logo.svg" width="33%">
-                        </figure>
+                    <!-- <span class="icon is-large"><i class="fa-2x fas fa-home"></i></span> -->
+                    <figure class="image is-3by1">
+                        <img src="https://www.soberizavod.ru/local/templates/soberizavod/img/logo.svg" width="33%">
+                    </figure>
                 </section>
                 <!--Список выпадающего меню-->
                 <ul class="menu-dropdown" id="packageList">
@@ -67,7 +70,8 @@
                 <!-- верхняя панель -->
                 <section class="section">
                     <h1 class="title is-1 has-text-weight-semibold has-text-centered">Тип упаковки </h1>
-                </h2><span class="title is-2 has-text-centered has-text-primary has-text-weight-light">Форма редактирования и добавления</span></h2>
+                    </h2><span class="title is-2 has-text-centered has-text-primary has-text-weight-light">Форма
+                        редактирования и добавления</span></h2>
                 </section>
 
                 <div class="section">
@@ -88,76 +92,86 @@
                         </div>
                         <div class="tile is-parent">
                             <article class="tile is-child box">
-                                <p class="title">Информация об упаковке</p><div class="field">
+                                <p class="title">Информация об упаковке</p>
+                                <div class="field">
                                     <div class="control">
-                                <table>
-                                    <thead>
-                                        <tr><th colspan="2"  class="title is-4">Технические характеристики</th></tr>
-                                        <tr>
-                                            <td>Обозначение</td>
-                                            <td><input class="input is-hovered" type="text" id="code"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Наименование</td>
-                                            <td><input class="input is-hovered" type="text" id="name"></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Грузоподьемность</td>
-                                            <td><input class="input is-hovered" type="text" id="payload"></td>
-                                        </tr>
-                                        <tr>
-                                            <td> Высота [h, мм] </td>
-                                            <td><input class="input is-hovered" type="text" id="sizeH"></td>
-                                        </tr>
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th colspan="2" class="title is-4">Технические характеристики</th>
+                                                </tr>
+                                                <tr>
+                                                    <td>Обозначение</td>
+                                                    <td><input class="input is-hovered" type="text" id="code"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Наименование</td>
+                                                    <td><input class="input is-hovered" type="text" id="name"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Грузоподьемность</td>
+                                                    <td><input class="input is-hovered" type="text" id="payload"></td>
+                                                </tr>
+                                                <tr>
+                                                    <td> Высота [h, мм] </td>
+                                                    <td><input class="input is-hovered" type="text" id="sizeH"></td>
+                                                </tr>
 
-                                        <tr>
-                                            <td> Ширина [wx, мм] </td>
-                                            <td><input class="input is-hovered" type="text" id="sizeWx"></td>
-                                        </tr>
+                                                <tr>
+                                                    <td> Ширина [wx, мм] </td>
+                                                    <td><input class="input is-hovered" type="text" id="sizeWx"></td>
+                                                </tr>
 
-                                        <tr>
-                                            <td> Длина [wy, мм] </td>
-                                            <td><input class="input is-hovered" type="text" id="sizeWy"></td>
-                                        </tr>
+                                                <tr>
+                                                    <td> Длина [wy, мм] </td>
+                                                    <td><input class="input is-hovered" type="text" id="sizeWy"></td>
+                                                </tr>
 
-                                        <tr>
-                                            <td> Цвет [#rrggbb] </td>
-                                            <td class="select">
-                                                <select class="is-hovered" id="color">
-                                                    <option value="color 1">color 1</option>
-                                                    <option value="color 2">color 2</option>
-                                                    <option value="color 3">color 3</option>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <!-- кнопки -->
-                                        <tr>
-                                            <td>
-                                                <!-- <input class="input" id="apply" type="button" value="apply"> -->
+                                                <tr>
+                                                    <td> Цвет [#rrggbb] </td>
+                                                    <td class="select">
+                                                        <select class="is-hovered" id="color">
+                                                            <option value="color 1">color 1</option>
+                                                            <option value="color 2">color 2</option>
+                                                            <option value="color 3">color 3</option>
+                                                        </select>
+                                                    </td>
+                                                </tr>
+                                                <!-- кнопки -->
+                                                <tr>
+                                                    <td>
+                                                        <!-- <input class="input" id="apply" type="button" value="apply"> -->
 
-                                            </td>
-                                            <td>
-                                                <!-- <input class="input" id="add" type="button" value="add"> -->
+                                                    </td>
+                                                    <td>
+                                                        <!-- <input class="input" id="add" type="button" value="add"> -->
 
-                                            </td>
-                                            <td>
-                                                <!-- <input class="input" id="delete" type="button" value="delete"> -->
+                                                    </td>
+                                                    <td>
+                                                        <!-- <input class="input" id="delete" type="button" value="delete"> -->
 
-                                            </td>
-                                        </tr>
-                                    </thead>
-                                </table>
+                                                    </td>
+                                                </tr>
+                                            </thead>
+                                        </table>
 
 
-                            </article></div></div>
                             </article>
-                            <div class="level">
-                                <button id="apply" class="button is-info">apply</button> <button id="apply" class="button is-info">add</button> <button id="apply" class="button is-info">delete</button>
-                            </div> </div>
+                        </div>
+                    </div>
+                    <!--field-->
+
+                    <div class="level">
+                        <button id="apply" class="button is-success">apply</button>
+                        <button id="info"  class="button is-warning">add</button>
+                        <button id="delete" class="button is-info">delete</button>
                     </div>
                 </div>
-
             </div>
-        </div>
+            <!--tile is-ancestor-->
+
+        </div> <!-- section -->
+        </div> <!-- column -->
     </body>
+
 </html>
