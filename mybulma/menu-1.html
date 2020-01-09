@@ -81,8 +81,9 @@
                         <div class="tile is-parent">
                             <article class="tile is-child box">
                                 <p class="title"> Упаковка: Ячейка </p>
-                                <figure class="image is-4by3">
-                                    <canvas id="canvas">
+                                <!-- image is-4by3 -->
+                                <figure class="">
+                                    <canvas id="canvas" style="background-color:red; width:100%; height:auto;">
                                         success: {
                                         }
                                         error: Browser does not support canvas element.
@@ -161,7 +162,7 @@
                     </div>
                     <!--field-->
 
-                    <div class="level">
+                    <div class="level is-flex">
                         <button id="apply" class="button is-success">apply</button>
                         <button id="info"  class="button is-warning">add</button>
                         <button id="delete" class="button is-info">delete</button>
