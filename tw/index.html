@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- TAILWIND CSS CDN -->
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+
+    <title>Hello, world!</title>
+  </head>
+  <body>
+   
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+
+    <div class="container is-fluid">
+      <div class="notification">
+          <h1 class="title">Fluid Container with max width = 1775px</h1>
+      </div>
+  </div>
+
+  <!-- Второй контейнер с плавающими колонками, вторая и третья из которых перестраиваются в колонку в первую очередь -->
+  <div class="container is-fluid">
+
+      <!-- Первая колонка с канвасом -->
+      <div class="tile is-ancestor">
+          <div class="tile is-parent is-5">
+              <!-- PARENT -->
+              <article class="tile is-child notification box">
+                  <!-- CHILD -->
+                  <div class="content">
+                      <p class="title">Canvas</p>
+                      <p class="subtitle">canvas canvas canvas</p>
+                      <div>
+
+                          <canvas id="canvas">
+                              success: {
+                              }
+                              error: Browser does not support canvas element.
+                          </canvas>
+
+                      </div>
+                  </div>
+              </article>
+          </div>
+          <div class="tile is-7">  <!-- is-vertical -->
+              <div class="tile is-parent">
+                  <!-- PARENT -->
+                  <article class="tile is-child notification box">
+                      <!-- CHILD -->
+                      <p class="title">Список...</p>
+                      <p class="subtitle">Top tile</p>
+                      <ul>
+                          <li>
+                              <a href="index.html">А picture with a certain size</a>
+                          </li>
+                          <li>
+                              <a href="index1.html">Responcive img depends on the container+proportions</a>
+                          </li>
+                          <li>
+                              <a href="index2.html">Responcive img depends on the container-proportions</a>
+                          </li>
+                      </ul>
+                  </article>
+              </div>
+              <div class="tile is-parent">
+                  <!-- PARENT -->
+                  <article class="tile is-child notification box">
+                      <!-- CHILD -->
+                      <p class="title">Middle tile</p>
+                      <p class="subtitle">With an image</p>
+                      <figure class="image is-4by3">
+                          <img src="https://bulma.io/images/placeholders/640x480.png">
+                      </figure>
+                      <ul>
+                          <li>
+                              <a href="index.html">А picture with a certain size</a>
+                          </li>
+                          <li>
+                              <a href="index1.html">Responcive img depends on the container+proportions</a>
+                          </li>
+                          <li>
+                              <a href="index2.html">Responcive img depends on the container-proportions</a>
+                          </li>
+                      </ul>
+                  </article>
+              </div>
+          </div>
+      </div>
+
+      <!-- Контейнер номер три -->
+      <div class="container is-fluid">
+
+      </div>
+
+
+
+  </body>
+</html>

@@ -1,0 +1,373 @@
+body,
+button,
+input,
+select,
+textarea {
+    font-family: BlinkMacSystemFont, -apple-system, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica, Arial, sans-serif
+}
+
+body {
+    background-color: #f5f5f5;
+}
+
+blockquote,
+body,
+dd,
+dl,
+dt,
+fieldset,
+figure,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+html,
+iframe,
+legend,
+li,
+ol,
+p,
+pre,
+textarea,
+ul {
+    margin: 0;
+    padding: 0
+}
+
+.image.is-4by3 img {
+    /* object-fit: cover; */
+}
+.image {
+    display: block;
+    position: relative
+}
+
+.image img {
+    display: block;
+    height: auto;
+    width: 100%
+}
+
+.image img.is-rounded {
+    border-radius: 290486px
+}
+
+.container {
+    margin: 0 auto;
+    position: relative
+}
+
+@media screen and (min-width:1088px) {
+    .container {
+        max-width: 960px;
+        width: 960px
+    }
+
+    .container.is-fluid {
+        margin-left: 64px;
+        margin-right: 64px;
+        max-width: none;
+        width: auto
+    }
+}
+
+@media screen and (min-width:1280px) {
+    .container {
+        max-width: 1152px;
+        width: 1152px
+    }
+}
+
+@media screen and (min-width:1472px) {
+    .container {
+        max-width: 1344px;
+        width: 1344px
+    }
+}
+
+.notification {
+    background-color: #f5f5f5;
+    border-radius: 4px;
+    padding: 1.25rem 2.5rem 1.25rem 1.5rem;
+    position: relative
+}
+
+.notification .content,
+.notification .subtitle,
+.notification .title {
+    color: currentColor
+}
+
+.subtitle,
+.title {
+    word-break: break-word
+}
+
+.title {
+    color: #363636;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.125
+}
+
+.title.is-1 {
+    font-size: 3rem
+}
+
+.title.is-2 {
+    font-size: 2.5rem
+}
+
+.title.is-3 {
+    font-size: 2rem
+}
+
+.title.is-4 {
+    font-size: 1.5rem
+}
+
+.title.is-5 {
+    font-size: 1.25rem
+}
+
+.title.is-6 {
+    font-size: 1rem
+}
+
+.title.is-7 {
+    font-size: .75rem
+}
+
+.tile {
+    align-items: stretch;
+    display: block;
+    flex-basis: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    min-height: -webkit-min-content;
+    min-height: -moz-min-content;
+    min-height: min-content
+}
+
+.tile.is-ancestor {
+    margin-left: -.75rem;
+    margin-right: -.75rem;
+    margin-top: -.75rem
+}
+
+.tile.is-ancestor:last-child {
+    margin-bottom: -.75rem
+}
+
+.tile.is-ancestor:not(:last-child) {
+    margin-bottom: .75rem
+}
+
+.tile.is-child {
+    margin: 0 !important
+}
+
+.tile.is-parent {
+    padding: .75rem
+}
+
+.tile.is-vertical {
+    flex-direction: column
+}
+
+.tile.is-vertical>.tile.is-child:not(:last-child) {
+    margin-bottom: 1.5rem !important
+}
+
+/* Инструкция по предварительному перемещению правой и средней колонки */
+@media screen and (max-width:1024px) {
+    .tile.is-7 {
+        flex-direction: column
+    }
+}
+
+@media screen and (min-width:769px),
+print {
+    .tile:not(.is-child) {
+        display: flex
+    }
+
+    .tile.is-1 {
+        flex: none;
+        width: 8.33333%
+    }
+
+    .tile.is-2 {
+        flex: none;
+        width: 16.66667%
+    }
+
+    .tile.is-3 {
+        flex: none;
+        width: 25%
+    }
+
+    .tile.is-4 {
+        flex: none;
+        width: 33.33333%
+    }
+
+    .tile.is-5 {
+        flex: none;
+        width: 41.66667%
+    }
+
+    .tile.is-6 {
+        flex: none;
+        width: 50%
+    }
+
+    .tile.is-7 {
+        display: flex width: 58.33333%
+    }
+
+    .tile.is-8 {
+        flex: none;
+        width: 66.66667%
+    }
+
+    .tile.is-9 {
+        flex: none;
+        width: 75%
+    }
+
+    .tile.is-10 {
+        flex: none;
+        width: 83.33333%
+    }
+
+    .tile.is-11 {
+        flex: none;
+        width: 91.66667%
+    }
+
+    .tile.is-12 {
+        flex: none;
+        width: 100%
+    }
+}
+
+.title {
+    color: #363636;
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.125
+}
+
+.title strong {
+    color: inherit;
+    font-weight: inherit
+}
+
+.title+.highlight {
+    margin-top: -.75rem
+}
+
+/* .title:not(.is-spaced)+.subtitle {
+    margin-top: -1.25rem
+} */
+
+.title.is-1 {
+    font-size: 3rem
+}
+
+.title.is-2 {
+    font-size: 2.5rem
+}
+
+.title.is-3 {
+    font-size: 2rem
+}
+
+.title.is-4 {
+    font-size: 1.5rem
+}
+
+.title.is-5 {
+    font-size: 1.25rem
+}
+
+.title.is-6 {
+    font-size: 1rem
+}
+
+.title.is-7 {
+    font-size: .75rem
+}
+
+.subtitle {
+    color: #4a4a4a;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.25
+}
+
+.subtitle strong {
+    color: #363636;
+    font-weight: 600
+}
+
+.subtitle:not(.is-spaced)+.title {
+    margin-top: -1.25rem
+}
+
+.subtitle.is-1 {
+    font-size: 3rem
+}
+
+.subtitle.is-2 {
+    font-size: 2.5rem
+}
+
+.subtitle.is-3 {
+    font-size: 2rem
+}
+
+.subtitle.is-4 {
+    font-size: 1.5rem
+}
+
+.subtitle.is-5 {
+    font-size: 1.25rem
+}
+
+.subtitle.is-6 {
+    font-size: 1rem
+}
+
+.subtitle.is-7 {
+    font-size: .75rem
+}
+
+.box {
+    background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .1);
+    color: #4a4a4a;
+    display: block;
+    padding: 1.25rem
+}
+
+a.box:focus,
+a.box:hover {
+    box-shadow: 0 2px 3px rgba(10, 10, 10, .1), 0 0 0 1px #3273dc
+}
+
+#canvas::before {
+    position: relative
+}
+#canvas {
+    background-color: green;
+    object-fit: cover;
+    width: 100%;
+    height: auto;
+    padding: 0
+}
