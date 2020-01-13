@@ -362,8 +362,7 @@ a.box:hover {
 }
 
 #canvas::before {
-    position: relative;
-    content: "jhghjg"
+    position: relative
 }
 #canvas {
     background-color: green;
