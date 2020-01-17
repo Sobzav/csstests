@@ -1,0 +1,15 @@
+.container {
+    display: grid;
+    max-width: 1024px;
+    margin: 0 auto;  /* по центру */
+    grid-template-columns: 100px auto; /* левая колонка фиксированная, правая резиновая */
+    /*grid-template-columns: 150px 1fr 2fr 150px;  /* 4 колонки, крайние фиксированы */
+    /*grid-template-columns: 150px minmax(100px, 3fr) 2fr 150px;  /* 4 колонки, вторая имеет max и min р-р */
+    /* grid-template-rows: 50px 50px 200px; */
+    grid-template-columns: repeat(3, 1fr);
+    /* grid-template-columns: 100px auto 100px; */
+    /* grid-template-rows: 50px 50px; */
+    grid-template: repeat(2, 50px) / repeat(3, 1fr);
+
+    grid-gap: 3px;
+}

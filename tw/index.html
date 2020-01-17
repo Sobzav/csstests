@@ -1,101 +1,224 @@
 <!doctype html>
 <html lang="en">
-  <head>
+
+<head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- TAILWIND CSS CDN -->
     <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
 
     <title>Hello, world!</title>
-  </head>
-  <body>
-   
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+</head>
 
-    <div class="container is-fluid">
-      <div class="notification">
-          <h1 class="title">Fluid Container with max width = 1775px</h1>
-      </div>
-  </div>
+<body class="bg-gray-200">
 
-  <!-- Второй контейнер с плавающими колонками, вторая и третья из которых перестраиваются в колонку в первую очередь -->
-  <div class="container is-fluid">
+    <!-- Блок заголовка во всю ширину -->
 
-      <!-- Первая колонка с канвасом -->
-      <div class="tile is-ancestor">
-          <div class="tile is-parent is-5">
-              <!-- PARENT -->
-              <article class="tile is-child notification box">
-                  <!-- CHILD -->
-                  <div class="content">
-                      <p class="title">Canvas</p>
-                      <p class="subtitle">canvas canvas canvas</p>
-                      <div>
+    <div class="flex">
+        <div class="w-full p-2 bg-gray-500 h-12 mx-auto">
+            <h1 class="title">Fluid Container</h1> <!-- Как сделать текст по центру? -->
+        </div>
+    </div>
 
-                          <canvas id="canvas">
-                              success: {
-                              }
-                              error: Browser does not support canvas element.
-                          </canvas>
+    <!-- Второй контейнер во всю ширину с тремя плавающими колонками, вторая и третья из которых перестраиваются в колонку в первую очередь -->
+    <div class="mx-auto p-2">
+        <!-- <div class=""> -->
+        <div class="flex -mx-2">
+            <div class="w-2/4 px-2 flex">
+                <!-- Первая колонка с канвасом -->
+                <div class="bg-red-400 rounded-lg shadow flex-1">
+                    <div class="relative px-2">
+                        <p class="title">Canvas</p>
+                        <p class="subtitle">canvas canvas canvas</p>
+                        <div>
 
-                      </div>
+                            <canvas id="canvas" style="width:100%; height:auto;"
+                                class="shadow-inner absolute inset-x-0 bg-yellow-500 rounded-lg object-cover">
+                                success: {
+                                }
+                                error: Browser does not support canvas element.
+                            </canvas>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:flex w-2/4">
+                <!-- "Flex" только на экранах>=1024, меньше-"block", и два правых блока перестраиваются один под другой -->
+                <div class="px-2 lg:flex">
+                    <div class="px-2 bg-yellow-300 rounded-lg shadow flex-1 mb-2 lg:mb-0">
+                        <!-- mb-2 - margin-bottom, работает только для малых экранов, где блоки один над другим -->
+                        <p class="title">Список...</p>
+                        <p class="subtitle">Top tile</p>
+                        <ul>
+                            <li>
+                                <a href="index.html">А picture with a certain size</a>
+                            </li>
+                            <li>
+                                <a href="index1.html">Responcive img depends on the container+proportions</a>
+                            </li>
+                            <li>
+                                <a href="index2.html">Responcive img depends on the container-proportions</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="px-2 lg:flex">
+                    <div class="bg-gray-100 px-2 rounded-lg shadow flex-1">
+                        <p class="title">Middle tile</p>
+                        <p class="subtitle">With an image</p>
+                        <figure class="image is-4by3">
+                            <img src="https://bulma.io/images/placeholders/640x480.png">
+                        </figure>
+
+                        <!-- ФОРМА -->
+                        <form class="w-full max-w-lg">
+                            <div class="flex flex-wrap -mx-3 mb-6">
+                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        for="code">
+                                        Обозначение
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                        id="grid-first-name" type="text" placeholder="Jane">
+                                    <p class="text-red-500 text-xs italic">Please fill out this field.</p>
+                                </div>
+                                <div class="w-full md:w-1/2 px-3">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        for="grid-last-name">
+                                        Last Name
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="grid-last-name" type="text" placeholder="Doe">
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap -mx-3 mb-6">
+                                <div class="w-full px-3">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        for="grid-password">
+                                        Password
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="grid-password" type="password" placeholder="******************">
+                                    <p class="text-gray-600 text-xs italic">Make it as long and as crazy as you'd like
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap -mx-3 mb-2">
+                                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        for="grid-city">
+                                        City
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="grid-city" type="text" placeholder="Albuquerque">
+                                </div>
+                                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        for="grid-state">
+                                        State
+                                    </label>
+                                    <div class="relative">
+                                        <select
+                                            class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                            id="grid-state">
+                                            <option>New Mexico</option>
+                                            <option>Missouri</option>
+                                            <option>Texas</option>
+                                        </select>
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20">
+                                                <path
+                                                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                                </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+                                    <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
+                                        for="grid-zip">
+                                        Zip
+                                    </label>
+                                    <input
+                                        class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                                        id="grid-zip" type="text" placeholder="90210">
+                                </div>
+                            </div>
+                        </form>
+
+
+
+                        <div class="form-group">
+                            <!-- Форма -->
+                            <div class="row">
+
+                                <div class="col">
+                                    <label class="mt-2 mb-1 h6" for="code"> Обозначение </label>
+                                    <input class="form-control" type="text" id="code" name="package_code">
+                                </div>
+                                <div class="col">
+                                    <label class="mt-2 mb-1 h6" for="color"> Цвет: </label>
+                                    <input class="form-control" type="color" id="color" name="package_color">
+                                </div>
+                            </div>
+                            <label class="mt-2 mb-1 h6" for="name"> Наименование </label>
+                            <input class="form-control" type="text" id="name" name="package_name">
+                            <label class="mt-2 mb-1 h6" for="payload"> Грузоподьемность, гр </label>
+                            <input class="form-control" type="text" id="payload" name="package_payload">
+                            <div class="row">
+
+                                <div class="col">
+                                    <label class="mt-2 mb-1 h6" for="sizeH"> Высота, мм </label>
+                                    <input class="form-control" type="text" id="sizeH" name="package_h">
+                                </div>
+                                <div class="col">
+                                    <label class="mt-2 mb-1 h6" for="sizeWx"> Ширина, мм </label>
+                                    <input class="form-control" type="text" id="sizeWx" name="package_wx">
+                                </div>
+                                <div class="col">
+                                    <label class="mt-2 mb-1 h6" for="sizeWy"> Длина, мм </label>
+                                    <input class="form-control" type="text" id="sizeWy" name="package_wy">
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Контейнер номер три -->
+    <!-- <div class="mx-auto">
+            <div class="px-2">
+                <div class="flex -mx-2">
+                  <div class="w-1/3 px-2">
+                    <div class="bg-gray-400 h-12"></div>
                   </div>
-              </article>
-          </div>
-          <div class="tile is-7">  <!-- is-vertical -->
-              <div class="tile is-parent">
-                  <!-- PARENT -->
-                  <article class="tile is-child notification box">
-                      <!-- CHILD -->
-                      <p class="title">Список...</p>
-                      <p class="subtitle">Top tile</p>
-                      <ul>
-                          <li>
-                              <a href="index.html">А picture with a certain size</a>
-                          </li>
-                          <li>
-                              <a href="index1.html">Responcive img depends on the container+proportions</a>
-                          </li>
-                          <li>
-                              <a href="index2.html">Responcive img depends on the container-proportions</a>
-                          </li>
-                      </ul>
-                  </article>
+                  <div class="w-1/3 px-2">
+                    <div class="bg-gray-500 h-12"></div>
+                  </div>
+                  <div class="w-1/3 px-2">
+                    <div class="bg-gray-400 h-12"></div>
+                  </div>
+                </div>
               </div>
-              <div class="tile is-parent">
-                  <!-- PARENT -->
-                  <article class="tile is-child notification box">
-                      <!-- CHILD -->
-                      <p class="title">Middle tile</p>
-                      <p class="subtitle">With an image</p>
-                      <figure class="image is-4by3">
-                          <img src="https://bulma.io/images/placeholders/640x480.png">
-                      </figure>
-                      <ul>
-                          <li>
-                              <a href="index.html">А picture with a certain size</a>
-                          </li>
-                          <li>
-                              <a href="index1.html">Responcive img depends on the container+proportions</a>
-                          </li>
-                          <li>
-                              <a href="index2.html">Responcive img depends on the container-proportions</a>
-                          </li>
-                      </ul>
-                  </article>
-              </div>
-          </div>
-      </div>
-
-      <!-- Контейнер номер три -->
-      <div class="container is-fluid">
-
-      </div>
+        </div> -->
 
 
 
-  </body>
+
+</body>
+
 </html>

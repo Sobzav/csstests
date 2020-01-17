@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
+    <!-- <link rel="stylesheet" type="text/css" href="..\reset.css" /> -->
+    <!-- <link rel="stylesheet" type="text/css" href="..\css\style.css" /> Убрал по причине другой структуры папок-->
+    <!-- Добавил свои стили ниже -->
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/basic.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/fonts.css">
+
+    <!-- Предзагрузка шрифтов -->
+    <link rel="preload" href="css/webfonts/3826E0_2_0.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="css/webfonts/3826E0_8_0.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- Перенес скрипты в head -->
+    <!-- <script src="..\jquery\jquery-3.4.1.min.js"></script>
+    <script src="..\jquery\jquery.validate.js"></script>
+    <script src="package.js"></script> -->
+    <link rel="stylesheet" type="text/css" href="css/MyFontsWebfontsKit.css">
+    <title> Упаковка </title>
+</head>
+
+<body class="bg-raven" style="owerflow-x: hidden; owerflow-y: hidden;">
+    <!-- <script src="..\jquery\jquery-3.4.1.min.js"></script>
+        <script src="..\jquery\jquery.validate.js"></script>
+        <script src="package.js"></script> -->
+
+    <!-- коневой контейнер формы -->
+    <div class="container">
+        <header>
+            <!-- Top - w 100% - панель с заголовком -->
+            <div>
+                <h1>Заголовок was here</h1>
+            </div>
+        </header>
+        <!-- Sec - w 100% - панель выбора элемента -->
+        <div class="flex items-baseline my-1 mx-2">
+            <div class="flex items-center flex-wrap">
+
+                <!-- выпадающий список элементов -->
+                <label class="p-1 text-lg" for="inpCode"> Обозначение </label>
+                <select class="p-1 text-lg text-white border-0 bg-crBrown" id="inpCode" name="package_code">
+                    <!-- Список всех элементов в базе -->
+                    <option value=""> Тип </option>
+                </select>
+                <input class="p-1 min-w-0 text-lg text-white border-0 bg-crBrown" hidden size="5" type="text"
+                    id="inpCodeEdit" name="package_code">
+            </div>
+            <div class="flex items-center flex-grow px-3">
+                <label class="p-1 text-lg" for="name"> Наименование </label>
+                <input class="p-1 text-lg flex-grow text-white border-0 bg-crBrown" size="30" type="text" id="inpName"
+                    name="package_name">
+            </div>
+            <div class="flex items-center">
+                <button class="px-3 py-1 text-base bg-orange-400 border-solid border border-black h-7" id="btnEdit">
+                    Редактировать </button>
+            </div>
+        </div>
+        <!-- </header> -->
+        <!-- информация об упаковке -->
+
+        <!-- изображение и характеристики -->
+        <div class="flex flex-row p-1">
+            <input type="hidden" name="package_id">
+            <!-- изображение -->
+            <div class="flex flex-col h-auto m-4 p-6 border-dotted border border-chiffon bg-chateauGrey">
+                <canvas class="border-dotted border border-chiffon p-0 m-0" id="canvas"
+                    style="width: 500px; height: 500px; object-fit: contain;">
+                    success: {
+                    }
+                    error: Browser does not support canvas element.
+                </canvas>
+            </div>
+            <!-- характеристики -->
+            <div class="flex flex-col flex-grow-0 p-1">
+                <div class="flex px-4">
+                    <div class="text-lg"> Размеры прямоугольника </div>
+                </div>
+                <div class="flex flex-row my-1 text-sm">
+
+                    <div class="flex items-center mx-2">
+                        <label class="my-1 mx-1 whitespace-no-wrap" for="sizeWx"> Ширина </label>
+                        <input class="px-1 h-5 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                            id="inpSizeWx" name="package_wx">
+                        <label class="my-1 mx-1 whitespace-no-wrap" for="sizeWx"> мм </label>
+                    </div>
+                    <div class="flex items-center mx-2">
+                        <label class="my-1 mx-1 whitespace-no-wrap" for="sizeWy"> Высота </label>
+                        <input class="px-1 h-5 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                            id="inpSizeWy" name="package_wy">
+                        <label class="my-1 mx-1 whitespace-no-wrap" for="sizeWy"> мм </label>
+                    </div>
+
+                    <div class="flex items-center mx-2">
+                        <label class="my-1 mx-1 whitespace-no-wrap" for="sizeH"> Глубина </label>
+                        <input class="px-1 h-5 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                            id="inpSizeH" name="package_h">
+                        <label class="my-1 mx-1 whitespace-no-wrap" for="sizeH"> мм </label>
+                    </div>
+                </div>
+                <div class="flex flex-row my-1 text-sm">
+                    <div class="flex items-center mx-2">
+                        <label class="my-1 mx-1" for="color"> Цвет: </label>
+                        <input class="h-5 border-0 bg-crBrown" type="color" id="inpColor" name="package_color">
+                    </div>
+                    <!-- <div class="flex items-center mx-2">
+                                <label class="my-1 mx-1" for="payload"> Грузоподьемность, гр </label>
+                                <input class="p-1 border-0 text-white bg-crBrown" size="6" type="text" id="payload" name="package_payload">
+                            </div> -->
+                    <div class="flex items-center mx-2">
+                        <label class="my-1 mx-1" for="inpVolume"> Объем = </label>
+                        <label class="py-1 border-0 text-black bg-tr" type="text" id="inpVolume" name="package_value"> 0
+                        </label>
+                        <label class="my-1 mx-1" for="inpVolume"> мм&sup2 </label>
+                    </div>
+                </div>
+
+                <!-- элемент имеет внутреннее содержимое -->
+                <div class="flex flex-row justify-between mt-3 mb-2">
+                    <div class="flex items-center mx-1 text-lg">
+                        <input class="border-1 text-black bg-tr" type="checkbox" id="checkBoxHasContent"
+                            name="checkBoxHasContent">
+                        <label class="my-1 mx-2" for="checkBoxHasContent"> Внутренние прямоугольники </label>
+                    </div>
+                </div>
+                <!-- внутреннее содержимое -->
+                <div class="flex flex-col" style="overflow-y: auto;">
+                    <!-- 1 внутренний элемент -->
+                    <div class="flex flex-row my-1">
+                        <label class="ml-1 my-1" id="sub1"> 1. </label>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx1"> Ширина </label>
+                            <input class="px-2 h-4 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWx1" name="package_wx1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx1"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY1"> Ширина </label>
+                            <input class="px-2 h-4 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWy1" name="package_wy1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY1"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="p-1" for="inpCode1"> </label>
+                            <select class="text-white border-0 bg-crBrown p-1" id="inpCode1" name="package_code">
+                                <option value=""> Тип </option>
+                                <!-- Список всех элементов в базе -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex flex-row my-1">
+                        <div class="flex items-center ml-8 mr-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy1"> Количество<br>по вертикали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNy1"
+                                name="package_wx1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy1"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx1"> Количество<br>по горизонтали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNx1"
+                                name="package_wy1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx1"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-base">
+                            <label class="my-1 mx-1" for="inpTotal1"> Всего = </label>
+                            <label class="py-1 border-0 text-black bg-tr" type="text" id="inpTotal1"
+                                name="package_total1"> 0 </label>
+                            <label class="my-1 mx-1" for="inpTotal1"> шт </label>
+                        </div>
+                    </div>
+                    <div class="flex flex-row my-1">
+                        <label class="ml-1 my-1" id="sub1"> 2. </label>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx2"> Ширина </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWx2" name="package_wx1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx2"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY1"> Ширина </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWy2" name="package_wy1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY1"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="p-1" for="inpCode2"> </label>
+                            <select class="text-white border-0 bg-crBrown p-1" id="inpCode2" name="package_code">
+                                <option value=""> Тип </option>
+                                <!-- Список всех элементов в базе -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex flex-row my-1">
+                        <div class="flex items-center ml-8 mr-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy2"> Количество<br>по вертикали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNy2"
+                                name="package_wx1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy1"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-sm">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx2"> Количество<br>по горизонтали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNx2"
+                                name="package_wy1">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx2"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2 text-base">
+                            <label class="my-1 mx-1" for="inpTotal2"> Всего = </label>
+                            <label class="py-1 border-0 text-black bg-tr" type="text" id="inpTotal2"
+                                name="package_total1"> 0 </label>
+                            <label class="my-1 mx-1" for="inpTotal2"> шт </label>
+                        </div>
+                    </div>
+                    <div class="flex flex-row my-1">
+                        <label class="ml-1 my-1" id="sub1"> 3. </label>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx3"> Ширина </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWx3" name="package_wx3">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx3"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY3"> Ширина </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWy3" name="package_wy3">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY3"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="p-1" for="inpCode3"> </label>
+                            <select class="text-white border-0 bg-crBrown p-1" id="inpCode1" name="package_code3">
+                                <option value=""> Тип </option>
+                                <!-- Список всех элементов в базе -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex flex-row my-1">
+                        <div class="flex items-center ml-8 mr-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy3"> Количество<br>по вертикали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNy3"
+                                name="package_wx3">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy3"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx3"> Количество<br>по горизонтали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNx3"
+                                name="package_wy3">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx3"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1" for="inpTotal3"> Всего = </label>
+                            <label class="py-1 border-0 text-black bg-tr" type="text" id="inpTotal3"
+                                name="package_total3"> 0 </label>
+                            <label class="my-1 mx-1" for="inpTotal3"> шт </label>
+                        </div>
+                    </div>
+                    <div class="flex flex-row my-1">
+                        <label class="ml-1 my-1" id="sub1"> 4. </label>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx4"> Ширина </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWx4" name="package_wx4">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizeWx4"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY4"> Ширина </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="7" type="text"
+                                id="inpSizeWy4" name="package_wy4">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpSizewY4"> мм </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="p-1" for="inpCode"> </label>
+                            <select class="text-white border-0 bg-crBrown p-1" id="inpCode4" name="package_code4">
+                                <option value=""> Тип </option>
+                                <!-- Список всех элементов в базе -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="flex flex-row my-1">
+                        <div class="flex items-center ml-8 mr-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy4"> Количество<br>по вертикали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNy4"
+                                name="package_wx4">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNy4"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx4"> Количество<br>по горизонтали
+                            </label>
+                            <input class="p-1 min-w-0 text-white border-0 bg-crBrown" size="2" type="text" id="inpNx4"
+                                name="package_wy4">
+                            <label class="my-1 mx-1 whitespace-no-wrap" for="inpNx4"> шт </label>
+                        </div>
+                        <div class="flex items-center mx-2">
+                            <label class="my-1 mx-1" for="inpTotal4"> Всего = </label>
+                            <label class="py-1 border-0 text-black bg-tr" type="text" id="inpTotal4"
+                                name="package_total4"> 0 </label>
+                            <label class="my-1 mx-1" for="inpTotal4"> шт </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- кнопки -->
+        <div class="flex justify-end p-3">
+            <button class="bg-tr border border-solid border-black h-7 px-3 py-1" id="btnCopy"> Копировать </button>
+            <!-- <button class="bg-tr border border-solid border-black h-6 px-3 py-1 ml-3" id="btnDelete"> Удалить </button> -->
+            <!-- <button class="bg-tr border border-solid border-black h-6 px-3 py-1 ml-3" id="btnAdd"> Добавить </button> -->
+            <button class="bg-tr border border-solid border-black h-7 px-3 py-1 ml-3" id="btnApply"> Сохранить </button>
+        </div>
+    </div>
+    <!--скрипты для стилей -->
+</body>
+<footer>
+</footer>
+
+</html>

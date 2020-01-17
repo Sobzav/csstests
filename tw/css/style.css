@@ -1,0 +1,14 @@
+
+
+body {
+    background-color: #f5f5f5;
+}
+@import url(//db.onlinewebfonts.com/c/13a5696f441e528e69b058fd42e94f85?family=Esqadero);
+@font-face {
+    font-family: "Esqadero";
+    src: url("/fonts/Esqadero.eot?") format("eot"), url("/fonts/Esqadero.woff2") format("woff2"), url("/fonts/Esqadero.woff") format("woff"), url("/fonts/Esqadero.ttf") format("truetype"), url("/fonts/Esqadero.svg#Esqadero") format("svg"); }
+
+.title {
+    font-family: Esqadero, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1.3px; }
