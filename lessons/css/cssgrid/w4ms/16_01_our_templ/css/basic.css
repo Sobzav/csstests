@@ -1,0 +1,52 @@
+html, body {
+  box-sizing: border-box;
+  background-color: #ffeead;
+  height: 100%;
+  padding: 10px;
+  margin: 0px;
+}
+p {
+  color: #96ceb4;
+  text-align: center;
+}
+ /* ">" - только прямые потомки */
+.container > * {
+  /* display: flex; */
+  justify-content: center;
+  align-items: center;
+  font-size: 1em;
+  color: #ffeead;
+
+}
+ul.ellist > *:nth-last-child(n+3) {
+  // Стили!
+}
+.container > *:p,  {
+  padding: 0.5em;
+}
+canvas {
+  padding: 0px;
+}
+header {
+  background-color: #96ceb4;
+}
+
+header {
+  padding: 0 40px;
+}
+
+.menu {
+  background-color: #ff6f69;
+}
+
+content {
+  background-color: #ffcc5c;
+}
+
+aside {
+  background-color: #ffcc5c;
+}
+
+footer {
+  background-color: #88d8b0;
+}

@@ -1,0 +1,49 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+.container {
+    height: 100%;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-columns: 150px repeat(5, 1fr) repeat(5, 1fr);
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+    "h h h h h h h h h h h "
+    "m c c c c c r r r r r "
+    "f f f f f f f f f f f";
+}
+
+
+header {
+    grid-area: h;
+    display: flex;
+}
+header h1 {
+    margin: 1em;
+    padding: 0em;
+}
+
+/* header > div:nth-child(3) {
+    margin-left: auto;
+} */
+
+.menu {
+    grid-area: m;
+}
+
+content {
+    grid-area: c;
+}
+
+aside {
+    grid-area: r;
+}
+
+footer {
+    grid-area: f;
+    display: flex;
+}
+footer {
+    padding: 1em 0;
+}
