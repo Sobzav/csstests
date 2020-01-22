@@ -6,17 +6,17 @@ html, body {
     height: 100%;
     display: grid;
     grid-gap: 5px;
-    grid-template-columns: 150px repeat(5, 1fr) repeat(5, 1fr);
-    grid-template-rows: auto 1fr auto;
-    grid-template-areas:
+    /* grid-template-columns: repeat(5, 1fr) repeat(5, 1fr); */
+    grid-template-rows: min-content min-content 1fr min-content
+    /* grid-template-rows: auto 1fr auto; */
+    /* grid-template-areas:
     "h h h h h h h h h h h "
     "m c c c c c r r r r r "
-    "f f f f f f f f f f f";
+    "f f f f f f f f f f f"; */
 }
 
-
 header {
-    grid-area: h;
+    /* grid-area: h; */
     display: flex;
 }
 header h1 {
@@ -29,19 +29,19 @@ header h1 {
 } */
 
 .menu {
-    grid-area: m;
+    /* grid-area: m; */
 }
 
 content {
-    grid-area: c;
+    /* grid-area: c; */
 }
 
 aside {
-    grid-area: r;
+    /* grid-area: r; */
 }
 
 footer {
-    grid-area: f;
+    /* grid-area: f; */
     display: flex;
 }
 footer {

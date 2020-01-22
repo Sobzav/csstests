@@ -1,0 +1,23 @@
+/* body {
+    font-family: -apple-system,  
+                 BlinkMacSystemFont, 
+                 "Segoe UI", 
+                 Roboto, 
+                 Oxygen-Sans, 
+                 Ubuntu, 
+                 Cantarell, 
+                 "Helvetica Neue", 
+                 sans-serif;
+ } */
+
+body {
+    font-family: 'CoreSansDS25LightItalic';
+}
+
+h1, button {
+    font-family: 'CoreSansDS25LightItalic';
+    /* font-weight: bold; */
+}
+select, input {
+    font-family: 'CitadinaRegular';
+}
