@@ -1,3 +1,5 @@
+@import 'MyFontsWebfontsKit.css';
+
 /* body {
     font-family: -apple-system,  
                  BlinkMacSystemFont, 
@@ -10,14 +12,20 @@
                  sans-serif;
  } */
 
-body {
+
+html {
+	font-size: 100%; /* 1rem = 16px  формула 16/16*100 */
+	scroll-behavior: smooth;
+}
+
+/* body {
     font-family: 'CoreSansDS25LightItalic';
 }
 
 h1, button {
     font-family: 'CoreSansDS25LightItalic';
     /* font-weight: bold; */
-}
-select, input {
+} */
+/* select, input {
     font-family: 'CitadinaRegular';
-}
+} */

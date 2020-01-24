@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="icon.png">
+    <!-- Place favicon.ico in the root directory -->
+    <!-- <link rel="stylesheet" type="text/css" href="..\reset.css" /> -->
+    <link rel="stylesheet" href="css/ant/style1.css">
+    <link rel="stylesheet" href="css/fonts.css">
+    <link rel="apple-touch-icon" href="icon.png">
+    <style>
+
+    </style>
+    <meta name="theme-color" content="#073046"> <!-- Цвет темы приложения для телефона - с шапки сайта, синий -->
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- <script src="Package.js"></script> -->
+
+    <title> Упаковка </title>
+</head>
+
+<body class="">
+    <script src="js/jquery-3.4.1.min.js"></script>
+    <script src="js/jquery.validate.js"></script>
+    <script src="http://172.17.17.92/webapp/package/main.js"></script>
+
+    <!-- Корневой контейнер формы -->
+    <header>
+        <div class="gridContainer">
+
+            <!-- TOP - Панель с заголовком -->
+            <div class="flex justify-center border-dotted border-0 border-b-1 border-chiffon m-1 p-2 text-lg">
+                <div class="">Заголовок </div>
+            </div>
+    </header>
+
+    <!-- Sub-TOP - панель выбора элемента -->
+    <section class="section__main">
+        <!-- Значение ID выбранного элемента для обмена с сервером. Всегда СКРЫТ из вилимости -->
+        <input type="hidden" name="package_id">
+
+        <div class="flex mx-2">
+            <div class="inputBlock-top pl-3">
+
+                <!-- выпадающий список элементов -->
+                <label class="inputLabel label-heading" for=""> Обозначение </label>
+                <select class="h-125" id="" name="package_code">
+                    <!-- Список всех элементов в базе -->
+                    <option value=""> Тип </option>
+                </select>
+                <input class="h-125 hidden" size="4" type="text" id="inpCodeEdit" name="package_code">
+                <!--Скрыты в норм. режиме, видимы в режиме редактирования-->
+            </div>
+
+            <div class="inputBlock-top px-6">
+
+                <label class="inputLabel label-heading" for="inpName"> Наименование </label>
+                <input class="h-125 w-auto" size="75" type="text" id="inpName" name="package_name">
+            </div>
+
+            <div class="inputBlock-top">
+                <button class="h-13" id="btnEdit"> Редактировать </button>
+            </div>
+        </div>
+
+    </section>
+
+
+    <!-- Информация об упаковке -->
+
+    <!-- Изображение и характеристики -->
+    <main>
+        <!--Два в одном-->
+        <div class="flex flex-row p-1 pt-3">
+            <!-- Left item -->
+            <div class="item-1">
+
+                <!-- Изображение -->
+
+                <div class="flex flex-col h-auto ml-5 my-5 mr-3 p-6 border-dotted border border-chiffon bg-chateauGrey">
+                    <canvas class="border-dotted border border-chiffon p-0 m-0" id="canvas"
+                        style="width: 500px; height: 500px; object-fit: contain;">
+                        success: {
+                        }
+                        error: Browser does not support canvas element.
+                    </canvas>
+                </div>
+
+            </div>
+            <!-- Характеристики -->
+
+            <div class="flex flex-col p-1">
+                <header>
+                    <div class="flex ml-6">
+                        <div class="label-heading"> Размеры прямоугольника </div>
+                    </div>
+                </header>
+                <section class="">
+                    <div class="flex flex-row ml-2 mt-3 text-sm">
+
+                        <div class="inputBlock mx-2">
+                            <label class="inputLabel" for="sizeWx"> Ширина </label>
+                            <input class="h-11" size="5" type="text" id="inpSizeWx" name="package_wx">
+                            <label class="inputLabel" for="sizeWx"> мм </label>
+                        </div>
+
+                        <div class="inputBlock mx-4">
+                            <label class="inputLabel" for="sizeWy"> Высота </label>
+                            <input class="h-11" size="5" type="text" id="inpSizeWy" name="package_wy">
+                            <label class="inputLabel" for="sizeWy"> мм </label>
+                        </div>
+
+                        <div class="inputBlock mx-2">
+                            <label class="inputLabel" for="sizeH"> Глубина </label>
+                            <input class="h-11" size="5" type="text" id="inpSizeH" name="package_h">
+                            <label class="inputLabel" for="sizeH"> мм </label>
+                        </div>
+
+                    </div>
+
+
+                    <div class="flex flex-row ml-2 mt-2 text-sm">
+
+                        <div class="inputBlock mx-2">
+                            <label class="mx-1" for="color"> Цвет: </label>
+                            <input class="h-11" type="color" id="inpColor" name="package_color">
+                        </div>
+                        <!--hidden - Скрыт в норм. режиме, видимы в режиме редактирования-->
+                        <div class="inputBlock hidden mx-2">
+                            <label class="my-1 hidden mx-1" for="inpPayload"> Грузоподьемность, гр </label>
+                            <input class="h-11 hidden" size="6" type="text" id="inpPayload" name="package_payload">
+                        </div>
+
+                        <div class="inputBlock mx-2">
+                            <label class="mx-1" for="inpVolume"> Объем = </label>
+                            <label class="" type="text" id="inpVolume" name="package_value"> 0 </label>
+                            <label class="my-1 mx-1" for="inpVolume"> мм&sup2 </label>
+                        </div>
+
+                    </div>
+                </section>
+
+                <header>
+                    <!-- элемент имеет внутреннее содержимое -->
+                    <div class="flex flex-row justify-between mt-6 mb-1">
+                        <div class="inputBlock mx-1">
+                            <input class="border-1 text-black bg-tr" type="checkbox" id="checkBoxHasContent"
+                                name="checkBoxHasContent">
+                            <label class="label-heading my-1 mx-2" for="checkBoxHasContent"> Внутренние
+                                прямоугольники
+                            </label>
+                        </div>
+                    </div>
+                </header>
+
+                <!-- внутреннее содержимое -->
+                <div class="flex flex-col" style="overflow-y: show;">
+
+                    <section class=:inner_choice>
+                        <!-- блок внутренних прямоугольников -->
+                        <div class="flex flex-row mt-2">
+
+                            <label class="ml-1 my-1" id="sub1"> 1. </label>
+                            <div class="inputBlock mx-2">
+                                <label class="inputLabel" for="inpSizeWx1"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWx1" name="package_wx1" value="4444">
+                                <label class="inputLabel" for="inpSizeWx1"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpSizewY1"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWy1" name="package_wy1">
+                                <label class="inputLabel" for="inpSizewY1"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-2">
+                                <label class="inputLabel" for="1"> </label>
+                                <select class="" id="1" name="package_code">
+                                    <option value=""> Тип </option>
+                                    <!-- Список всех элементов в базе -->
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="flex flex-row mb-3 mt-1">
+
+                            <div class="inputBlock ml-8 mr-2">
+                                <label class="inputLabel" for="inpNy4"> Количество<br>по вертикали </label>
+                                <input class="" size="1" type="text" id="inpNy4" name="package_wx4">
+                                <label class="inputLabel" for="inpNy4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpNx4"> Количество<br>по горизонтали </label>
+                                <input class="" size="1" type="text" id="inpNx4" name="package_wy4">
+                                <label class="inputLabel" for="inpNx4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock-base ml-10">
+                                <label class="my-1 mx-1" for="inpTotal4"> Всего = </label>
+                                <label class="" type="text" id="inpTotal4" name="package_total4"> 0 </label>
+                                <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section>
+                        <!-- блок внутренних прямоугольников -->
+                        <div class="flex flex-row mt-2">
+
+                            <label class="ml-1 my-1" id="sub1"> 2. </label>
+                            <div class="inputBlock mx-2">
+                                <label class="inputLabel" for="inpSizeWx2"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWx2" name="package_wx1">
+                                <label class="inputLabel" for="inpSizeWx2"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpSizewY1"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWy2" name="package_wy1">
+                                <label class="inputLabel" for="inpSizewY1"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-2">
+                                <label class="inputLabel" for="2"> </label>
+                                <select class=" " id="2" name="package_code">
+                                    <option value=""> Тип </option>
+                                    <!-- Список всех элементов в базе -->
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="flex flex-row mb-3 mt-1">
+
+                            <div class="inputBlock ml-8 mr-2">
+                                <label class="inputLabel" for="inpNy4"> Количество<br>по вертикали </label>
+                                <input class="" size="1" type="text" id="inpNy4" name="package_wx4">
+                                <label class="inputLabel" for="inpNy4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpNx4"> Количество<br>по горизонтали </label>
+                                <input class="" size="1" type="text" id="inpNx4" name="package_wy4">
+                                <label class="inputLabel" for="inpNx4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock-base ml-10">
+                                <label class="my-1 mx-1" for="inpTotal4"> Всего = </label>
+                                <label class="" type="text" id="inpTotal4" name="package_total4"> 0 </label>
+                                <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section>
+                        <!-- блок внутренних прямоугольников -->
+                        <div class="flex flex-row mt-2">
+
+                            <label class="ml-1 my-1" id="sub1"> 3. </label>
+                            <div class="inputBlock mx-2">
+                                <label class="inputLabel" for="inpSizeWx3"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWx3" name="package_wx3">
+                                <label class="inputLabel" for="inpSizeWx3"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpSizewY3"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWy3" name="package_wy3">
+                                <label class="inputLabel" for="inpSizewY3"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-2">
+                                <label class="" for="3"> </label>
+                                <select class=" " id="1" name="package_code3">
+                                    <option value=""> Тип </option>
+                                    <!-- Список всех элементов в базе -->
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="flex flex-row mb-3 mt-1">
+
+                            <div class="inputBlock ml-8 mr-2">
+                                <label class="inputLabel" for="inpNy4"> Количество<br>по вертикали </label>
+                                <input class="" size="1" type="text" id="inpNy4" name="package_wx4">
+                                <label class="inputLabel" for="inpNy4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpNx4"> Количество<br>по горизонтали </label>
+                                <input class="" size="1" type="text" id="inpNx4" name="package_wy4">
+                                <label class="inputLabel" for="inpNx4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock-base ml-10">
+                                <label class="my-1 mx-1" for="inpTotal4"> Всего = </label>
+                                <label class="" type="text" id="inpTotal4" name="package_total4"> 0 </label>
+                                <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section>
+                        <!-- блок внутренних прямоугольников -->
+                        <div class="flex flex-row mt-2">
+
+                            <label class="ml-1 my-1" id="sub1"> 4. </label>
+                            <div class="inputBlock mx-2">
+                                <label class="inputLabel" for="inpSizeWx4"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWx4" name="package_wx4">
+                                <label class="inputLabel" for="inpSizeWx4"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpSizewY4"> Ширина </label>
+                                <input class="" size="5" type="text" id="inpSizeWy4" name="package_wy4">
+                                <label class="inputLabel" for="inpSizewY4"> мм </label>
+                            </div>
+
+                            <div class="inputBlock mx-2">
+                                <label class="" for=""> </label>
+                                <select class=" " id="4" name="package_code4">
+                                    <option value=""> Тип </option>
+                                    <!-- Список всех элементов в базе -->
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="flex flex-row mb-2 mt-1">
+
+                            <div class="inputBlock ml-8 mr-2">
+                                <label class="inputLabel" for="inpNy4"> Количество<br>по вертикали </label>
+                                <input class="" size="1" type="text" id="inpNy4" name="package_wx4">
+                                <label class="inputLabel" for="inpNy4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock mx-4">
+                                <label class="inputLabel" for="inpNx4"> Количество<br>по горизонтали </label>
+                                <input class="" size="1" type="text" id="inpNx4" name="package_wy4">
+                                <label class="inputLabel" for="inpNx4"> шт </label>
+                            </div>
+
+                            <div class="inputBlock-base ml-10">
+                                <label class="my-1 mx-1" for="inpTotal4"> Всего = </label>
+                                <label class="" type="text" id="inpTotal4" name="package_total4"> 0 </label>
+                                <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
+                            </div>
+
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="flex flex-row my-1">
+
+                            <div class="inputBlock-base flex flex-grow justify-end items-center mx-2 mt-4">
+                                <label class="inputLabel label-heading my-1 mx-1" for="inpTotal4"> Общее количество
+                                    =
+                                </label>
+                                <label class="inputLabel label-heading" type="text" id="inpTotal4"
+                                    name="package_total4"> 0
+                                </label>
+                                <label class="inputLabel label-heading my-1 mx-1" for="inpTotal4"> шт </label>
+                            </div>
+
+                        </div>
+                    </section>
+
+
+                </div>
+
+            </div>
+            </aside>
+        </div>
+    </main>
+
+
+    <!-- кнопки -->
+    <div class="flex items-end mx-2">
+        <div class="flex flex-row items-end" style="width: 810px">
+        </div>
+        <div class="flex items-center">
+
+            <button class="h-13" id="btnCopy"> Копировать </button>
+            <!-- <button class="bg-tr border border-solid border-black h-6 px-3 py-1 ml-3" id="btnDelete"> Удалить </button> -->
+            <!-- <button class="bg-tr border border-solid border-black h-6 px-3 py-1 ml-3" id="btnAdd"> Добавить </button> -->
+            <button class="h-13" id="btnApply"> Сохранить </button>
+        </div>
+    </div>
+
+    </div>
+
+    <!--скрипты для стилей -->
+
+</body>
+
+<footer>
+</footer>
+
+</html>

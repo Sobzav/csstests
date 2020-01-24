@@ -1,0 +1,131 @@
+@import 'MyFontsWebfontsKit.css';
+@import 'ant/atomic.css';
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+:root {
+    --color-raven: #6B727B;
+    --color-crBrown: #474443;
+    --color-chateauGrey: #97A1AA;
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-tr: transparent;
+}
+
+body, input, select, option, button {
+    font-family: 'CoreSansDS25LightItalic';
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--color-raven);
+}
+
+.gridContainer {
+    display: grid;
+    grid-template-rows: min-content min-content min-content min-content;
+}
+
+label {
+    /* font-family: 'CoreSansDS25Light'; */
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.label-heading {
+    font-family: 'CoreSansDS35RegularItalic';
+    font-size: 1.125rem;
+}
+
+input {
+    align-content: center;
+    border-style: none;
+    font-size: 0.8rem;
+}
+
+select {
+    vertical-align: middle;
+    border-style: none;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+input:-internal-autofill-selected {
+    background-color: var(--color-crBrown) !important;
+}
+
+input, select, option{
+    display: inline-block;
+    vertical-align: middle;
+
+    font-size: 0.8rem;
+    white-space: nowrap;
+    color: var(--color-white);
+    background-color: var(--color-crBrown);
+    box-sizing: border-box;
+    padding-right: 0.5rem;
+    padding-left: 0.25rem;
+    text-align: start;
+}
+
+
+option{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+button{
+
+    text-align: center;
+    color: var(--color-black);
+    background-color: transparent;
+    border: 1px solid var(--color-black);
+    font-size: inherit;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    margin-left: 0.75rem;
+    margin-right: o.75rem;
+}
+
+#{
+    width: 5rem;
+}
+
+#inpCodeEdit{
+    width: 5rem;
+}
+
+#btnEdit{
+    width: 9rem;
+}
+
+.inputLabel{
+    display: inline-block;
+    vertical-align: middle;
+    text-align: end;
+    padding-right: 0.2rem;
+    padding-left: 0.1rem;
+    font-size: 0.85rem;
+}
+
+.inputBlock-top>label, .inputBlock-top>input, .inputBlock-top>select, .inputBlock-top>button{
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.inputBlock-base>label{
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.inputBlock{
+    display: flex;
+    align-items: center;
+    /* vertical-align: middle; */
+    white-space: nowrap;
+}

@@ -1,0 +1,173 @@
+@import 'MyFontsWebfontsKit.css';
+@import 'atomic.css';
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+:root{
+    --color-raven: #6B727B;
+    --color-crBrown: #474443;
+    --color-chateauGrey: #97A1AA;
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-tr: transparent;
+}
+
+body{
+    font-family: 'CoreSansDS25LightItalic';
+    background-color: var(--color-raven);
+    /* overflow-x: hidden; */
+    /* overflow-y: hidden; */
+}
+
+.gridContainer{
+    display: grid;
+    grid-template-rows: min-content min-content min-content min-content;
+}
+
+label{
+    font-family: 'CoreSansDS25LightItalic';
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+.label-heading{
+    font-family: 'CoreSansDS35RegularItalic';
+    font-size: 1.125rem;
+}
+
+input{
+    align-content: center;
+    border-style: none;
+    font-size: 0.8rem;
+}
+
+select{
+    vertical-align: middle;
+    border-style: none;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+input, select, option{
+    display: inline-block;
+    vertical-align: middle;
+    font-family: 'CoreSansDS25LightItalic';
+    font-size: 0.8rem;
+    white-space: nowrap;
+    color: var(--color-white);
+    background-color: var(--color-crBrown);
+    box-sizing: border-box;
+    padding-right: 0.5rem;
+    padding-left: 0.25rem;
+    text-align: start;
+}
+
+option{
+    padding-left: 0;
+    padding-right: 0;
+}
+
+button{
+    font-family: 'CoreSansDS25LightItalic';
+    text-align: center;
+    color: var(--color-black);
+    background-color: transparent;
+    border: 1px solid var(--color-black);
+    font-size: inherit;
+    padding-top: 0;
+    padding-bottom: 0;
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+    margin-left: 0.75rem;
+    margin-right: o.75rem;
+}
+
+
+#inpCode{
+    width: 5rem;
+}
+
+#inpCodeEdit{
+    width: 5rem;
+}
+
+#btnEdit{
+    width: 9rem;
+}
+
+.inputLabel{
+    display: inline-block;
+    vertical-align: middle;
+    text-align: end;
+    padding-right: 0.2rem;
+    padding-left: 0.1rem;
+    font-size: 0.85rem;
+}
+
+.inputBlock-top>label, .inputBlock-top>input, .inputBlock-top>select, .inputBlock-top>button {
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.inputBlock-base>label{
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.inputBlock{
+    display: flex;
+    align-items: center;
+    /* vertical-align: middle; */
+    white-space: nowrap;
+}
+.multyLine {
+    line-height: 0.7rem;
+}
+
+.section-sub__grid {
+    display: grid;
+}
+
+/* .section-sub__grid--5x2 {
+    display: grid;
+    grid-template-columns: minmax(10px, max-content) repeat(2, 150px) repeat(2, 75px);
+    grid-template-rows: auto;
+} */
+
+.section-sub__grid--5x2 > div {
+    /* display: flex; */
+    /* justify-content: center; */
+    /* align-items: center; */
+    color: #ffeead;
+}
+
+
+.section-sub__grid--5x2 {
+    display: grid;
+    max-width: 
+    grid-template-columns: 10px repeat(2, 1fr) repeat(2, 0.6fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 0px;
+    align-items: center;
+    margin-top: 0.5rem;
+}
+
+.nmbr { grid-area: 1 / 1 / 2 / 2; }
+.frst { grid-area: 1 / 2 / 2 / 3; }
+.scnd { grid-area: 1 / 3 / 2 / 4; }
+.thrd { grid-area: 1 / 4 / 2 / 5; }
+.ffth { grid-area: 2 / 2 / 3 / 3; }
+.sxth { grid-area: 2 / 3 / 3 / 4; }
+.svnth{ grid-area: 2 / 5 / 3 / 6; }
+
+.nmbr {
+    padding-right:0;
+}
+
+.first label {
+    /* margin: 0.5rem auto; */
+}
