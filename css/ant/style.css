@@ -1,12 +1,12 @@
-@import 'MyFontsWebfontsKit.css';
+@import '../MyFontsWebfontsKit.css';
 @import 'atomic.css';
 
 * {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
-:root{
+:root {
     --color-raven: #6B727B;
     --color-crBrown: #474443;
     --color-chateauGrey: #97A1AA;
@@ -15,43 +15,45 @@
     --color-tr: transparent;
 }
 
-body{
+body {
     font-family: 'CoreSansDS25LightItalic';
     background-color: var(--color-raven);
     /* overflow-x: hidden; */
     /* overflow-y: hidden; */
 }
 
-.gridContainer{
+.gridContainer {
     display: grid;
     grid-template-rows: min-content min-content min-content min-content;
 }
 
-label{
+label {
     font-family: 'CoreSansDS25LightItalic';
-    font-size: 0.8rem;
+    font-size: 0.85rem;
     white-space: nowrap;
 }
 
-.label-heading{
+.label-heading {
     font-family: 'CoreSansDS35RegularItalic';
     font-size: 1.125rem;
 }
 
-input{
+input {
     align-content: center;
     border-style: none;
     font-size: 0.8rem;
 }
 
-select{
+select {
     vertical-align: middle;
     border-style: none;
     text-align: center;
     font-size: 0.8rem;
 }
 
-input, select, option{
+input,
+select,
+option {
     display: inline-block;
     vertical-align: middle;
     font-family: 'CoreSansDS25LightItalic';
@@ -65,12 +67,12 @@ input, select, option{
     text-align: start;
 }
 
-option{
+option {
     padding-left: 0;
     padding-right: 0;
 }
 
-button{
+button {
     font-family: 'CoreSansDS25LightItalic';
     text-align: center;
     color: var(--color-black);
@@ -86,19 +88,19 @@ button{
 }
 
 
-#inpCode{
+#selCode {
     width: 5rem;
 }
 
-#inpCodeEdit{
+#inpCodeEdit {
     width: 5rem;
 }
 
-#btnEdit{
+#btnEdit {
     width: 9rem;
 }
 
-.inputLabel{
+.inputLabel {
     display: inline-block;
     vertical-align: middle;
     text-align: end;
@@ -107,67 +109,110 @@ button{
     font-size: 0.85rem;
 }
 
-.inputBlock-top>label, .inputBlock-top>input, .inputBlock-top>select, .inputBlock-top>button {
+.inputBlock-top>label,
+.inputBlock-top>input,
+.inputBlock-top>select,
+.inputBlock-top>button {
     font-size: 0.95rem;
     white-space: nowrap;
 }
 
-.inputBlock-base>label{
+.inputBlock-base>label {
     font-size: 0.95rem;
     white-space: nowrap;
 }
 
-.inputBlock{
+.inputBlock {
     display: flex;
     align-items: center;
     /* vertical-align: middle; */
     white-space: nowrap;
 }
+
 .multyLine {
-    line-height: 0.7rem;
+    line-height: 0.75rem;
 }
 
 .section-sub__grid {
     display: grid;
 }
 
-/* .section-sub__grid--5x2 {
-    display: grid;
-    grid-template-columns: minmax(10px, max-content) repeat(2, 150px) repeat(2, 75px);
-    grid-template-rows: auto;
-} */
-
-.section-sub__grid--5x2 > div {
-    /* display: flex; */
-    /* justify-content: center; */
-    /* align-items: center; */
-    color: #ffeead;
+.section-sub__grid--5x2>div {
+    display: flex;
 }
 
-
+/* Настройка grid для секции sub Ширина-Высота-количество */
 .section-sub__grid--5x2 {
     display: grid;
-    max-width: 
-    grid-template-columns: 10px repeat(2, 1fr) repeat(2, 0.6fr);
+    max-width: 459px;
+    grid-template-columns: min-content 150px 156px 66px 1fr;
     grid-template-rows: repeat(2, 1fr);
-    grid-column-gap: 10px;
-    grid-row-gap: 0px;
+    grid-column-gap: 0;
+    grid-row-gap: 0.3rem;
     align-items: center;
     margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
 }
 
-.nmbr { grid-area: 1 / 1 / 2 / 2; }
-.frst { grid-area: 1 / 2 / 2 / 3; }
-.scnd { grid-area: 1 / 3 / 2 / 4; }
-.thrd { grid-area: 1 / 4 / 2 / 5; }
-.ffth { grid-area: 2 / 2 / 3 / 3; }
-.sxth { grid-area: 2 / 3 / 3 / 4; }
-.svnth{ grid-area: 2 / 5 / 3 / 6; }
+/* padding для всех labels в секции  */
+.section-sub__grid--5x2 label {
+    padding-right: 0.2rem;
+    padding-left: 0.1rem;
 
+}
+/* Нулевой блок Грида - цифра */
 .nmbr {
-    padding-right:0;
+    grid-area: 1 / 1 / 2 / 2;
+    justify-self: left;
+}
+/* Первый блок - Ширина */
+.frst {
+    grid-area: 1 / 2 / 2 / 3;
+    justify-self: left;
+    padding-left: 0.2rem;
+}
+/* Второй блок - Высота */
+.scnd {
+    grid-area: 1 / 3 / 2 / 4;
+    justify-self: center;
+}
+/* Третий блок - Select */
+.thrd {
+    grid-area: 1 / 4 / 2 / 5;
+    justify-self: right;
+}
+/* Пятый блок - Количество по вертикали */
+.ffth {
+    grid-area: 2 / 2 / 3 / 3;
+}
+/* Шестой блок - Количество по горизонтали - занимает 2 ячейки*/
+.sxth {
+    grid-area: 2 / 3 / 3 / 5;
+    justify-self: center;
+}
+/* Седьмой блок - Всего */
+.svnth {
+    grid-area: 2 / 5 / 3 / 6;
+}
+/* Двухстрочные Labels по центру блока, ориентация текста по правой стороне*/
+.ffth, .sxth {
+    align-items: center;
+    line-height: 0.75rem;
+    text-align: end;
+}
+/* Выравнивание блоков по центру между соседними */
+.scnd, .sxth {
+    padding-right: 11px;
+}
+/* Ориентация по правой стороне (вторая и последняя ячейка во сторой строке) */
+.ffth, .svnth {
+    justify-self: end;
 }
 
-.first label {
-    /* margin: 0.5rem auto; */
+.svnth label {
+    font-size: 0.95rem;
+}
+/* класс для увеличенной разрядки букв для текста ВСЕГО */
+.summ {
+    letter-spacing: .03rem;
 }

@@ -16,7 +16,7 @@ function shadeColor (color = "#000000", percent = 0) {
        (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + 
        (B < 255 ? B < 1 ? 0 : B : 255)).toString (16).slice (1));
     return new_color;
- }
+}
 
 
 // Класс PackageSimple
@@ -1411,4 +1411,3 @@ window.addEventListener("load", () => {
     }
 
 });
-  
