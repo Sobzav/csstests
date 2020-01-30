@@ -16,26 +16,139 @@
 }
 
 body {
-    font-family: 'CoreSansDS25LightItalic';
+    font-family: 'CoreSansDS25Light';
     background-color: var(--color-raven);
-    /* overflow-x: hidden; */
-    /* overflow-y: hidden; */
+    /* background-color: var(--color-crBrown); */
 }
 
+/* GRID-Контейнер для всего содержимого страницы */
 .gridContainer {
     display: grid;
-    grid-template-rows: min-content min-content min-content min-content;
+    /* background-color: var(--color-raven); */
+    margin: 0 0.5rem;
+    width: max-content;
+    grid-template-columns: repeat(2, min-content);
+    grid-template-rows: repeat(5, min-content);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+.header-top {
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+.section__main {
+    display: flex;
+    grid-area: 2 / 1 / 3 / 3;
+}
+
+.item-1 {
+    display: grid;
+    grid-area: 3 / 1 / 4 / 2;
+}
+
+.item-2 {
+    display: grid;
+    grid-area: 3 / 2 / 4 / 3;
+}
+
+.bottom-block__buttons {
+    display: flex;
+    grid-area: 4 / 1 / 5 / 3;
+    width: 100%;
+}
+
+.status-bar {
+    display: grid;
+    grid-area: 5 / 1 / 6 / 3;
+}
+/* MAIN: If убрать "display: flex;"=> оно станет "block" => отображение для мобильных - в один столбец */
+main {
+    display: flex;  
+    flex-direction: row;
+    padding: 0.75rem 0.25rem 0.25rem;
+}
+/* section__main - зазор от краев экрана с помощью padding */
+section.section__main {
+    margin: 0.25rem 0 0 0;
+    width: 100%;
+    padding: 0 0.5rem;
+}
+
+
+/* Растягивающийся input */
+.input-flex {
+    display: flex;
+    flex: 1 0 auto;
+}
+
+.input-flex label {
+    flex: 0 0 100px;
+    display: block;
+}
+
+.input-flex input {
+    flex: 1 0 auto;
+}
+
+/* Левая панель с канвасом */
+.item-1 {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    /* margin: 1.25rem 0.75rem 1.25rem 0; */
+    margin: 0.5rem 0.85rem 0.5rem 0;
+    padding: 1.5rem;
+    border-width: 1px;
+    border-style: dotted;
+    background-color: #97A1AA;
+    border-color: #F3FDBD;
+}
+
+.item-1 canvas {
+    width: 500px;
+    height: 500px;
+    object-fit: contain;
+    border-width: 1px;
+    border-style: dotted;
+    border-color: #F3FDBD;
+}
+
+/* Правая панель с размерами */
+.item-2 {
+    padding: 0.25rem;
+    flex-direction: column;
+    display: flex;
+}
+
+/* Верх правой панели с вводом высоты ширины и глцбины */
+.section-general {
+    margin: 0 0.5rem;
+    margin-top: 0.75rem;
+    flex-direction: row;
+    font-size: .875rem;
+    display: flex;
+}
+
+/* TOP - Панель с заголовком */
+.gridContainer header.header-top {
+    padding: 0.5rem;
+    justify-content: center;
+    border-bottom: 1px dotted #F3FDBD;
+    display: flex;
 }
 
 label {
-    font-family: 'CoreSansDS25LightItalic';
+    font-family: 'CoreSansDS25Light';
     font-size: 0.85rem;
     white-space: nowrap;
 }
 
-.label-heading {
-    font-family: 'CoreSansDS35RegularItalic';
+.label-heading,
+.gridContainer header.header-top {
+    font-family: 'CoreSansDS35Regular';
     font-size: 1.125rem;
+    display: flex;
 }
 
 input {
@@ -56,7 +169,7 @@ select,
 option {
     display: inline-block;
     vertical-align: middle;
-    font-family: 'CoreSansDS25LightItalic';
+    font-family: 'CoreSansDS25Light';
     font-size: 0.8rem;
     white-space: nowrap;
     color: var(--color-white);
@@ -67,29 +180,31 @@ option {
     text-align: start;
 }
 
+input,
+select,
+option {
+    margin: 0 0 0 0.2rem;
+}
+
 option {
     padding-left: 0;
     padding-right: 0;
 }
 
 button {
-    font-family: 'CoreSansDS25LightItalic';
+    font-family: 'CoreSansDS25Light';
     text-align: center;
     color: var(--color-black);
     background-color: transparent;
     border: 1px solid var(--color-black);
     font-size: inherit;
-    padding-top: 0;
-    padding-bottom: 0;
-    padding-right: 0.75rem;
-    padding-left: 0.75rem;
-    margin-left: 0.75rem;
-    margin-right: o.75rem;
+    padding: 0 0.75rem;
+    margin: 0 0.75rem;
 }
 
 
 #selCode {
-    width: 5rem;
+    width: 6em;
 }
 
 #inpCodeEdit {
@@ -133,23 +248,127 @@ button {
     line-height: 0.75rem;
 }
 
+
+
+section.section__main div {
+    /* padding: 0 0.75rem; */
+}
+
+section.section__main div:nth-child(2) {
+    margin: 0 1.5rem;
+}
+/* Ширина первого Select в Top-панели выбора Типа */
+/* section.section__main>div>select {
+    width: 6em;
+} */
+/* Ширина первого Select в Top-панели выбора Типа */
+.select-type {
+    width: 6em;
+}
+
+.section__main select,
+.section__main input {
+    height: 1.25rem;
+    font-size: 0.95rem;
+    white-space: nowrap;
+}
+
+.section__main button,
+.section__main div:last-child {
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.section__main button {
+    padding: 0;
+    margin-left: 0.75rem;
+}
+
+.section__main div label {
+    font-family: 'CoreSansDS35Regular';
+    font-size: 0.95rem;
+    vertical-align: middle;
+    text-align: end;
+    padding: 0 0.1rem;
+}
+
+.section-general__grid,
 .section-sub__grid {
     display: grid;
 }
 
-.section-sub__grid--5x2>div {
+.section-sub__grid--5x2>div,
+.section-general__grid--3x2>div {
     display: flex;
+    align-items: center;
 }
 
-/* Настройка grid для секции sub Ширина-Высота-количество */
+/* ================================================================== */
+/* Настройка grid 3x2 для правой секции general Ширина-Высота-Глубина */
+/* ================================================================== */
+.section-general__grid {
+    display: grid;
+}
+
+.section-general__grid--3x2>div {
+    margin: 0 0.5rem;
+}
+
+
+.section-general__grid--3x2 {
+    display: grid;
+    min-width: 459px;
+    grid-template-columns: repeat(3, min-content);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 0;
+    grid-row-gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.section-general__grid--3x2 .frst {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.section-general__grid--3x2 .scnd {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.section-general__grid--3x2 .thrd {
+    grid-area: 1 / 3 / 2 / 4;
+}
+
+.section-general__grid--3x2 .frth {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.section-general__grid--3x2 .ffth {
+    grid-area: 2 / 2 / 3 / 3;
+}
+
+.section-general__grid--3x2 .sxth {
+    grid-area: 2 / 3 / 3 / 4;
+}
+
+.section-general__grid--3x2 label {
+    padding-right: 0.2rem;
+    padding-left: 0.1rem;
+}
+
+.section-general__grid--3x2 input {
+    height: 1.1rem;
+}
+
+
+/* ================================================================= */
+/* Настройка grid 5x2 для правой секции sub Ширина-Высота-количество */
+/* ================================================================= */
 .section-sub__grid--5x2 {
     display: grid;
-    max-width: 459px;
-    grid-template-columns: min-content 150px 156px 66px 1fr;
+    grid-template-columns: repeat(5, min-content);
     grid-template-rows: repeat(2, 1fr);
     grid-column-gap: 0;
     grid-row-gap: 0.3rem;
-    align-items: center;
     margin-top: 0.5rem;
     margin-bottom: 0.75rem;
 }
@@ -158,61 +377,90 @@ button {
 .section-sub__grid--5x2 label {
     padding-right: 0.2rem;
     padding-left: 0.1rem;
-
 }
-/* Нулевой блок Грида - цифра */
-.nmbr {
+
+/* Нулевой блок Грида 5x2 - цифра */
+.section-sub__grid--5x2__nmbr {
     grid-area: 1 / 1 / 2 / 2;
     justify-self: left;
 }
+
 /* Первый блок - Ширина */
-.frst {
+.section-sub__grid--5x2 .frst {
     grid-area: 1 / 2 / 2 / 3;
     justify-self: left;
     padding-left: 0.2rem;
 }
+
 /* Второй блок - Высота */
-.scnd {
+.section-sub__grid--5x2 .scnd {
     grid-area: 1 / 3 / 2 / 4;
     justify-self: center;
 }
+
 /* Третий блок - Select */
-.thrd {
+.section-sub__grid--5x2 .thrd {
     grid-area: 1 / 4 / 2 / 5;
     justify-self: right;
 }
-/* Пятый блок - Количество по вертикали */
-.ffth {
+
+.section-sub__grid--5x2 select {
+    width: 6em;
+}
+
+/* Четвертый блок - Количество по вертикали */
+.section-sub__grid--5x2 .frth {
     grid-area: 2 / 2 / 3 / 3;
 }
-/* Шестой блок - Количество по горизонтали - занимает 2 ячейки*/
-.sxth {
+
+/* Пятый блок - Количество по горизонтали - занимает 2 ячейки */
+.section-sub__grid--5x2 .ffth {
     grid-area: 2 / 3 / 3 / 5;
     justify-self: center;
 }
-/* Седьмой блок - Всего */
-.svnth {
+
+/* Шестой блок - Всего */
+.section-sub__grid--5x2 .sxth {
     grid-area: 2 / 5 / 3 / 6;
 }
+
 /* Двухстрочные Labels по центру блока, ориентация текста по правой стороне*/
-.ffth, .sxth {
+.section-sub__grid--5x2 .frth,
+.section-sub__grid--5x2 .ffth {
     align-items: center;
     line-height: 0.75rem;
     text-align: end;
 }
+
 /* Выравнивание блоков по центру между соседними */
-.scnd, .sxth {
+.section-sub__grid--5x2 .scnd,
+.section-sub__grid--5x2 .ffth {
     padding-right: 11px;
 }
+
 /* Ориентация по правой стороне (вторая и последняя ячейка во сторой строке) */
-.ffth, .svnth {
+.section-sub__grid--5x2 .frth,
+.section-sub__grid--5x2 .sxth {
     justify-self: end;
 }
 
-.svnth label {
+.section-sub__grid--5x2 .sxth label {
     font-size: 0.95rem;
 }
+
 /* класс для увеличенной разрядки букв для текста ВСЕГО */
-.summ {
+.section-sub__grid--5x2 .summ {
     letter-spacing: .03rem;
 }
+
+/* Кнопки внизу страницы - по правой стороне */
+.bottom-block__buttons {
+    justify-content: flex-end;
+}
+
+.bottom-block__buttons button.button-right {
+    margin: 0 0 0 1.5rem;
+}
+
+/* Статус-бар */
+.status-bar {}

@@ -24,7 +24,7 @@ SELECT
     package.created,
     package.updated,
     package.deleted,
-	material.name as material_name 
+	material.name as material_name
 FROM
 	package
 LEFT JOIN
@@ -39,7 +39,7 @@ ON (
     package.photo_id = package_photo.id OR
     package.photo_id = NULL
 )
-ORDER BY package.id;
+ORDER BY package.code;
 ";
 
 // print_r ($query);
@@ -57,6 +57,70 @@ if ($result = $mySqli->query($query)) {
 
     $json = array();
     while($row = $result->fetch_array(MYSQLI_ASSOC)){
+
+        // получаем id текущего элемента
+        $id = $row['id'];
+
+        // Фозмируем запрос SELECT для получения внутренних элементов
+        $query = " 
+            SELECT
+                place_prototype.sub_package_id,
+                place_prototype.row,
+                place_prototype.col,
+                package.code,
+                package.name,
+                package.material_id,
+                package.photo_id,
+                package.payload,
+                package.h,
+                package.wx,
+                package.wy,
+                package.color,
+                package.created,
+                package.updated,
+                package.deleted,
+                material.name as material_name
+            FROM
+                place_prototype
+            LEFT JOIN
+                package 
+            ON (
+                package.id = place_prototype.sub_package_id OR
+                package.id = null
+            )
+            LEFT JOIN
+                material 
+            ON (
+                package.material_id = material.id OR
+                package.material_id = null
+            )
+            WHERE place_prototype.package_id = $id
+            ORDER BY
+                place_prototype.row,
+                place_prototype.col;
+        ";
+
+        // если внутренние элементы есть
+        if ($subRows = $mySqli->query($query)) {
+
+            $subItem = array();
+
+            // перебираем их поштучно
+            while($subRow = $subRows->fetch_array(MYSQLI_ASSOC)){
+
+                // и каждый кладем в массив
+                $subItem[] = $subRow;
+            }
+
+            // добавляем массив внутренних элементов к текущей записи
+            // их количество больше 0 
+            if (count($subItem) > 0) {
+
+                $row["subItem"] = $subItem;
+            }
+        }
+
+        // добавляем текщую запись к результирующему массиву
         $json[] = $row;
     }
 
