@@ -5,18 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="css/ant/reset.css">
-    <!-- <link rel="stylesheet" href="css/ant/sstyle-orig.css"> -->
     <link rel="stylesheet" href="css/ant/style.css">
-    <link rel="stylesheet" href="css/ant/modal.css">
-    <!-- <link rel="stylesheet" href="http://10.30.50.10/webapp/css/style.css"> -->
-    <link rel="stylesheet" href="css/fonts.css">
+    <!-- <link rel="stylesheet" href="css/fonts.css"> -->
     <link rel="apple-touch-icon" href="icon.png">
     <title> Упаковка </title>
 </head>
 
 <body class="">
-
 
     <!-- корневой контейнер формы -->
     <div class="gridContainer">
@@ -88,29 +83,29 @@
 
                             <div class="frst">
                                 <label class="" for="sizeWx"> Ширина </label>
-                                <input class="mainInput" size="5" type="text" id="inpSizeWx" name="package_wx">
+                                <input class="mainInput" size="5" type="text" min="2" max="20" pattern="[0-9]+" id="inpSizeWx" name="package_wx" required>
                                 <label class="" for="sizeWx"> мм </label>
                             </div>
 
                             <div class="scnd">
                                 <label class="" for="sizeWy"> Высота </label>
-                                <input class="mainInput" size="5" type="text" id="inpSizeWy" name="package_wy">
+                                <input class="mainInput" size="5" type="text" id="inpSizeWy" name="package_wy" required>
                                 <label class="" for="sizeWy"> мм </label>
                             </div>
 
                             <div class="thrd">
                                 <label class="" for="sizeH"> Глубина </label>
-                                <input class="mainInput" size="5" type="text" id="inpSizeH" name="package_h">
+                                <input class="mainInput" size="5" type="text" id="inpSizeH" name="package_h" required>
                                 <label class="" for="sizeH"> мм </label>
                             </div>
                             <div class="frth">
                                 <label class="" for="color"> Цвет: </label>
-                                <input class="mainInput" type="color" id="inpColor" name="package_color">
+                                <input class="mainInput" type="color" id="inpColor" name="package_color" required>
                             </div>
 
                             <div class="ffth">
                                 <label class="hidden" for="inpPayload"> Грузоподьемность, гр </label>
-                                <input class="hidden mainInput" size="6" type="text" id="inpPayload" name="package_payload">
+                                <input class="hidden mainInput" size="6" type="text" id="inpPayload" name="package_payload" required>
                             </div>
 
                             <div class="sxth">
@@ -226,8 +221,11 @@
     <!--скрипты для стилей -->
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery.validate.js"></script>
-    <!-- <script src="js/main.js"></script> -->
-    <script src="http://10.30.50.10/webapp/package/main.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/package.js"></script>
+    <script src="js/subblock.js"></script>
+    <script src="js/main.js"></script>
+    <!-- <script src="http://10.30.50.10/webapp/package/main.js"></script> -->
 
 </body>
 

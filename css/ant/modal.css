@@ -4,7 +4,7 @@
 
 /* Контейнер - блокиратор основной страницы под модальным окном */
 .dialog-modal {
-    /*display: none; /* - по умолчанию none */
+    display: none; /* - по умолчанию none */
     position: absolute;    /* Stay in place */
     z-index: 100;     /* Sit on top */
     left: 0;

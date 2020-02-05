@@ -1,5 +1,9 @@
+@import 'reset.css';
 @import '../MyFontsWebfontsKit.css';
 @import 'atomic.css';
+@import 'modal.css';
+@import 'forms.css';
+
 
 * {
     margin: 0;
@@ -162,7 +166,7 @@ header.header-top div {
 
 label {
     font-family: 'CoreSansDS25Light';
-    font-size: 0.85rem;
+    /* font-size: 0.85rem; */
     white-space: nowrap;
 }
 
@@ -191,21 +195,7 @@ select {
     font-size: 0.8rem;
 }
 
-input,
-select,
-option {
-    display: inline-block;
-    vertical-align: middle;
-    font-family: 'CoreSansDS25Light';
-    font-size: 0.8rem;
-    white-space: nowrap;
-    color: var(--color-white);
-    background-color: var(--color-crBrown);
-    box-sizing: border-box;
-    padding: 0 0.5rem 0 0.25rem;
-    text-align: start;
-    margin: 0 0.2rem;
-}
+/* Здесь был input  */
 
 option {
     padding-left: 0;
@@ -379,7 +369,7 @@ section.section__main div:nth-child(2) {
 .ffth { order:2; } */
 
 .section-general__grid--3x2 input {
-    height: 1.1rem;
+    /* height: 1.1rem; */
 }
 
 .section-general__grid--3x2 .frth {

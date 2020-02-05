@@ -9,684 +9,6 @@
 var logLevel = 1;
 
 
-function logOut(message, ...optionalParams) {
-    if (logLevel === 0) {
-        return false;
-    } else {
-
-        if (optionalParams.length == 0) {
-
-            console.log(message);
-        } else {
-
-            console.log(message, optionalParams);
-        }
-    }
-}
-
-
-
-// функция осветляет или затемняет цвет в парамеетре color,
-// переданный в формате #rrggbb
-// на велдечину percent, переданную в процентах 
-function shadeColor (color = "#000000", percent = 0) {
-    var num = parseInt (color.slice(1), 16); 
-    var amt = Math.round(2.55 * percent);
-    var R = (num >> 16) + amt;
-    var G = (num >> 8 & 0x00FF) + amt;
-    var B = (num & 0x0000FF) + amt;
-    var new_color = ("#" + (0x1000000 + 
-       (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + 
-       (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + 
-       (B < 255 ? B < 1 ? 0 : B : 255)).toString (16).slice (1));
-    return new_color;
- }
-
-
-// Класс PackageSimple
-// место хранения, простого типа, состоящее из одного элементарного элемента 
-class PackageSimple {
-
-    //_id;            // id экземпляра упаковки в базе данных
-    //_code;          // обозначение
-    //_name;          // наименование экземпляра упаковки 
-    // _material;      // название материала из которого сделана упаковка
-    // _payload;       // id линии
-    // _h;             // высота элемента
-    // _wx;            // размер элемента в гортзонтальной плоскости по оси x
-    // _wy;            // резмер элемента в гортзонтальной плоскости по оси y
-    // width;          //
-    // height;      
-    // _color;         // цвет элемента (по умолчанию #202020)
-    
-    // _yScale;        // масштаб по вертикали
-    // _xScale;        // масштаб пл горизонтали
-    // _scale;         // масштаб отображения на canvas
-    // _d;             // отступ от края canvas в частях от размера canvas
-    // _dI;            // коэффициент для размеров элемента учитывающий отступ
-    // _dC;            // коэффициент для расчета масштаба учитывающий отступ
-
-    // статуса ВЫБРАН / НЕ ВЫБРАН 
-    // _selected;
-
-    // объект canvas на котором элемент будет отображен
-    // _canvas;
-
-    // получаем 2d контекст, 
-    // это объект для вывода всей графики 
-    // _ctx;
-
-    // Создаем элемент
-    constructor(id = 0, canvas) {
-        logOut("class PackageSimple.constructor { id=" + id);
-        
-        this._hidden = true;
-        
-        this._id = id;
-
-        this._color = '#202020';        // цвет элемента (по умолчанию #202020)
-
-        this._selectedColor = shadeColor(this._color, 20);
-
-        this._yScale = 1;     // масштаб по вертикали
-        this._xScale = 1;     // масштаб пл горизонтали
-        this._scale = 1;     // масштаб отображения на canvas
-        this._pd = 1;       // внутренний отступ в px
-        this._d = 1.0;       // внешний отступ (1 - без отсьупа, 1.01 - отступ в 1%)
-
-        this._border = 1;
-        this._borderColor = "#505050";
-        
-        // статуса ВЫБРАН / НЕ ВЫБРАН 
-        this._selected = false;
-        
-        // объект canvas на котором элемент будет отображен
-        this.canvas = canvas;
-
-        // если true то элемент был изменен
-        this._changed = false;
-
-        logOut("class PackageSimple.constructor }");
-    }
-
-
-    set id(value) {this._id = value;}
-
-    get id() {return this._id;}
-
-
-    set code(value) {this._code = value;}
-
-    get code() {return this._code;}
-
-
-    set name(value) {this._name = value;}
-
-    get name() {return this._name;}
-
-
-    set material(value) {this._material = value;}
-
-    get material() {return this._material;}
-
-
-    set payload(value) {this._payload = value;}
-
-    get payload() {return this._payload;}
-
-
-    set wx(value) {
-        this._dispW = value;
-        this.setSize(value, this._wy, this._h, true);}
-        
-    get wx() {return this._wx;}
-        
-        
-    set wy(value) {
-        this._dispH = value;
-        this.setSize(this._wx, value, this._h, true);}
-    
-    get wy() {return this._wy;}
-    
-    
-    set h(value) {this.setSize(this._wx, this._wy, value, true);}
-
-    get h() {return this._h;}
-
-
-    set x(value) {this._x = value;}
-
-    get x() {return this._x;}
-
-
-    set y(value) {this._y = value;}
-
-    get y() {return this._y;}
-
-
-    set dispW(value) {
-        this._dispW = value;
-        this.setSize(this._wx, this._wy, this._h, true);}
-
-    get dispW() {return this._dispW;}
-
-
-    set dispH(value) {
-        this._dispH = value;
-        this.setSize(this._wx, this._wy, this._h, true);}
-
-    get dispH() {return this.dispH;}
-
-
-    set scale(value) {this._scale = value;}
-
-    get scale() {return this._scale;}
-
-
-    set selected(value) {this.setSelected(value)}
-
-    get selected() {return this._selected;}
-
-
-    set canvas(value) {
-        this._canvas = value;
-                
-        // получаем 2d контекст, 
-        // это объект для вывода всей графики 
-        this._ctx = this._canvas.getContext('2d');
-
-        if (!this._hidden) {this.draw();}
-    }
-
-    get canvas() {return this._canvas;}
-
-
-    set color(color) {
-        logOut("class PackageSimple.set color { color=" + color);
-
-        if (!this._hidden) {this.clear();}
-
-        this._color = color;
-        this._selectedColor = shadeColor(color, 20);
-
-        if (!this._hidden) {this.draw();}
-
-        logOut("class PackageSimple.set color }");
-    }
-
-    get color() {
-        return this._color;
-    }
-
-
-    set changed(value) {this._changed = value;}
-
-    get changed() {return this._changed;}
-
-
-    // изменение размеров элемента
-    setSize(
-        wx = 0, // размер элемента по горизонтали по оси y
-        wy = 0, // размер элемента по горизонтали по оси x
-        h = 0,   // высота элемента
-        force = false) {
-
-        logOut("class PackageSimple.setSize { wx=%o; wy=%o; wh=%o; force=%o", wx, wy, h, force);
-        
-        // если размеры элемента изменились
-        if ((this._wx != wx) || (this._wy != wy) || (this._h != h) || force) {
-
-            // стираем элемент в текущих размерах и позиции
-            if (!this._hidden) {this.clear();}
-
-            // сохраняем новые значения размеров
-            this._wx = wx;
-            this._wy = wy;
-            this._h = h;
-                     
-
-            // рисуем элемент в новых размерах и позиции
-            if (!this._hidden) {this.draw();}
-
-            logOut("class pack.setSize id=" + this._id + " wx=" + this._wx  + " wy=" + this._wy + " h=" + this._h);
-        }
-        logOut("class PackageSimple.setSize }");
-    }
-
-
-    // Стираем ячейку на <canvas>
-    clear() {
-        this._ctx.save();
-        this._ctx.scale(1/this._scale, 1/this._scale);
-
-        this._ctx.clearRect(0, 0, this._wx, this._wy);
-
-        this._ctx.restore();
-    }
-
-
-    // делаем элемент не видимым
-    hide() {
-        if (!this._hidden) {
-
-            this._hidden = true;
-            
-            // рисуем элемент
-            this.clear();
-        }
-    }
-
-
-    // делаем элемент видимым
-    show() {
-        this._hidden = false;
-        
-        // рисуем элемент
-        this.draw();
-    }
-
-
-    // Рисуем ячйку на <canvas>
-    draw(color = this._color) {
-
-        if (!this._hidden) {
-
-            // logOut("class PackageSimple.draw{ id=" + this._id);
-
-            // this.ctx.fillRect(this.x, this.y, this.width, this.height);
-            this.drawCube(
-                this._x,
-                this._y,
-                this._wx, 
-                this._wy, 
-                this._h, 
-                color,
-                this._ctx,
-                this._scale
-            );
-
-            // requestAnimationFrame(this.draw);
-
-            // logOut("class PackageSimple.draw }");
-        }
-    }
-
-
-    // перерисуем ячейку на <canvas>
-    reDraw(color = this._color) {
-        if (!this._hidden) {
-
-            this.clear();
-            this.draw(color);
-        }
-    }
-
-
-    // изменение и запоминание статуса ВЫБРАН / НЕ ВЫБРАН 
-    // усли colored = true то элемент подсетит себя затемнением своего цвета
-    setSelected(selected, colored = false) {
-        logOut("class PackageSimple.setSelected { id=" + this._id + " selected = " + selected);    
-
-        // запоминаем новое состояние
-        this._selected = selected;
-
-
-        // если colored = true
-        // элемент должен подсветить себя когда выбран
-        if (colored) {
-            if (this._selected) {
-                // если новый статус "ВЫБРАН"
-                
-                    // выделенный элемент подсвечивает себя цветом
-                    this.reDraw(this._selectedColor);                
-            } else {
-                // если новый статус "НЕ ВЫБРАН"
-                
-                    // перерисовываем елемент в нормальном цвете
-                    this.reDraw();                
-            }
-        } else {
-            this.reDraw();
-        }
-        
-        logOut("class PackageSimple.setSelected }");    
-    }
-
-
-    // обрабатываем клики мышью
-    onClick(clickX, clickY) {
-
-        // приводим координаты мыши в клиентской области <canvas>
-        // к текущему масштабированию
-        clickX = clickX * this._scale * 2;
-        clickY = clickY * this._scale * 2;
-
-        logOut("class PackageSimple.onClick { ", clickX, clickY, this._x, this._y, this._wx, this._wy);    
-        // проверяем попадает ли клик мыши по горизонтали в ширину ячейки
-        let xClickInside = (clickX > this._x) && (clickX < (this._x + this._wx));
-
-        // проверяем попадает ли по вертикали клик мыши в высоту ячейки
-        let yClickInside = (clickY > this._y) && (clickY < (this._y + this._wy));
-
-        // передаем попадание клика в ячейку
-        // для изменения и запоминания нового статуса "ВЫБРАН"
-        if (xClickInside && yClickInside) {
-            logOut("class PackageSimple.onClick - clicked");    
-
-            this.setSelected(!(this._selected), true);
-        } else {
-            logOut("class PackageSimple.onClick - click outside");    
-        }
-    }
-    
-    // onTouchend(e) { // обрабатываем касания пальцем
-    //     var ex = (e.touches[0].pageX - this.canvas.offsetLeft) | 0;
-    //     var ey = (e.touches[0].pageY - this.canvas.offsetTop) | 0;
-    //     // event(x, y);
-    // }
-    
-    
-    // рисуем прямоугольник на <canvas.context>
-    drawCube(x, y, wx, wy, h, color, ctx, scale) {
-
-        ctx.save();
-        ctx.scale(1/scale, 1/scale);
-
-        ctx.fillStyle = color;
-        
-        ctx.fillRect(x + this._pd, y + this._pd, wx - this._pd * 2, wy - this._pd * 2);
-        
-        // if (this._border > 0) {
-        //     ctx.lineWidth = this._border;
-        //     ctx.strokeStyle = this._borderColor;
-
-        //     ctx.strokeRect(x, y, wx, wy);
-        // }
-
-        ctx.restore();
-    }
-}
-
-
-
-
-
-// Класс PackageContainer
-// один блок места хранения, составного типа
-// содержит в себе только однотипные элементарные элементы.
-// расположенные в пронумерованных рядах, и столбцах
-// количество рядов хранится в свойстве rowCount
-// количество столбцов в свойстве colCount
-class PackageContainerItem extends PackageSimple {
-
-    // _rowCount;
-    // _colCount;
-
-    // если true, то разрешено выделение больше одного элемента
-    // _multiselect = false;
-
-    // Создаем элемент
-    constructor(id, canvas) {
-
-        // вызов конструктора родителя
-        super(id, canvas);
-
-        this.item = [[]];
-
-        // зазор между вертикальными рядами
-        this._mx = 0;
-
-        // зазор между горизонтальными рядами
-        this._my = 0;
-
-        // внутренний отступ в px
-        this._pd = 0;
-
-        this._border = 0;
-
-        // размер прямоугольника в котором будет нарисован элемент
-        this._dispW = canvas.width;
-        this._dispH = canvas.height;
-    }
-
-
-    set wx(value) {this.setSize(value, this._wy, this._h, true);}
-        
-    get wx() {return this._wx;}
-        
-        
-    set wy(value) {this.setSize(this._wx, value, this._h, true);}
-    
-    get wy() {return this._wy;}
-    
-    
-    set h(value) {this.setSize(this._wx, this._wy, value, true);}
-
-    get h() {return this._h;}
-
-
-    set dispW(value) {
-        this._dispW = value;
-        this.setSize(this._wx, this._wy, this._h, true);}
-
-    get dispW() {return this._dispW;}
-
-
-    set dispH(value) {
-        this._dispH = value;
-        this.setSize(this._wx, this._wy, this._h, true);}
-
-    get dispH() {return this.dispH;}
-
-
-    /**
-     * @param {number} rowCount
-     */
-    set rowCount(value) {
-        this._rowCount = value;
-    }
-
-    get rowCount() {
-        return this._rowCount;
-    }
-
-
-    /**
-     * @param {number} colCount
-     */
-    set colCount(value) {
-        this._colCount = value;
-    }
-
-    get colCount() {
-        return this._colCount;
-    }
-
-
-    /**
-     * @param {boolean} multiselect
-     */
-    set multiselect(value) {
-        this._multiselect = value;
-    } 
-
-    get multiselect() {
-        return this._multiselect;
-    }
-
-
-    // изменение размеров элемента
-    setSize(
-        wx = 0, // размер элемента по горизонтали по оси y
-        wy = 0, // размер элемента по горизонтали по оси x
-        h = 0,   // высота элемента
-        force = false) {
-
-        logOut("class PackageContainerItem.setSize { id=%o; wx=%o; wy=%o; wh=%o; force=%o", this._id, wx, wy, h, force);
-        
-        // если размеры элемента изменились
-        if ((this._wx != wx) || (this._wy != wy) || (this._h != h) || force) {
-
-            // стираем элемент в текущей позиции
-            if (!this._hidden) {this.clear();}
-
-            // сохраняем новые значения размеров
-            this._wx = wx;
-            this._wy = wy;
-            this._h = h;
-         
-            this._xScale = this._d * this._wx / this._dispW;
-            this._yScale = this._d * this._wy / this._dispH;
-            
-            logOut("dispW=" + this._dispW + " dispH=" + this._dispH);
-            logOut("xScale=" + this._xScale + " yScale=" + this._yScale);
-            
-            
-            this._scale = Math.max(this._xScale, this._yScale);
-
-            this._x = (this._dispW * this._scale - this._wx) / 2;
-            this._y = (this._dispH * this._scale - this._wy) / 2;
-                   
-            logOut("this.scale=" + this._scale);
-            logOut("class PackageContainerItem.setSize x=" + this._x  + " y=" + this._y);
-    
-            if (!this._hidden) {this.draw();}
-
-            logOut("class PackageContainerItem.setSize wx=" + this._wx  + " wy=" + this._wy + " h=" + this._h);
-        }
-        logOut("class PackageContainerItem.setSize }");
-    }
-
-
-    // Стираем ячейку на <canvas>
-    clear() {
-        // logOut("class PackageContainerItem.clear { item=%o", this);
-
-        this._ctx.clearRect(0, 0, this._dispW, this._dispH);
-
-        // logOut("class PackageContainerItem.clear }");
-    }
-
-    
-    // коннтейнер рисует себя и внутренние прямоугольники
-    draw(color = this._color) {
-
-        if (!this._hidden) {
-
-            // рисуем себя как элементарный прямоугольник
-            super.draw(color);
-
-            var x = this._x;
-            var y = this._y;
-            // рисуем блоки
-            for (var rowIndex = 0; rowIndex < this._rowCount; rowIndex++) {
-                
-                // logOut("class PackageContainerItem.draw { row=" + rowIndex);    
-                
-                x = this._x;
-                for (var colIndex = 0; colIndex < this._colCount; colIndex++) {
-                    
-                    if (typeof this.item[rowIndex][colIndex] !== 'undefined') {
-                        // logOut("class PackageContainerItem.draw { col=" + colIndex);    
-                        // logOut("class PackageContainerItem.draw { item=", this.item[rowIndex][colIndex]);    
-                        
-                        this.item[rowIndex][colIndex]._x = x;
-                        this.item[rowIndex][colIndex]._y = y;
-                        this.item[rowIndex][colIndex].scale = this._scale;
-                        this.item[rowIndex][colIndex]._borderColor = this.color;
-                        this.item[rowIndex][colIndex].show();
-        
-                        // вычисляем горизонтальную координату где начнется следующий слобец
-                        x = x + (this.item[rowIndex][colIndex].wx + this._mx);
-                    }
-                }        
-                // вычисляем вертикальную координату где начнется следующий ряд
-                y = y + (this.item[rowIndex][0].wy + this._my);
-            }
-        }
-    }
-
-
-    // перерисуем ячейку на <canvas>
-    reDraw(color = this._color) {
-        if (!this._hidden) {
-
-            this.clear();
-            this.draw(color);
-        }
-    }
-
-
-    // делаем элемент не видимым
-    hide() {
-        if (!this._hidden) {
-
-            this._hidden = true;
-            
-            // рисуем элемент
-            this.clear();
-        }
-    }
-
-
-    // делаем элемент видимым
-    show() {
-        if (this._hidden) {
-            this._hidden = false;
-            
-            // рисуем элемент
-            this.draw();
-        }
-    }
-    
-}
-
-
-
-
-
-// Класс PackageContainer
-// место хранения, составного типа, состоящее из одного элементарного элемента
-// и содержащее внутри себя массив блоков элементарных элементов (PackageContainerItem).
-class PackageContainer {
-
-    // количество блоков
-    // _count;
-
-    // если true, то разрешено выделение больше одного элемента
-    // _multiselect = false;
-
-    // Создаем элемент
-    // constructor(id = 0, canvas) {
-
-    // }
-
-
-    /**
-     * @param {number} count
-     */
-    set count(value) {
-        this._count = value;
-    } 
-
-    get count() {
-        return this._count;
-    }
-
-
-    /**
-     * @param {boolean} multiselect
-     */
-    set multiselect(value) {
-        this._multiselect = value;
-    } 
-
-    get multiselect() {
-        return this._multiselect;
-    }
-}
-
-
 
 
 
@@ -698,6 +20,50 @@ class PackageContainer {
 // **                                                                   **  
 // ***********************************************************************
 
+
+
+// -------------------------------------------------------
+// КОНСТАНТЫ |
+//
+
+
+const btn = {
+    Ok	            : 0x00000400, 	// An "OK" button defined with the AcceptRole.
+    Open	        : 0x00002000, 	// A "Open" button defined with the AcceptRole.
+    Save	        : 0x00000800, 	// A "Save" button defined with the AcceptRole.
+    Cancel	        : 0x00400000, 	// A "Cancel" button defined with the RejectRole.
+    Close	        : 0x00200000, 	// A "Close" button defined with the RejectRole.
+    Discard	        : 0x00800000, 	// A "Discard" or "Don't Save" button, depending on the platform, defined with the DestructiveRole.
+    Apply	        : 0x02000000, 	// An "Apply" button defined with the ApplyRole.
+    Reset	        : 0x04000000, 	// A "Reset" button defined with the ResetRole.
+    RestoreDefaults	: 0x08000000, 	// A "Restore Defaults" button defined with the ResetRole.
+    Help	        : 0x01000000, 	// A "Help" button defined with the HelpRole.
+    SaveAll	        : 0x00001000, 	// A "Save All" button defined with the AcceptRole.
+    Yes	            : 0x00004000, 	// A "Yes" button defined with the YesRole.
+    YesToAll	    : 0x00008000, 	// A "Yes to All" button defined with the YesRole.
+    No	            : 0x00010000, 	// A "No" button defined with the NoRole.
+    NoToAll	        : 0x00020000, 	// A "No to All" button defined with the NoRole.
+    Abort	        : 0x00040000, 	// An "Abort" button defined with the RejectRole.
+    Retry	        : 0x00080000, 	// A "Retry" button defined with the AcceptRole.
+    Ignore	        : 0x00100000, 	// An "Ignore" button defined with the AcceptRole.
+    NoButton	    : 0x00000000, 	// An invalid button.        
+}
+
+
+
+// -------------------------------------------------------
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ |
+//
+
+
+// контейнер элементов для выпадающих списков
+var packs = [];
+
+
+
+// -------------------------------------------------------
+// ГЛОБАЛЬНЫЕ ФУНКЦИИ |
+//
 
 
 // -------------------------------------------------------
@@ -714,8 +80,8 @@ function getMousePos(canvas, event) {
 
 
 // -------------------------------------------------------
-// подгоняем размер тега <input> под его содержимое
-// если параметр min = true то размер всегда будет минимально возможным
+// Функция | подгоняем размер тега <input> под его содержимое
+//           если параметр min = true то размер всегда будет минимально возможным
 //
 function tuneInputSize(target, min = false) {
     if (min) {
@@ -727,11 +93,102 @@ function tuneInputSize(target, min = false) {
 
 
 // -------------------------------------------------------
+// Функция | Поиск элемента в массиве packs
+//           По атрибуту id
+//           Возвращает указатель на элемент массива (объект)
+//           или false массив пуст или в нем нет выделенного элемента
+//
+function getPackById(id) {
+    console.group("main.getPackById { id: %o", id);
+
+    if (typeof id === 'undefined') {
+        console.warn('id: is undefined');
+        console.groupEnd();
+        return false;
+    }
+
+    if (typeof id === null) {
+        console.warn('id: is null');
+        console.groupEnd();
+        return false;
+    }
+
+    // если контейнер элементов не пуст
+    // и id не пустое значение
+    if (packs) {
+
+        // смотрим какой из элементов с заданным id
+        var pack = packs.find(obj => obj.id === id);
+
+        // если эелемент существует
+        if (pack) {
+            
+            console.groupEnd();
+            return pack;
+            
+            // если такого элемента нет возвращаем false
+        } else {
+            console.warn('pack: %o', pack);
+            console.warn('id: %o doesn`t exist', id);
+            console.groupEnd();
+            return false;
+        }
+
+    // если контейнер пуст то возвращаем false
+    } else {
+        console.warn('packs: %o', packs);
+        console.groupEnd();
+        return false;
+    }
+}
+
+
+// -------------------------------------------------------
+// Функция | Поиск элемента в массиве packs
+//           По атрибуту listItem <option>
+//           Возвращает указатель на элемент массива (объект)
+//           или false массив пуст или в нем нет выделенного элемента
+//
+function getPackByListItem(listItem) {
+    console.groupCollapsed("main.getPackByListItem { listItem: %o", listItem);
+
+    // если контейнер элементов не пуст
+    // и listItem не пустое значение
+    if ((packs) && (listItem)) {
+
+        // смотрим какой из элементов в массиве packs содержит искомый listItem в свойстве
+        var pack = packs.find(obj => obj.id == listItem.id.split(".")[2]);
+
+        // если эелемент существует
+        if (pack) {
+
+            console.groupEnd();
+            return pack;
+
+        // если такого элемента нет возвращаем false
+        } else {
+            console.warn('listItem: %o doesn`t exist', listItem);
+            console.groupEnd();
+            return false;
+        }
+
+    // если контейнер пуст то возвращаем false
+    } else {
+        console.warn('packs is emptyt: %o', packs);
+        console.groupEnd();
+        return false;
+    }
+}
+
+
+
+
+// -------------------------------------------------------
 // Слот | Страница полностью загружена
 //
 window.addEventListener("load", () => {
 
-    logOut("index.php loaded");
+    console.group("index.php loaded");
 
 
     // -------------------------------------------------------
@@ -741,21 +198,21 @@ window.addEventListener("load", () => {
     //           его не перекроет текст нового сообщения
     //
     function setStatus(statusText, timeout) {
-        logOut("main.setStatus { text: %o", statusText);
+        console.group("main.setStatus { text: %o", statusText);
 
         // показываем статус
-        lblStatus.innerHTML = statusText;
+        lblStatus.innerText = statusText;
           
         // если timeout больше 0
         if (timeout > 0) {
             
             // стираем выведенное сообщение через время timeout в миллисекундах
             setTimeout(() => {
-                lblStatus.innerHTML = "";
+                lblStatus.innerText = "";
             }, timeout);
         }
 
-        logOut("main.setStatus }");
+        console.groupEnd("main.setStatus }");
     }
 
 
@@ -765,6 +222,7 @@ window.addEventListener("load", () => {
     //           элементы выбирает по селектору selector
     //
     function setDomElementsEnabled(selector, enabled) {
+        console.group("main.setDomElementsEnabled { selector: %o; enabled: %b", selector, enabled);
 
         // получаем htmlCollection - коллекцию элементов с классом disabled
         var disabledItems = document.querySelectorAll(selector);
@@ -773,6 +231,7 @@ window.addEventListener("load", () => {
         for (var item of disabledItems) {
             item.disabled = !enabled;
         }
+        console.groupEnd("main.setDomElementsEnabled }");    
     }
 
 
@@ -780,11 +239,11 @@ window.addEventListener("load", () => {
     // Функция | Возвращает ссылку на элемент DOM по Id
     //
     function domElementById(id) {
-        // logOut("main.domElementById { id=%o", id);
+        // console.group("main.domElementById { id: %o", id);
         var item = document.getElementById(id);
-        // logOut("main.domElementById elment=%o", element);
+        // console.log("elment: %o", element);
 
-        // logOut("main.domElementById }");    
+        // console.groupEnd("main.domElementById }");    
         return item;
     }
 
@@ -793,11 +252,11 @@ window.addEventListener("load", () => {
     // Функция | Создает елемент в DOM по названию тэга
     //
     function domCreateElement(tagName) {
-        logOut("main.domCreateElement { tagName = %o", tagName);
+        console.group("main.domCreateElement { tagName: %o", tagName);
         var item = document.createElement(tagName);
-        logOut("main.domCreateElement elment=%o", item);
+        console.log("elment=%o", item);
 
-        logOut("main.domCreateElement }");    
+        console.groupEnd("main.domCreateElement }");    
         return item;
     }
 
@@ -806,9 +265,6 @@ window.addEventListener("load", () => {
     // -------------------------------------------------------
     // ЭЛЕМЕНТЫ DOM | Объявляем константы связи с элементами страницы и/или формы
     //
-
-
-    // список всех элементов на форме
     const selCode = domElementById("selCode");
     const inpCodeEdit = domElementById("inpCodeEdit");
     const inpName = domElementById("inpName");
@@ -825,77 +281,20 @@ window.addEventListener("load", () => {
     const lblStatus = domElementById("lblStatus");
     const lblStatusChanged = domElementById("lblStatusChanged");
     const lblStatusInfo = domElementById("lblStatusInfo");
-
-    // элементы формы для внутренних прямоцгольников
-    var subInp = [];
-    subInp.push(domElementById("selCode1"));
-    subInp.push(domElementById("inpNx1"));
-    subInp.push(domElementById("inpNy1"));
-    subInp.push(domElementById("selCode2"));
-    subInp.push(domElementById("inpNx2"));
-    subInp.push(domElementById("inpNy2"));
-    subInp.push(domElementById("selCode3"));
-    subInp.push(domElementById("inpNx3"));
-    subInp.push(domElementById("inpNy3"));
-    subInp.push(domElementById("selCode4"));
-    subInp.push(domElementById("inpNx4"));
-    subInp.push(domElementById("inpNy4"));
-
-
+    // получаем и сохраняем указатель на <canvas> где будет вся графика
     const canvas = domElementById("canvas");
-    
-    // canvas.style.position = "absolute";
-    
-    // Resizing
-    // Поведение canvas при изменении размеров окна
-    canvas.width = 1000;
-    canvas.height = 1000;
-    // canvas.style.width  = '300px';
-    // canvas.style.height = '300px';
-    // canvas.style.left = '10px';
-    // canvas.style.top = '50px';
-    
+
 
 
     // -------------------------------------------------------
-    // КОНСТАНТЫ | Объявляем константы
+    // ИНИЦИАЛИЗАЦИЯ |
     //
 
 
-    const btn = {
-        Ok	            : 0x00000400, 	// An "OK" button defined with the AcceptRole.
-        Open	        : 0x00002000, 	// A "Open" button defined with the AcceptRole.
-        Save	        : 0x00000800, 	// A "Save" button defined with the AcceptRole.
-        Cancel	        : 0x00400000, 	// A "Cancel" button defined with the RejectRole.
-        Close	        : 0x00200000, 	// A "Close" button defined with the RejectRole.
-        Discard	        : 0x00800000, 	// A "Discard" or "Don't Save" button, depending on the platform, defined with the DestructiveRole.
-        Apply	        : 0x02000000, 	// An "Apply" button defined with the ApplyRole.
-        Reset	        : 0x04000000, 	// A "Reset" button defined with the ResetRole.
-        RestoreDefaults	: 0x08000000, 	// A "Restore Defaults" button defined with the ResetRole.
-        Help	        : 0x01000000, 	// A "Help" button defined with the HelpRole.
-        SaveAll	        : 0x00001000, 	// A "Save All" button defined with the AcceptRole.
-        Yes	            : 0x00004000, 	// A "Yes" button defined with the YesRole.
-        YesToAll	    : 0x00008000, 	// A "Yes to All" button defined with the YesRole.
-        No	            : 0x00010000, 	// A "No" button defined with the NoRole.
-        NoToAll	        : 0x00020000, 	// A "No to All" button defined with the NoRole.
-        Abort	        : 0x00040000, 	// An "Abort" button defined with the RejectRole.
-        Retry	        : 0x00080000, 	// A "Retry" button defined with the AcceptRole.
-        Ignore	        : 0x00100000, 	// An "Ignore" button defined with the AcceptRole.
-        NoButton	    : 0x00000000, 	// An invalid button.        
-    }
-
-
-    // -------------------------------------------------------
-    // КОНСТАНТЫ | Объявляем константы
-    //
-
-
-    // массив хранит в себе количество горизонтальных и вертикальных рядов в блоках
-    var blockRows = [];
-    var blockCols = [];
-
-    // контейнер элементов для выпадающих списков
-    var packs = [];
+    // структура хранящая количество блоков в count
+    // и блоки в item с количеством горизонтальных рядов
+    // и количеством элементов в каждом ряде
+    var subBlock = new SubBlockContainer();
 
     // ссылка на ранее выбранный элемент
     var prevousPack;
@@ -911,81 +310,91 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
-    // ИНИЦИАЛИЗАЦИЯ
+    // Создаем 4 блока для редактирования внутренних элементов
+    // запоминаем указатели на элементы формы для внутренних прямоцгольников в массиве
     //
+    console.group("main.addSubBlockElements {");
 
+    // массив всех вариантов имен внутренних элементов без индексов
+    var subBlockElementIds = ['inpSizeWx', 'inpSizeWy', 'selCode', 'inpNy', 'inpNx', 'inpTotal'];
+    var subBlockElementNames = ['package_wx', 'package_wy', 'package_code', 'package_Ny', 'package_Nx', 'package_total'];
+    
+    // получаем темплейт блока внутренних элементов 
+    var subBlockTamplate = domElementById('subBlockTamplate');
+    
+    // получаем контейнер темплейта
+    var subBlockContainer = subBlockTamplate.parentNode;
+    
+    // удаляем из DOM темплейт
+    subBlockContainer.removeChild(subBlockTamplate);
+    
+    console.log("subBlockTamplate: %o", subBlockTamplate);
+
+    // запускаем цикл для всех блоков
+    for(var blockIndex = 0; blockIndex < 4; blockIndex++) {
+        
+        // копированием из темплейта создаем очередной блок внутренних элементов
+        var newSubBlock = subBlockTamplate.cloneNode(true);
+
+        // даем id новому блоку
+        newSubBlock.id = 'subBlock' + (blockIndex + 1);
+        console.log("newSubBlock: %o", newSubBlock);
+
+        // даем номер (для отображения на форме) новому блоку
+        var subLabel = newSubBlock.querySelector('#' + 'subLabel');
+        subLabel.id = subLabel.id + blockIndex;
+        subLabel.innerText = (blockIndex + 1);
+                
+        // перебираем все варианты имеен элементов в новом блоке
+        subBlockElementIds.forEach(subBlockElementId => {
+            console.log("subBlockElementId: %o", subBlockElementId);
+            
+            // получаем очередной элемент блока
+            var subBlockElement = newSubBlock.querySelector('#' + subBlockElementId + '_');
+            console.log("subBlockElement: %o", subBlockElement);
+            
+            // даем id и name элементу блока 
+            subBlockElement.id = subBlockElementId + blockIndex;
+            // subBlockElement.name = subBlockElementNames + (blockIndex + 1);
+        });
+
+        // добавляеем созданный блок в конейнер
+        subBlockContainer.appendChild(newSubBlock);
+
+        // показываем блок внутренних элементов
+        newSubBlock.classList.remove('hidden');
+
+        // добавляем блок внутренних элементов
+        subBlock.add(
+            blockIndex, 
+            document.querySelector('#selCode' + blockIndex),
+            document.querySelector('#inpNx' + blockIndex),
+            document.querySelector('#inpNy' + blockIndex),
+            document.querySelector('#inpSizeWx' + blockIndex),
+            document.querySelector('#inpSizeWy' + blockIndex),
+            document.querySelector('#inpTotal' + blockIndex)
+        );
+
+        var subBlockItem = subBlock.item[blockIndex];
+
+        // привязываем событие изменения полей блока 
+        console.log("{ subBlock.item[blockIndex]: %o", subBlockItem);
+        // Привязываем событие получения фокуса списком
+        subBlockItem.selCode.addEventListener('focus', eventListFocus);
+
+        // Привязываем событие потери списком фокуса 
+        subBlockItem.selCode.addEventListener('blur', eventListBlur);
+    }
+    console.groupEnd("main.addSubBlockElements }");
+
+
+    // Настраиваем разрешение <canvas>
+    canvas.width = 1000;
+    canvas.height = 1000;    
 
     // Делает все инпуты недоступными для редактирования
     setDomElementsEnabled('.disabled, .mainInput, .subInput');
 
-
-
-    // -------------------------------------------------------
-    // Функция | Поиск элемента в массиве packs
-    //           По атрибуту id
-    //           Возвращает указатель на элемент массива (объект)
-    //           или false массив пуст или в нем нет выделенного элемента
-    //
-    function getPackById(id) {
-
-        // если контейнер элементов не пуст
-        // и id не пустое значение
-        if ((typeof packs != "undefined") && (typeof id != "undefined")) {
-
-            // смотрим какой из элементов с заданным id
-            var pack = packs.find(obj => obj.id == id);
-
-            // если эелемент существует
-            if (typeof pack != "undefined") {
-
-                return pack;
-
-            // если такого элемента нет возвращаем false
-            } else {
-                logOut('getPackById: id=%o doesn`t exist', id);
-                return false;
-            }
-
-        // если контейнер пуст то возвращаем false
-        } else {
-            logOut('getPackById: packs is emptyt' + typeof packs);
-            return false;
-        }
-    }
-
-
-    // -------------------------------------------------------
-    // Функция | Поиск элемента в массиве packs
-    //           По атрибуту listItem <option>
-    //           Возвращает указатель на элемент массива (объект)
-    //           или false массив пуст или в нем нет выделенного элемента
-    //
-    function getPackByListItem(listItem) {
-
-        // если контейнер элементов не пуст
-        // и listItem не пустое значение
-        if ((typeof packs != "undefined") && (typeof listItem != "undefined")) {
-
-            // смотрим какой из элементов в массиве packs содержит искомый listItem в свойстве
-            var pack = packs.find(obj => obj.listItem.id == listItem.id);
-
-            // если эелемент существует
-            if (typeof pack != "undefined") {
-
-                return pack;
-
-            // если такого элемента нет возвращаем false
-            } else {
-                logOut('getPackByListItem: listItem = %o doesn`t exist', listItem);
-                return false;
-            }
-
-        // если контейнер пуст то возвращаем false
-        } else {
-            logOut('getPackByListItem: packs is emptyt' + typeof packs);
-            return false;
-        }
-    }
 
 
     // -------------------------------------------------------
@@ -994,6 +403,7 @@ window.addEventListener("load", () => {
     //           или ссылке на pack
     //
     function selectPack(value) {
+        console.group("main.selectPack { value: %o", value);
 
         // если прислали <select>.selectedIndex то выбираем  
         // <option> с этим индексом
@@ -1011,11 +421,10 @@ window.addEventListener("load", () => {
             selCode.selectedIndex = value.listItem.index;
         }
 
-        // создаем событие что список изменился
-        var event = new Event('change');
+        // меняем выбранный элемент
+        setSelectedPack(selCode, packs);
 
-        // отправляем событие
-        selCode.dispatchEvent(event);
+        console.groupEnd("main.selectPack }");
     }
     
     
@@ -1026,29 +435,38 @@ window.addEventListener("load", () => {
     //           или false если массив пуст или в нем нет выделенного элемента
     //
     function getSelectedPack(list) {
-        logOut("main.getSelectedPack { list = %o", list);
+        console.group("main.getSelectedPack { list: %o", list);
 
         // если в выпадающем списке есть выбранный элемент
         //     и контейнер элементов не пуст
-        if ((typeof packs != "undefined") && (typeof list.selectedOptions != "undefined")) {
+        if ((packs) && (list.selectedOptions)) {
             
             // в выпадающем списке смотрим какой элемент выбран и берем его id
-            var optId = list.selectedOptions[0].id;
-    
+            var selectedOption = list.selectedOptions[0];
+            console.log('selectedOption: %o', selectedOption);
+
+            var selectedOptionId = selectedOption.id;
+            console.log('selectedOptionId: %o', selectedOptionId);
+
+            var selectedPackId = selectedOptionId.split(".")[2]
+            console.log('selectedPackId: %o', selectedPackId);
+
             // смотрим какой из элементов выбран в списке
-            var pack = packs.find(obj => obj.listItem.id == optId);
+            var pack = packs.find(obj => obj.id == selectedPackId);
 
-            if (typeof pack != "undefined") {
-                logOut('package list has selected: ' + pack.id + " name=" + pack.name);
-
-                logOut("main.getSelectedPack }");
+            if (pack) {
+                
+                console.log('pack selected: %o', pack);
+                console.groupEnd();
                 return pack;
             } else {
-                logOut('package list has no selected item');
+                console.warn('pack list has no selected item');
+                console.groupEnd();
                 return false;
             }
         } else {
-            logOut('package list is emptyt' + typeof packs);
+            console.warn('packs (%o) is emptyt or list.selectedOptions (%o) is empty', packs, list.selectedOptions);
+            console.groupEnd();
             return false;
         }
     }
@@ -1058,31 +476,30 @@ window.addEventListener("load", () => {
     // Функция | Создает тэг <option> для <select>
     // 
     function createOption(optionId, code, name = '', dimentions = '') {
-        logOut("main.createOption { optionId = %o", optionId);
-        logOut("main.createOption { code = %o", code);
-        logOut("main.createOption { name = %o", name);
-        logOut("main.createOption { dimentions = %o", dimentions);
-
+        console.groupCollapsed("main.createOption { ");
 
         var item = document.createElement('option');
 
-        // var item = domCreateElement('option');
         item.id = optionId;
-        item.innerHTML = code;
+
+        var itemText = code;
 
         if (name > '') {
-            item.innerHTML =  item.innerHTML + ' | ' + name;
+            itemText = itemText + ' | ' + name;
         }
 
         if (dimentions > '') {
-            item.innerHTML = item.innerHTML + ' | ' + dimentions;
+            itemText = itemText + ' | ' + dimentions;
         }
-        
-        logOut("main.createOption: option = %o }",  item);
+
+        item.innerText = itemText;
+
+        console.log("option: %o }",  item);
+        console.groupEnd("main.createOption }");
         return item;
     }
-
     
+
     // -------------------------------------------------------
     // Функция | Создает новый элемент
     //           Если передать data то из этой структуры
@@ -1106,7 +523,7 @@ window.addEventListener("load", () => {
     //              }
     //
     function packsCreate(data) {
-        logOut("main.packsCreate { data = %o", data);
+        console.group("main.packsCreate { data: %o", data);
         
         // Создаем новый элемент
         var pack = new PackageContainerItem(
@@ -1115,15 +532,49 @@ window.addEventListener("load", () => {
         );
 
         // заполняем все свойства элемента из структуры data
-        pack.code = data['code'];
-        pack.name = data['name'];
+        pack.code = data.code;  //['code'];
+        pack.name = data.name;  //['name'];
         pack.payload = parseInt(data['payload']);   // грузоподъемность в граммах
-        pack.h = parseInt(data['h']);               // размеры элемента из базы
-        pack.wx = parseInt(data['wx']);             // размеры элемента из базы
-        pack.wy = parseInt(data['wy']);             // размеры элемента из базы
+        pack.setSize(
+            parseInt(data['wx']),   // размеры элемента из базы
+            parseInt(data['wy']),   // размеры элемента из базы
+            parseInt(data['h'])     // размеры элемента из базы
+        );               
         pack.color = "#" + data['color'];           // цвет элемента из базы
 
-        logOut("main.packsCreate pack = %o }", pack);
+        // получаем внутренние элементы из структуры data
+        var subItem = data['subItem'];
+
+        // если внутренние элементы есть
+        if (subItem) {
+            var rowIndex;
+            var colIndex;
+
+            // то создаем массив внутренних элементов
+            // внутри текущего элемента
+            subItem.forEach(sub => {
+                console.log("subItem = %o }", sub);
+
+                // получаем ряд и столбец
+                // в которых расположен данный внутренний элдемент
+                rowIndex = parseInt(sub.row);
+                colIndex = parseInt(sub.col);
+
+                var newSubPack = new PackageSimple(parseInt(sub.sub_package_id), canvas);
+                newSubPack.code = sub.code;
+                newSubPack.name = sub.name;
+                newSubPack.color = "#" + sub.color;
+                newSubPack.wx = parseInt(sub.wx);
+                newSubPack.wy = parseInt(sub.wy);
+                newSubPack.h = parseInt(sub.h);
+
+                pack.pushTo(rowIndex -1, colIndex -1, newSubPack);
+                
+                newSubPack.show();
+            });
+        }
+
+        console.groupEnd("main.packsCreate pack = %o }", pack);
         return pack;
     }
 
@@ -1134,14 +585,13 @@ window.addEventListener("load", () => {
     //           selCode, selCode1...selCode[N]
     //
     function packsAdd(pack) {
-        logOut("main.packsAdd { pack = %o ", pack);
+        console.group("main.packsAdd { pack = %o ", pack);
 
         // Добавляем новый элемент из базы в массив
         packs.push(pack);
 
-        // генерим уникальный id для <option>
-        var timestamp = Date.now();
-        var optionId = "opt" + timestamp;
+        // даем уникальный id для <option>
+        var optionId = "opt.main." + pack.id;
 
         // создаем новый элемент в выпадающий список список на форме
         pack.listItem = createOption(optionId, pack.code);
@@ -1150,24 +600,19 @@ window.addEventListener("load", () => {
         selCode.appendChild(pack.listItem);
 
         // добавляем новый элемент в выпадающие списки внутренних прямоугольников на форме
-        subInp.forEach(subInpItem => {
-            if (subInpItem.nodeName === "SELECT") {
+        console.log("subBlock: %o ", subBlock);
+        for(var blockIndex = 0; blockIndex < subBlock.count; blockIndex++) {
+            
+            // даеем уникальный id для <option>
+            var optionId = "opt.sub." + pack.id;
+    
+            // создаем <option> соответствующий очередному pack
+            var subOption = createOption(optionId, pack.code);
 
-                // генерим уникальный id для <option>
-                var timestamp = Date.now();
-                var optionId = "optSub" + timestamp;
-        
-                subInpItem.appendChild(createOption(optionId, pack.code));
-                
-                // Привязываем событие выбор элемента в списке
-                subInpItem.addEventListener('change', eventSubListItemChanged);
-            }
-
-            if (subInpItem.nodeName === "INPUT") {
-                subInpItem.addEventListener('change', eventSubInputChanged);
-            }
-        });
-        logOut("main.packsAdd }");
+            // добавляем созданный <option> в <select> текцщего блока внутренних элементов
+            subBlock.item[blockIndex].selCode.appendChild(subOption);            
+        }
+        console.groupEnd();
     }
 
 
@@ -1177,7 +622,7 @@ window.addEventListener("load", () => {
     //           selCode, selCode1...selCode[N]
     //
     function packsRemove(pack) {
-        logOut("main.packsRemove { pack = %o ", pack);
+        console.group("main.packsRemove { pack = %o ", pack);
 
         // удаляем элемент из списков selCode1...selCode[N]
         subInp.forEach(subInpItem => {
@@ -1193,60 +638,129 @@ window.addEventListener("load", () => {
         // Удаляем элемент из массива
         packs.splice(packs.indexOf(pack), 1);
 
-        logOut("main.packsRemove }");
+        console.groupEnd("main.packsRemove }");
     }
 
 
     // -------------------------------------------------------
-    // Делаем запросс в базу данных 
-    // получаем информацию об элементах
+    // Функция | Запрос серверу в формате ajax
+    //           type = "POST" / "GET"
+    //           url = "fileName.php"
+    //           dataType = "json"
+    //           возвращает данные в формате json в случае успеха
+    //           либо false в случае ошибки
+    //
+    function requestToServer(type, url, dataType, successFunction, errorFunction) {
+        console.group("main.requestToServer { url = %o ", url);
+
+        console.time();
+
+        // отправляем запрос серверу
+        $.ajax({
+            type: type,
+            url: url,
+            dataType: dataType,
+
+            // получаем ответ в случае успеха
+            success: function(jsonResponce, textStatus, jqXHR) {
+    
+                console.log('data: %o', jsonResponce);
+                console.log('textStatus: ' + textStatus);
+                console.timeEnd();
+                console.log('jqXHR: %o', jqXHR);
+    
+                // возвращаем ответ сервера
+                successFunction(jsonResponce);
+            },
+
+            // получаем ответ в случае ошибок
+            error: function(XMLHttpRequest, textStatus, jqXHR) {
+    
+                console.warn('textStatus: ' + textStatus);
+                console.timeEnd();
+                console.warn('jqXHR: %o', jqXHR);
+                
+                // возвращаем ошибку
+                errorFunction(XMLHttpRequest);
+            }
+        });
+
+        console.groupEnd("main.requestToServer }");
+    }
+
+
+    // -------------------------------------------------------
+    // Функция | Загрузка элементов pack из базы данных в массив packs
+    //
+    function packsLoad(successFunction, errorFunction) {
+        console.group("main.packsLoad {");
+
+        // отправляем запрос серверу
+        requestToServer('POST', 'getPackage.php', 'json',
+
+            // если успешно и сервер вернул данные
+            function(jsonResponce) {
+    
+                var rows = jsonResponce;
+
+                // в ответе сервера массив записей, 
+                // запись это вся информация одного элемента 
+
+        
+                // перебираем записи прострочно и создаем из каждой элемент массива packs
+                rows.forEach(row => {
+
+                    console.log('next data row: %o', row);
+
+                    // Создаем новый элемент
+                    var pack = packsCreate(row);
+
+                    // добавляем созданный элемент в массив и выпадающие списки
+                    packsAdd(pack);
+                });
+        
+                successFunction();
+            },
+            
+            // если запрос серверу вернул ошибку
+            function(XMLHttpRequest) {
+                
+                errorFunction();
+            }
+        );   
+        console.group("main.packsLoad }");
+    }
+
+
+    // -------------------------------------------------------
+    // Загружаем данные с сервера 
+    // получаем информацию об элементах pack
     //
     setStatus('Загрузка данных с сервера', 3000);
 
-    $.ajax({
-        type: "POST",
-        url: "getPackage.php",
-        dataType: "json",
-        success: function(jsonResponce, textStatus, jqXHR) {
-
-            logOut('getPackage.php POST data: %o', jsonResponce);
-            logOut('getPackage.php POST textStatus: ' + textStatus);
-            logOut('getPackage.php POST jqXHR: %o', jqXHR);
-
-            // в ответе сервера массив записей, 
-            // запись это вся информация одного элемента 
-            jsonResponce.forEach(row => {
-
-                logOut('getPackage.php next data row: %o', row);
-
-                // Создаем новый элемент
-                var pack = packsCreate(row);
-
-                // добавляем созданный элемент в массив и выпадающие списки
-                packsAdd(pack);
-
-
-                logOut('getPackage.php new package item: %o', pack);
-            });
+    packsLoad( 
+        
+        // в случае успеха:
+        function(){
 
             // назначаем выбранный элемент
             // 0 - создать новый 
             // 1 - первый элемент в базе
-            selectPack(1);
+            if (selCode.options.length > 1) {
+                selectPack(1);
+            } else {
+                selectPack(0);
+            }
 
             setStatus('Ok', 3000);
+        }, 
+    
+        // в случае неудачи
+        function() {
 
-            logOut('pack array: %o', packs);
-        },
-        error: function(XMLHttpRequest, textStatus, jqXHR) {
-
-            setStatus('Сервер вернул ошибку ' + textStatus, 3000);
-
-            logOut('getPackage.php POST textStatus: ' + textStatus);
-            logOut('getPackage.php POST jqXHR: %o', jqXHR);
+            setStatus('Сервер вернул ошибку ', 3000);    
         }
-    });
-
+    );
 
 
     // -------------------------------------------------------
@@ -1267,7 +781,7 @@ window.addEventListener("load", () => {
     checkBoxHasContent.addEventListener('change', eventCheckBoxHasContentChanged);
 
     // Привязываем событие клика на список
-    selCode.addEventListener('click', eventListClicked);
+    // selCode.addEventListener('click', eventListClicked);
 
     // Привязываем событие получения фокуса списком
     selCode.addEventListener('focus', eventListFocus);
@@ -1304,6 +818,8 @@ window.addEventListener("load", () => {
     // Слот | Масштабирование элемента на canvas
     //
     canvas.addEventListener('wheel', function(evt) {
+        console.group('canvas.addEventListener wheel {');
+
         evt.preventDefault();
 
         var mousePos = getMousePos(canvas, evt);
@@ -1316,11 +832,11 @@ window.addEventListener("load", () => {
             
             // то меняем выбранному элементу масштам
             if (evt.deltaY < 0) {
-                logOut('canvas zoom out: ' + evt.deltaY);
+                console.log('canvas zoom out: ' + evt.deltaY);
                 pack.scale = pack.scale * 1.05;
             }
             if (evt.deltaY > 0) {
-                logOut('canvas zoom in: ' + evt.deltaY);
+                console.log('canvas zoom in: ' + evt.deltaY);
                 pack.scale = pack.scale * 0.95;
             }
 
@@ -1329,10 +845,11 @@ window.addEventListener("load", () => {
         }
 
         var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        lblStatusInfo.innerHTML = message;
+        lblStatusInfo.innerText = message;
+
+        console.groupEnd('canvas.addEventListener wheel }');
     }, false);
     
-
 
     // -------------------------------------------------------
     // СЛОТЫ | Обработка событий
@@ -1344,9 +861,13 @@ window.addEventListener("load", () => {
     //        Вывод сообщения о текущей позиции курсора мыши
     //
     canvas.addEventListener('mousemove', function(evt) {
+        // console.group('eventMouseDown { ');
+
         var mousePos = getMousePos(canvas, evt);
         var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        lblStatusInfo.innerHTML = message;
+        lblStatusInfo.innerText = message;
+
+        // console.groupEnd('eventMouseDown }');
     }, false);
 
 
@@ -1354,6 +875,7 @@ window.addEventListener("load", () => {
     // Слот | Привязываем события клика на элементе
     //
     function eventMouseDown(e) {
+        console.group('eventMouseDown {', editMode);
 
         // получаем выделленый элемент
         var pack = selectedPack;
@@ -1362,25 +884,56 @@ window.addEventListener("load", () => {
         if (pack) {
 
             // то передаем клик элементу
-            // logOut('item mouse down: %o', pack);
+            // console.log('item mouse down: %o', pack);
             var pos = getMousePos(canvas, e)
             pack.onClick(pos.x, pos.y);
             // pack.onClick(event.clientX, event.clientY);
         }
-
+        console.groupEnd('eventMouseDown }');
     }
 
 
     // -------------------------------------------------------
     // Функция | Показывает модальный диалог с кнопками
     //
-    function messageBox(mess, ...params) {
+    var dialogBox_modal = domElementById('dialog_modal');
+    var btnOk_modal = dialogBox_modal.querySelector('#btnOk_modal');
+    var btnCancel_modal = dialogBox_modal.querySelector('#btnCancel_modal');
+
+    function messageBox(mess) {
+        console.group('messageBox {', editMode);
+
         var reply;
         if (confirm(mess)) {
             reply = btn.Yes;
         } else {
             reply = btn.No;
         }
+
+        btnOk_modal.onclick = function() {
+            console.group('messageBox.btnOk_modal { ');
+
+            // modalDialog.close();
+            dialogBox_modal.style.display = 'none';
+            
+            console.groupEnd();
+            return btn.Yes;
+        }
+
+        btnCancel_modal.onclick = function() {
+            console.group('messageBox.modalCancel { ');
+
+            // modalDialog.close();
+            dialogBox_modal.style.display = 'none';
+            
+            console.groupEnd();
+            return btn.No;
+        }
+
+        // modalDialog.showModal();
+        // modalDialog.style.display = 'block';
+
+        console.groupEnd();
         return reply;
     }
 
@@ -1390,32 +943,36 @@ window.addEventListener("load", () => {
     //           в режим редактирования и обратно
     //
     function setEditMode(editMode) {
-        logOut('setEditMode editMode=%o', editMode);
+        console.group('setEditMode editMode=%o', editMode);
 
-        logOut('setEditMode selectedPack=%o', selectedPack);
+        console.log('selectedPack = %o', selectedPack);
 
         if (editMode) {
-            
+        
             // включаем режим редактирования [ РЕДАКТИРОВАТЬ ]
 
             // сохраняем копию выбранного элемента для отмены изменений
             // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
+            // делаем поля внутренних элементов доступными
+            setDomElementsEnabled('.subInput', true);
+            setDomElementsEnabled('#btnCopy', false);
+                
             // Меняем кнопке текст с "Редактировать" на "Назад"
-            btnEdit.innerHTML = 'Назад'
-    
+            btnEdit.innerText = 'Назад'
+            
             // показываем поле для воода типа
             inpCodeEdit.classList.remove('hidden');
-
+            
             // прячем список для выбора типа
             selCode.classList.add('hidden');
-
+            
             setStatus('Режим редактирования включен', 3000);
         } else {
-
+            
             // отключаем режим редактирования [ НАЗАД ]
-
-            logOut('setEditMode selectedPack.changed=%o', selectedPack.changed);
+            
+            console.log('selectedPack.changed = %o', selectedPack.changed);
             // если элемент был изменен
             if (selectedPack.changed) {
                 
@@ -1426,7 +983,7 @@ window.addEventListener("load", () => {
                 // Если пользователь хочет сохранить изменения
                 if (reply == btn.Yes) {
                     
-                    logOut('setEditMode: выполнить: Сохранение элемента');
+                    console.log('выполнить: Сохранение элемента');
                     
                     // сохраняем элемент в БД
                     packSave(selectedPack);
@@ -1435,77 +992,84 @@ window.addEventListener("load", () => {
                     // восстанавливаем выбранный элемент из копии до изменений
                     // selectedPack = JSON.parse(JSON.stringify(beforChangePack));
                     
-                    logOut('setEditMode selectedPack.id=%o', selectedPack.id);
+                    console.log('selectedPack.id = %o', selectedPack.id);
                     // и если выбранный элемнт является новым
                     if (selectedPack.id == 0) {
-                        logOut('setEditMode элемент новый возвращаемся к ранее выбранному!!!', prevousPack);
-
+                        console.log('элемент новый возвращаемся к ранее выбранному!!!', prevousPack);
+                        
                         // убираем его с <canvas>
                         selectedPack.hide();
-
+                        
                         // удаляем новый и не сохраненный элемент
                         packsRemove(selectedPack);
-
+                        
                         // возвращаемся к ранее выбранному элементу
                         selectedPack = prevousPack;
                     }
                 }
                 
-            // если элемент не изменен
+                // если элемент не изменен
             } else {
-
+                
                 // и он новый то удаляем его
                 if (selectedPack.id == 0) {
-                    logOut('setEditMode элемент новый, не сохраняем, удаляем его и возвращаемся к ранее выбранному!!!', prevousPack);
-
+                    console.log('элемент новый, не сохраняем, удаляем его и возвращаемся к ранее выбранному!!!', prevousPack);
+                    
                     // убираем его с <canvas>
                     selectedPack.hide();
-
+                    
                     // удаляем новый и не сохраненный элемент
                     packsRemove(selectedPack);
-
+                    
                     // возвращаемся к ранее выбранному элементу
                     selectedPack = prevousPack;
                 }
             }
-
+            
             // делаем его выбранным в списке
             selCode.selectedIndex = selectedPack.listItem.index;
-
+            
             // Показываем текущий элемент на <canvas>
             selectedPack.show();
             
             // Показываем свойства элемента
+            // Показываем свойства вложенных элементов
             packsShowInfo(selectedPack);
             
-            // Показываем свойства вложенных элементов
-            packsSubShowInfo(selectedPack);
-            
-            // Меняем кнопке текст с "Назад" на "Редактировать"
-            btnEdit.innerHTML = 'Редактированть'
+            // блокируем инпуты внутренних элементов
+            setDomElementsEnabled('.subInput', false);
+            setDomElementsEnabled('#btnCopy', true);
 
+            // Меняем кнопке текст с "Назад" на "Редактировать"
+            btnEdit.innerText = 'Редактированть'
+            
             // прячем поле для воода типа
             inpCodeEdit.classList.add('hidden');
-
+            
             // показываем список для выбора типа
             selCode.classList.remove('hidden');     
-
+            
             setStatus('Режим редактирования отключен', 3000);
-        }   
-
+        }       
+        
         // делаем инпуты доступными / блокируем делаем инпуты
         setDomElementsEnabled('.mainInput', editMode);
-    }
-
+        
+        console.groupEnd('setEditMode }');
+    }    
+    
 
     // -------------------------------------------------------
     // Обработка события нажатия кнопки "Редактировать"
     //
     function eventBtnEditClicked() {
+        console.group('eventBtnEditClicked {');
 
         // меняем текущий режим 'редактирование' на противоположенный
         editMode = !editMode;
         setEditMode(editMode);
+
+        console.groupEnd('eventBtnEditClicked }');
     }
 
 
@@ -1516,7 +1080,7 @@ window.addEventListener("load", () => {
     //           иначе оновляет объект в базе
     //
     function packSave(pack) {
-        logOut('packSave { pack = %o', pack);
+        console.group('packSave { pack = %o', pack);
 
         setStatus('Сохранение данных', 3000);
 
@@ -1524,8 +1088,10 @@ window.addEventListener("load", () => {
         if (pack) {
 
             // если данный элемент является новым
-            if (pack.id == 0) {
+            if (pack.id === 0) {
                 
+                console.timeEnd();
+
                 // формируем данные для отправки на сервер
                 // Выполняем асинхронный запрос POST (INSERT)
                 $.ajax({
@@ -1547,19 +1113,20 @@ window.addEventListener("load", () => {
 
                     // Если сохранение успешно:
                     success: function(jsonResponce, textStatus, jqXHR){
-
+                        
                         // Вызов: Добавление нового элемента 
                         // Вызов: Показать элемент
                         var result = JSON.parse(jsonResponce);
-
-                        logOut('packSave: ответ сервера: %o', result);
+                        
+                        console.log('ответ сервера: %o', result);
+                        console.timeEnd();
 
                         // обновляем id элемента
                         pack.id = result.package_id;
 
                         // помечаем что элемент сохранен
                         pack.changed = false;
-                        lblStatusChanged.innerHTML = "";
+                        lblStatusChanged.innerText = "";
 
                         // показываем сообщение в statusbar
                         setStatus('Сохранено', 3000);
@@ -1570,14 +1137,17 @@ window.addEventListener("load", () => {
                         
                         // вывод сообщения об ошибке в statusbar
                         setStatus('Сервер вернул ошибку ' + textStatus, 3000);
-
-                        logOut('packSave: setPackage.php POST textStatus: ' + textStatus);
-                        logOut('packSave: setPackage.php POST jqXHR: %o', jqXHR);
+                        
+                        console.warn('textStatus: ' + textStatus);
+                        console.timeEnd();
+                        console.warn('jqXHR: %o', jqXHR);
                     }
                 });
     
             // иначе обновляем существующий элемент в БД
             } else {
+
+                console.time();
 
                 // формируем данные для отправки на сервер
                 // Выполняем асинхронный запрос POST (UPDATE)
@@ -1603,11 +1173,12 @@ window.addEventListener("load", () => {
                         // Вызов: Показать элемент
                         var result = JSON.parse(jsonResponce);
                         
-                        logOut('packSave: ответ сервера: %o', result);
-
+                        console.log('ответ сервера: %o', result);
+                        console.timeEnd();
+                        
                         // помечаем что элемент сохранен
                         pack.changed = false;
-                        lblStatusChanged.innerHTML = "";
+                        lblStatusChanged.innerText = "";
 
                         // показываем сообщение в statusbar
                         setStatus('Сохранено', 3000);
@@ -1618,9 +1189,10 @@ window.addEventListener("load", () => {
                         
                         // вывод сообщения об ошибке на странице
                         setStatus('Сервер вернул ошибку ' + textStatus, 3000);
-
-                        logOut('packSave: setPackage.php POST textStatus: ' + textStatus);
-                        logOut('packSave: setPackage.php POST jqXHR: %o', jqXHR);
+                        
+                        console.warn('textStatus: ' + textStatus);
+                        console.timeEnd();
+                        console.warn('jqXHR: %o', jqXHR);
                     }
                 });
             }
@@ -1629,10 +1201,99 @@ window.addEventListener("load", () => {
         } else {
 
             setStatus('Сохранение неудачно. Не выбран ни один тип', 3000);
-            logOut('packSave: pack пуст или не существует !!!');
+            console.log('pack пуст или не существует !!!');
         }
         
-        logOut('packSave }');
+        console.groupEnd();
+    }
+
+
+    // -------------------------------------------------------
+    // Функция | Копирует элемент pack и добавляет копию в конец массива packs
+    //           Добавляет его в список <select>
+    //           Отображает скопированный элемент
+    //           И включает режим редактирования
+    //
+    function packCopy(pack) {
+        console.group('packSave { pack = %o', pack);
+
+        // если выделенный элемент существует
+        if (pack) {
+            console.group('!!! В разработке !!!', pack);
+
+            // Создаем новый элемент
+            var newPack = packsCreate({
+                id: "0",
+                code: pack.code + '-copy',
+                name: pack.name,
+                color: pack.color.replace("#", ""),
+                wx: pack.wx,
+                wy: pack.wy,
+                h: pack.h,
+                payload: pack.payload,
+                material_id: pack.material_id,
+                photo_id: pack.photo_id,
+                created: null,
+                updated: null,
+                deleted: null
+            });
+
+            // копируем его
+            // newPack.code = ;
+            // newPack.name = ;
+            // newPack.color = ;
+            // newPack.wx = ;
+            // newPack.wy = pack.wy;
+            // newPack.h = pack.h;
+            // newPack.payload = ;
+            // newPack.material_id = ;
+            // newPack.photo_id = ;
+            // newPack.created = ;
+            // newPack.updated = pack.updated;
+            // newPack.deleted = pack.deleted;
+
+            newPack._rowCount = pack._rowCount;
+            newPack._colCount = Object.assign({}, pack._colCount);
+            newPack.item = Object.assign({}, pack.item);
+
+            // добавляем его в выпадающий список и в массив
+            packsAdd(newPack);
+                        
+            // включаем режим редактирования
+            editMode = true;
+            setEditMode(editMode);
+
+        } else {
+            
+            console.log('ничего не выбрано для копирования pack = %o', pack);
+            console.groupEnd();
+            return false;
+        }
+
+        console.log('newPack = %o', newPack);
+
+        // запоминаем текущий элемент как ранее выбранный
+        prevousPack = selectedPack;
+
+        // Скрываем ранее выбранный элемент на <canvas>
+        if (selectedPack) {
+            selectedPack.hide();
+        }
+
+        // Запоминаем выбранный элемент как текущий
+        selectedPack = newPack;
+
+        // Показываем текущий элемент на <canvas>
+        if (selectedPack) {
+            selectedPack.show();
+        }
+
+        // Показываем свойства элемента
+        // Передаем блокам внутренних элементов какой элемент сейчамс выбран
+        // что бы они отобразили внутреннее содержимое выбранного элемента
+        packsShowInfo(selectedPack);
+        
+        console.groupEnd();
     }
 
 
@@ -1640,94 +1301,25 @@ window.addEventListener("load", () => {
     // Слот | Обработка события нажатия кнопки SAVE
     //
     function eventBtnSaveClicked() {
-        logOut('eventBtnSaveClicked {');
+        console.group('eventBtnSaveClicked {');
     
         // сохраняем выбранный элемент
         packSave(selectedPack);
 
-        logOut('eventBtnSaveClicked }');
+        console.groupEnd();
     }
 
 
     // -------------------------------------------------------
-    // Слот | Обработка событие нажатия кнопки ADD
+    // Слот | Обработка событие нажатия кнопки "КОПИРОВАТЬ"
     //
     function eventBtnCopyClicked() {
+        console.group('eventBtnCopyClicked {');
 
-        return false;
-        // если массив элементов существует
-        if (typeof packs != "undefined") {
+        // копируем выбранный элемент
+        packCopy(selectedPack);
 
-            // то создаем новый элемент в массив
-            logOut('item add clicked');
-            
-            var pack = new PackageSimple(
-                0,          // id нового элемента, пока 0
-                canvas      // canvas где будет отображен элемент
-            );
-            pack.code = selCode.value;
-            pack.name = inpName.value;
-            pack.payload = parseInt(inpPayload.value);
-            pack.h = parseInt(inpSizeH.value);
-            pack.wx = parseInt(inpSizeWx.value);
-            pack.wy = parseInt(inpSizeWy.value);
-            pack.color = inpColor.value;
-            
-            // добавляем новый элемент в базу данных
-
-            // делаем запросс в базу данных 
-            // получаем информацию об элементах
-            $.ajax({
-                type: "POST",
-                url: "addPackage.php",
-                dataType: "json",
-                data: { 
-                    "package_code": pack.code,
-                    "package_name": pack.name,
-                    "package_payload": pack.payload,
-                    "package_h": pack.h,
-                    "package_wx": pack.wx,
-                    "package_wy": pack.wy,
-                    "package_color": pack.color.replace("#", "")
-                },
-                // если операция выполнена успешно
-                success: function(jsonResponce, textStatus, jqXHR){
-
-                    var result = JSON.parse(jsonResponce);
-                    logOut('ответ сервера: %o', result);
-
-                    // сервер вернет id нового элемента
-                    pack.id = parseInt(result.package_id);
-                    
-                    // добавляем новый элемент в массив
-                    packs.push(pack);
-
-                    // добавляем новый элемент в список на форме
-                    pack.listItem = domCreateElement('option');
-                    pack.listItem.id = pack.id;
-                    pack.listItem.innerHTML = pack.code;
-                    selCode.append(pack.listItem);
-
-                    // Привязываем событие выбор объекта в списке
-                    pack.listItem.on('click', eventListItemClicked);
-
-                    logOut('new item id=' + pack.id + ' inserted successeful!');
-                    logOut('addPackage.php POST textStatus: ' + textStatus);
-                    logOut('addPackage.php POST jqXHR: %o', jqXHR);
-                    // alert('item id=' + pack.id + ' inserted successeful!');
-                },
-                // если были ошибки
-                error: function(XMLHttpRequest, textStatus, jqXHR) {
-                    // вывод сообщения об ошибке на странице
-                    // $("#cellInfo").text("Ошибка: " + + textStatus);
-
-                    alert('Сервер вернул ошибку ' + textStatus);
-                    logOut('addPackage.php POST textStatus: ' + textStatus);
-                    logOut('addPackage.php POST jqXHR: %o', jqXHR);
-                }
-            });
-        }
-
+        console.groupEnd();
     }
     
 
@@ -1735,6 +1327,7 @@ window.addEventListener("load", () => {
     // Слот | Обработка события изменения характеристик элемента
     //
     function eventItemChanged(e) {
+        console.group('eventItemChanged {');
 
         // получаем выделенный элемент
         var pack = selectedPack;
@@ -1749,7 +1342,7 @@ window.addEventListener("load", () => {
                         pack.code = "";
                     } else {
                         pack.code = e.target.value;
-                        pack.listItem.innerHTML = pack.code;
+                        pack.listItem.innerText = pack.code;
                     }
                     break;
                 case 'inpName':
@@ -1773,15 +1366,16 @@ window.addEventListener("load", () => {
             }            
             
             // вычисляем объем элемента
-            inpVolume.innerHTML = pack.h * pack.wx * pack.wy;
+            inpVolume.innerText = pack.h * pack.wx * pack.wy;
 
             // обновим изображение элемента
             pack.reDraw();  
 
             // помечаем что элемент изменен
             pack.changed = true;
-            lblStatusChanged.innerHTML = "Не сохранено";
+            lblStatusChanged.innerText = "Не сохранено";
         } 
+        console.groupEnd('eventItemChanged }');
     }
 
 
@@ -1789,10 +1383,12 @@ window.addEventListener("load", () => {
     // Слот | Событие изменение checkbox "объект имеет содержимое"
     //
     function eventCheckBoxHasContentChanged(e) {
+        console.group('eventCheckBoxHasContentChanged {');
 
-        if (e.target.value) {
+        // если установлена галка Внутренние элементы
+        if (e.target.checked) {
 
-            // делаем инпуты доступными
+            // делаем поля внутренних элементов доступными
             setDomElementsEnabled('.subInput', true);
         } else {
             
@@ -1805,26 +1401,24 @@ window.addEventListener("load", () => {
 
         // если в списке выбран элемент
         if (pack) {
-            logOut('eventCheckBoxHasContentChanged item: %o', pack);
-        }
+            console.log('item: %o', pack);
 
-        // помечаем что элемент изменен
-        pack.changed = true;
-        lblStatusChanged.innerHTML = "Не сохранено";
+            // помечаем что элемент изменен
+            pack.changed = true;
+            lblStatusChanged.innerText = "Не сохранено";
+        }    
+
+        console.groupEnd('eventCheckBoxHasContentChanged }');
     }
 
 
-    //  Флаг | признак что выпадающий список раскрыт
-    var selCodeOpened = false;
-
-
     // -------------------------------------------------------
-    // Устанавливаем отображение элементов списка
-    // если detiled = true элементы в нем показаны как Обозначение | Наименование [| Ш х В х Г]
-    // если detiled = false элементы в нем показаны как Обозначение
+    // Функция | Устанавливаем отображение элементов списка
+    //           если detiled = true элементы в нем показаны как Обозначение | Наименование [| Ш х В х Г]
+    //           если detiled = false элементы в нем показаны как Обозначение
     //
-    function setSelectItemsDetiled(detiled) {
-        logOut('setSelectItemsDetiled { detiled = %o', detiled);
+    function setSelectItemsDetiled(selCode, detiled) {
+        console.groupCollapsed('setSelectItemsDetiled { detiled = %o', detiled);
 
         // меняем элементы в выпадающем списке на форме
         var pack ;
@@ -1834,29 +1428,33 @@ window.addEventListener("load", () => {
             pack = getPackByListItem(selCode.options[index]);
 
             // обновляем текст <option>
-            selCode.options[index].innerHTML = pack.code;
+            selCode.options[index].innerText = pack.code;
 
             if (detiled) {
-                selCode.options[index].innerHTML += ' | ' + pack.name;
+                selCode.options[index].innerText += ' | ' + pack.name;
             }
         }
 
-        logOut('setSelectItemsDetiled }');
+        console.groupEnd('setSelectItemsDetiled }');
     }
+
+
+    //  Флаг | признак что выпадающий список раскрыт
+    var selCodeOpened = false;
 
 
     // -------------------------------------------------------
     // Слот | Привязываем событие клика на список
     //
     function eventListClicked(e) {
-        logOut('eventListClicked {');
+        console.group('eventListClicked {');
 
         // selCodeOpened = !selCodeOpened;
 
         // меняем элементы в выпадающем списке на форме
         // setSelectItemsDetiled(selCodeOpened);
 
-        logOut('eventListClicked }');
+        console.groupEnd('eventListClicked }');
     }
 
 
@@ -1865,13 +1463,13 @@ window.addEventListener("load", () => {
     // когда список раскрыт элементы в нем показаны как Обозначение | Наименование
     //
     function eventListFocus(e) {
-        logOut('eventListFocus {');
+        console.groupCollapsed('eventListFocus {');
 
         // меняем элементы в выпадающем списке на форме
         selCodeOpened = false;
-        setSelectItemsDetiled(true)
+        setSelectItemsDetiled(e.target, true)
 
-        logOut('eventListFocus }');
+        console.groupEnd();
     }
 
 
@@ -1880,13 +1478,13 @@ window.addEventListener("load", () => {
     // когда список раскрыт элементы в нем показаны как Обозначение | Наименование
     //
     function eventListBlur(e) {
-        logOut('eventListBlur {');
+        console.groupCollapsed('eventListBlur {');
 
         // меняем элементы в выпадающем списке на форме
         selCodeOpened = false;
-        setSelectItemsDetiled(false)
+        setSelectItemsDetiled(e.target, false)
 
-        logOut('eventListBlur }');
+        console.groupEnd();
     }
 
 
@@ -1894,9 +1492,9 @@ window.addEventListener("load", () => {
     // Функция | Показываем свойства элемента на форме
     //
     function packsShowInfo(pack) {
-        logOut('packsShowInfo {');
+        console.group('packsShowInfo {');
 
-        logOut('packsShowInfo: pack.color: %o', pack.color);
+        console.log('pack.color: %o', pack.color);
 
         inpCodeEdit.value = pack.code;
         inpName.value = pack.name;
@@ -1905,21 +1503,40 @@ window.addEventListener("load", () => {
         inpSizeWx.value = pack.wx;
         inpSizeWy.value = pack.wy;
         inpColor.value = pack.color;
-        inpVolume.innerHTML = pack.h * pack.wx * pack.wy;
+        inpVolume.innerText = pack.h * pack.wx * pack.wy;
 
-        lblStatusChanged.innerHTML = ((pack.changed) ? "Не сохранен" : "");
+        // если у элемента pack есть внутренние элементы
+        if (pack) {
 
-        logOut('packsShowInfo }');
-    }
+            if (pack.item.length > 0) {
+
+                // ставим галочку что есть внутренние элементы 
+                checkBoxHasContent.checked = true;
+
+                // выводим размеры веутренних элементов
+                subBlock.showInfo(pack);
+            //
+            } else {
+
+                checkBoxHasContent.checked = false;
+
+                // очищаем поля внутренних элементов
+                subBlock.showInfo(pack);
+                // subBlock.clear();
+            }
+        } else {
+
+            checkBoxHasContent.checked = false;
+
+            // очищаем поля внутренних элементов
+            subBlock.showInfo(pack);
+            // subBlock.clear();
+        }
 
 
-    // -------------------------------------------------------
-    // Функция | Показываем свойства вложенных элементов на форме
-    //
-    function packsSubShowInfo(pack) {
-        logOut('packsSubShowInfo {');
-        logOut('packsSubShowInfo: !!! в процессе разработки !!!');
-        logOut('packsSubShowInfo }');
+        lblStatusChanged.innerText = ((pack.changed) ? "Не сохранен" : "");
+
+        console.groupEnd('packsShowInfo }');
     }
 
 
@@ -1930,31 +1547,28 @@ window.addEventListener("load", () => {
     //           и переключает в режим редактирования 
     //
     function setSelectedPack(list, packs) {
-        logOut('setSelectedPack {');
+        console.group('setSelectedPack { list: %o', list);
 
         // если список элементов не пуст
-        // if (typeof packs != "undefined") {
+        // if (typeof packs != undefined) {
 
         // <option> выбранный в списке <select>
-        logOut('setSelectedPack: list: %o', list);
-        logOut('setSelectedPack: list.selectedOptions: %o', list.selectedOptions);
-        logOut('setSelectedPack: list.selectedOptions[0]: %o', list.selectedOptions[0]);
-
-        if (typeof list.selectedOptions !== "object") {
-            logOut('setSelectedPack: list.selectedOptions is undefined - exit');
-            return false;
-        }
         var selectedOption = list.selectedOptions[0];
 
+        console.log('list.selectedOption: %o', selectedOption);
+
+        if (typeof selectedOption !== "object") {
+            console.log('list.selectedOption is undefined - exit');
+            return false;
+        }    
         // получаем id выбранного в списке <option>
-        var optionId = selectedOption.id;
-        logOut('setSelectedPack: option: %o %o %o', optionId, selectedOption.innerHTML);
+        var selectedOptionId = selectedOption.id;
 
         var pack;
 
         // если выбран <option> НОВЫЙ
-        if (optionId == '0') {
-            logOut('setSelectedPack: создаем новый элемент');
+        if (selectedOptionId == '0') {
+            console.log('создаем новый элемент');
 
             // Создаем новый элемент
             pack = packsCreate({
@@ -1987,7 +1601,7 @@ window.addEventListener("load", () => {
             pack = getSelectedPack(list);
         }
 
-        logOut('setSelectedPack: pack = %o', pack);
+        console.log('pack = %o', pack);
 
         // запоминаем текущий элемент как ранее выбранный
         prevousPack = selectedPack;
@@ -2006,13 +1620,11 @@ window.addEventListener("load", () => {
         }
 
         // Показываем свойства элемента
+        // Передаем блокам внутренних элементов какой элемент сейчамс выбран
+        // что бы они отобразили внутреннее содержимое выбранного элемента
         packsShowInfo(selectedPack);
-
-        // Показываем свойства вложенных элементов
-        packsSubShowInfo(selectedPack);
-
-
-        logOut('setSelectedPack }');
+        
+        console.groupEnd();
     }
 
 
@@ -2021,280 +1633,17 @@ window.addEventListener("load", () => {
     //
     function eventListItemChanged(e) {
         // e.preventDefault();
-        logOut('eventListItemChanged {');
+        console.group('eventListItemChanged {');
         
         // меняем выбранный элемент
         setSelectedPack(selCode, packs);
 
         // делаем элементы в выпадающем списке упрощенными (только ТИП)
         selCodeOpened = false;
-        setSelectItemsDetiled(false);
+        setSelectItemsDetiled(e.target, false);
         selCode.blur();
         
-        logOut('eventListItemChanged }');
-    }
-
-
-    // -------------------------------------------------------
-    // оперделяем номер блока которому принадлежит <option> или <input>
-    // по числу в конце id. Например id=selCode3 - функция вернет номер блока 3
-    //
-    function getBlockId(item) {
-        // regexp выбирает числа из строки
-        var regexp = /(\d+)/;
-
-        // получаем массив чисел
-        var matches = item.id.match(regexp);
-        // logOut("getBlockId matches: %o", matches);
-
-        // берем последнее число
-        var id = parseInt(matches[matches.length - 1]);
-
-        return id;
-    }
-
-    
-    // -------------------------------------------------------
-    // Слот | Обрабатываем событие выбор элемента в списке внутренних прямоугольников
-    //
-    function eventSubListItemChanged(e) {
-        // e.preventDefault();
-        logOut('eventSubListItemChanged {');
-        
-        // если список элементов не пуст
-        if (typeof packs != "undefined") {
-
-            // если выделенный элемент есть
-            if (typeof selectedPack != "undefined") {
-
-                // стираеем ранее выбранный элемент
-                // selectedPack.hide();
-            }
-            
-            // получаем выбранный в списке элемент
-            var pack = getPackByListItem(selCode.options[e.target.selectedIndex]);
-
-            // id блока внутренних прямоугольников
-            var id = getBlockId(e.target);
-            logOut("eventSubListItemChanged sub id: %o", id);
-
-            // получаем инпуты количества элементов в блоке
-            var inpNx = domElementById("inpNx" + id);
-            var inpNy = domElementById("inpNy" + id);
-
-            // получаем инпуты размеров элементов блока
-            var inpSizeWx = domElementById("inpSizeWx" + id);
-            var inpSizeWy = domElementById("inpSizeWy" + id);
-        
-            // inpNx.value = ;
-            // inpNy.value = ;
-
-            // если выбранный элемент существует
-            if (pack) {
-
-                // запоминаем его
-                // selectedPack = pack;
-
-                // выводим его свойства
-                
-                logOut("pack selected: %o", pack);
-                
-                inpSizeWx.value = pack.wx;
-                inpSizeWy.value = pack.wy;
-
-            } else {
-                // ничего не выбрано
-                logOut('pack selected none');
-                
-                // очищаем все поля ввода
-                inpSizeWx.value = "";
-                inpSizeWy.value = "";
-            }
-            eventSubInputChanged(e);
-        }
-        logOut('eventSubListItemChanged }');
-    }
-    
-
-    // -------------------------------------------------------
-    // функция возвращает сумму всех элементов массива чисел
-    //
-    function sum(array) {
-        var value = 0;
-        array.forEach(item => {
-            value = value + parseInt(item);
-        });
-        return value;
-    }
-
-
-    // -------------------------------------------------------
-    // функция возвращает максимальный элемент массива положительных чисел
-    //
-    function max(array) {
-        var value = 0;
-        array.forEach(item => {
-            if (parseInt(item) > value) {value = parseInt(item)};
-        });
-        return value;
-    }
-
-
-    // -------------------------------------------------------
-    // Слот | Обрабатываем событие изменения количества элементов в блоке внутренних прямоугольников
-    //
-    function eventSubInputChanged(e) {
-        // e.preventDefault();
-        logOut('eventSubInputChanged {');
-        
-        // если список элементов не пуст
-        if (typeof packs != "undefined") {
-
-            // id блока внутренних прямоугольников
-            var id = getBlockId(e.target);
-            logOut("eventSubInputChanged: sub id: %o", id);
-
-            // количество горизонтальных рядов до начала данного блока
-            var rowCountBefor = 0;
-
-            logOut("eventSubInputChanged: blockRows: %o", blockRows);
-
-            // считаем сколько есть горизонтальных рядов до начала данного блока 
-            (Object.keys(blockRows)).forEach( blockIndex => {
-                // logOut('eventSubInputChanged: blockIndex:', blockIndex);
-                // logOut('eventSubInputChanged: blockRows[blockIndex]:', blockRows[blockIndex]);
-                var index = parseInt(blockIndex);
-                if (index < id) {
-
-                    rowCountBefor = rowCountBefor + blockRows[index];
-                }
-            });
-
-            logOut('eventSubInputChanged: rowCountBefor:', rowCountBefor);
-
-            
-            // тип внутреннего элемента в данном блоке
-            var subSelCode = domElementById("selCode" + id);
-
-            // получаем инпуты количества элементов в блоке
-            var inpNx = domElementById("inpNx" + id);
-            var inpNy = domElementById("inpNy" + id);
-
-            var nX = parseInt(inpNx.value);
-            var nY = parseInt(inpNy.value);
-
-            // получаем выбранный в списке элемент
-            var pack = selectedPack;
-
-            // получаем выбранный внутренний элемент данного блока
-            var subPack = getPackByListItem(selCode.options[subSelCode.selectedIndex]);
-
-            // если заполнены значения по вертикали и горизонтали
-            if ((nX > 0) && (nY > 0)) {
-                
-            } else {
-                
-                if (!(nX > 0)) {
-                    nX = 0;
-                    nY = 0;
-                    // обнуляем количество столбцов в данном блоке
-                    // blockRows[id] = 0;
-                    // pack.item[rowIndex] = [];
-
-                    // logOut("eventSubInputChanged: blockRows[id]: %o", blockRows[id]);
-                }
-                
-                if (!(nY > 0)) {
-                    nY = 0;
-                    // обнуляем количество рядов в данном блоке
-                    // blockCols[id] = 0;
-                    // logOut("eventSubInputChanged: blockCols[id]: %o", blockCols[id]);      
-                }          
-            }
-
-            var rowCount = rowCountBefor + blockRows[id];
-
-            // удаляем ряды в данном блоке если они уже есть
-            for (var rowIndex = rowCountBefor; rowIndex < rowCount; rowIndex++) {
-                if (typeof pack.item[rowIndex] !== 'undefined') {
-                    logOut("eventSubInputChanged: deleting row: %o", rowIndex);
-                    pack.item.splice(rowIndex, 1);
-                }
-            }
-
-            // устанавливаем количество рядов в данном блоке
-                blockRows[id] = nY;
-                logOut("eventSubInputChanged: blockRows[id]: %o", blockRows[id]);
-            
-                // устанавливаем количество столбцов в данном блоке
-                blockCols[id] = nX;
-                logOut("eventSubInputChanged: blockCols[id]: %o", blockCols[id]);
- 
-                // если выбранный элемент существует
-                if (pack) {
-
-                    // если тип внутреннего элемента выбран
-                    if (subPack) {
-                        // меняем количество рядов текущего блока в pack
-
-                        logOut("eventSubInputChanged: pack selected: %o", pack);
-                        
-
-                        rowCount = rowCountBefor + blockRows[id];
-                        
-                        var colIndex = 0;
-                        var colCount = blockCols[id];
-
-                        pack.rowCount = sum(blockRows);
-                        
-                        pack.colCount = max(blockCols);
-
-                        logOut('eventSubInputChanged: rowCount:', rowCount);
-                        logOut('eventSubInputChanged: colCount:', colCount);
-                        logOut('eventSubInputChanged: pack.colCount:', pack.colCount);
-
-                        // изменяем количество рядов данного блока в pack 
-                        for (var rowIndex = (rowCountBefor); rowIndex < rowCount; rowIndex++) {
-                            logOut('eventSubInputChanged: rowIndex:', rowIndex);
-                                                    
-                            if (blockRows[id + 1] === 'undefined') {
-                                logOut('eventSubInputChanged: appand in:', rowIndex);
-                                pack.item.push([]);
-                            } else {
-                                logOut('eventSubInputChanged: insert in:', rowIndex);
-                                pack.item.splice(rowIndex, 0, []);
-                            }
-
-                            // добавляем элементы в ряд
-                            for (var colIndex = 0; colIndex < colCount; colIndex++) {
-                                
-                                var newSubPack = new PackageSimple(pack.id * 100 +  rowIndex * 10 + colIndex, canvas);
-                                newSubPack.code = subPack.code;
-                                newSubPack.name = subPack.name;
-                                newSubPack.color = subPack.color;
-                                newSubPack.wx = subPack.wx;
-                                newSubPack.wy = subPack.wy;
-                                newSubPack.h = subPack.h;
-
-                                pack.item[rowIndex].push(newSubPack);
-                            }
-                        }
-                        logOut('eventSubInputChanged: pack.item:', pack);
-
-                    }
-
-                    // перерисуем элемент
-                    pack.reDraw();
-                } else {
-                    // ничего не выбрано
-                    logOut('eventSubInputChanged: pack selected none');
-
-                    // очищаем все поля ввода
-                    // inpSizeWx.value = "";
-                    // inpSizeWy.value = "";
-                }
-        }
-        logOut('eventSubInputChanged }');
+        console.groupEnd('eventListItemChanged }');
     }
 
 });

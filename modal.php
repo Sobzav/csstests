@@ -5,12 +5,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="css/ant/reset.css">
 
     <link rel="stylesheet" href="css/ant/style.css">
-
-    <link rel="stylesheet" href="css/fonts.css">
-    <link rel="stylesheet" href="css/ant/modal.css">
     <link rel="apple-touch-icon" href="icon.png">
     <title> Модальное окно </title>
 </head>
