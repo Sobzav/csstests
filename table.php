@@ -25,22 +25,22 @@
                     <th data-type="numeric">№№ <span class="resize-handle"></span></th>
                     <th data-type="text-long">Название <span class="resize-handle"></span></th>
                     <th data-type="text-mid">Обозначение <span class="resize-handle"></span></th>
-                    <th data-type="text-mid">Ширина, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-mid">Высота, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-mid">Глубина, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Объём, см3 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">X, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Y, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Z, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-mid">Вн. прям. <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Тип 1 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Кол 1 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Тип 2 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Кол 2 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Тип 3 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Кол 3 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Тип 4 <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Кол 4 <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Ширина,<br>мм <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Высота,<br>мм <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Глубина,<br>мм <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Объём,<br>см3 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">X,<br>мм <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Y,<br>мм <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Z,<br>мм <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Вн.<br>прям. <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Тип<br>1 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Кол<br>1 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Тип<br>2 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Кол<br>2 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Тип<br>3 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Кол<br>3 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Тип<br>4 <span class="resize-handle"></span></th>
+                    <th data-type="text-short">Кол<br>4 <span class="resize-handle"></span></th>
                 </tr>
             </thead>
             <tbody>
