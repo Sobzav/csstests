@@ -3,7 +3,7 @@
 @import 'atomic.css';
 @import 'modal.css';
 @import 'forms.css';
-
+@import 'table.css';
 
 * {
     margin: 0;
@@ -182,18 +182,7 @@ label {
     padding-left: 0.1em;
 }
 
-input {
-    align-content: center;
-    border-style: none;
-    font-size: 0.8rem;
-}
 
-select {
-    vertical-align: middle;
-    border-style: none;
-    text-align: center;
-    font-size: 0.8rem;
-}
 
 /* Здесь был input  */
 

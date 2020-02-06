@@ -5,6 +5,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
+        <!-- Подключаем шрифтовые иконки для меню -->
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+        integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" href="css/ant/style.css">
     <!-- <link rel="stylesheet" href="css/fonts.css"> -->
     <link rel="apple-touch-icon" href="icon.png">
@@ -82,24 +85,25 @@
                         <div class="section-general__grid--3x2">
 
                             <div class="frst">
-                                <label class="" for="sizeWx"> Ширина </label>
-                                <input class="mainInput" size="5" type="text" min="2" max="20" pattern="[0-9]+" id="inpSizeWx" name="package_wx" required>
+                                <label class="" for="inpSizeWx"> Ширина </label>
+                                <input class="mainInput" size="5" type="text" min="2" max="20" pattern="[0-9]+" id="inpSizeWx" placeholder="" name="package_wx" required>
+                                <span class="fa fa-info-circle icospan"></span>
                                 <label class="" for="sizeWx"> мм </label>
                             </div>
 
                             <div class="scnd">
-                                <label class="" for="sizeWy"> Высота </label>
+                                <label class="" for="inpSizeWy"> Высота </label>
                                 <input class="mainInput" size="5" type="text" id="inpSizeWy" name="package_wy" required>
                                 <label class="" for="sizeWy"> мм </label>
                             </div>
 
                             <div class="thrd">
-                                <label class="" for="sizeH"> Глубина </label>
+                                <label class="" for="inpSizeH"> Глубина </label>
                                 <input class="mainInput" size="5" type="text" id="inpSizeH" name="package_h" required>
                                 <label class="" for="sizeH"> мм </label>
                             </div>
                             <div class="frth">
-                                <label class="" for="color"> Цвет: </label>
+                                <label class="" for="inpColor"> Цвет: </label>
                                 <input class="mainInput" type="color" id="inpColor" name="package_color" required>
                             </div>
 
