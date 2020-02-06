@@ -90,8 +90,14 @@ th,
 td {
     padding: 10px 0px;
     overflow: hidden;
+    text-align: center;
     /* text-overflow: ellipsis; */
     /* white-space: nowrap; */
+}
+
+.text-long {
+    text-align: left;
+    padding-left: 5px;
 }
 
 th {
@@ -106,7 +112,7 @@ th {
     /* position: relative;  Если не надо чтобы th прилипала к верху */
 }
 
-th:first-child, td:first-child {
+th:first-child {
     padding-left: 5px;
 }
 

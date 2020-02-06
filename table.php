@@ -47,7 +47,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Название длинное в две строчки</td>
+                    <td class="text-long">Название длинное в две строчки</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -70,7 +70,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet.</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet.</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -93,7 +93,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -116,7 +116,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Название длинное в две строчки</td>
+                    <td class="text-long">Название длинное в две строчки</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -139,7 +139,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet.</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet.</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -162,7 +162,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -185,7 +185,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Название длинное в две строчки</td>
+                    <td class="text-long">Название длинное в две строчки</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -208,7 +208,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet.</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet.</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -231,7 +231,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -254,7 +254,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Название длинное в две строчки</td>
+                    <td class="text-long">Название длинное в две строчки</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -277,7 +277,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet.</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet.</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -300,7 +300,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -323,7 +323,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Название длинное в две строчки</td>
+                    <td class="text-long">Название длинное в две строчки</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -346,7 +346,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet.</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet.</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
@@ -369,7 +369,7 @@
                 <tr>
                     <td>1</td>
                     <td>3</td>
-                    <td>Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
+                    <td class="text-long">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, illum. Dolorem, quaerat?</td>
                     <td>501.0</td>
                     <td>4444</td>
                     <td>44</td>
