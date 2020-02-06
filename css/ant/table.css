@@ -6,9 +6,9 @@
 
 /* .gridContainer__table {
     display: grid;
-    grid-template-columns: repeat(20, 0.9fr);
+    grid-template-columns: repeat(20, 0.8fr);
     grid-template-columns: minmax(150px, 1.33fr) minmax(150px, 2.33fr);
-    grid-template-rows: repeat(5, 0.9fr);
+    grid-template-rows: repeat(5, 0.8fr);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 } */
@@ -23,9 +23,9 @@ body {
 }
 
 table {
-    min-width: 98vw;
-    width: auto;
-    flex: 1;
+    /* min-width: 98vw; */
+    /* width: auto; */
+    flex: 2;
     display: grid;
     border-collapse: collapse;
     border-spacing: 5px;
@@ -38,39 +38,39 @@ table {
         /* 2 */
         minmax(300px, 3fr)
         /* 3 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 4 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 5 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 6 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 7 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 8 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 9 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 10 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 11 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 12 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 13 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 14 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 15 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 16 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 17 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 18 */
-        minmax(90px, 0.9fr)
+        minmax(80px, 0.8fr)
         /* 19 */
-        minmax(90px, 0.9fr);
+        minmax(80px, 0.8fr);
         /* 20 */
 }
 
