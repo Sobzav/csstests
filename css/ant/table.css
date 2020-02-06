@@ -32,45 +32,45 @@ table {
     background-color: white;
     /* These are just initial values which are overriden using JavaScript when a column is resized */
     grid-template-columns:
-        minmax(20px, 0.2fr)
+        minmax(30px, 0.3fr)
         /* 1 */
-        minmax(20px, 0.2fr)
+        minmax(30px, 0.3fr)
         /* 2 */
         minmax(300px, 3fr)
         /* 3 */
-        minmax(80px, 0.8fr)
+        minmax(100px, 1fr)
         /* 4 */
-        minmax(80px, 0.8fr)
+        minmax(100px, 1fr)
         /* 5 */
-        minmax(80px, 0.8fr)
+        minmax(100px, 1fr)
         /* 6 */
-        minmax(80px, 0.8fr)
+        minmax(100px, 1fr)
         /* 7 */
-        minmax(80px, 0.8fr)
+        minmax(100px, 1fr)
         /* 8 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 9 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 10 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 11 */
-        minmax(80px, 0.8fr)
+        minmax(100px, 1fr)
         /* 12 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 13 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 14 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 15 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 16 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 17 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 18 */
-        minmax(80px, 0.8fr)
+        minmax(60px, 0.6fr)
         /* 19 */
-        minmax(80px, 0.8fr);
+        minmax(60px, 0.6fr);
         /* 20 */
 }
 
@@ -102,6 +102,7 @@ td {
 
 th {
     position: sticky;  /* Если надо чтобы th прилипала к верху */
+    word-wrap: break-word; /* Перенос длинных слов */
     top: 0;
     background-color: #6B727B;
     /* text-align: left; */

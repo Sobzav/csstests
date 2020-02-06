@@ -3,9 +3,10 @@
 const min = 150;
 // The max (fr) values for grid-template-columns
 const columnTypeToRatioMap = {
-    numeric: 0.2,
-    'text-short': 0.8,
+    numeric: 0.3,
+    'text-short': 0.6,
     'text-long': 3,
+    'text-mid' : 1,
 };
 
 const table = document.querySelector('table');

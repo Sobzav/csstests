@@ -24,15 +24,15 @@
                     <th data-type="numeric">№ <span class="resize-handle"></span></th>
                     <th data-type="numeric">№№ <span class="resize-handle"></span></th>
                     <th data-type="text-long">Название <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Обозначение <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Ширина, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Высота, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Глубина, мм <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Обозначение <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Ширина, мм <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Высота, мм <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Глубина, мм <span class="resize-handle"></span></th>
                     <th data-type="text-short">Объём, см3 <span class="resize-handle"></span></th>
                     <th data-type="text-short">X, мм <span class="resize-handle"></span></th>
                     <th data-type="text-short">Y, мм <span class="resize-handle"></span></th>
                     <th data-type="text-short">Z, мм <span class="resize-handle"></span></th>
-                    <th data-type="text-short">Вн. прям. <span class="resize-handle"></span></th>
+                    <th data-type="text-mid">Вн. прям. <span class="resize-handle"></span></th>
                     <th data-type="text-short">Тип 1 <span class="resize-handle"></span></th>
                     <th data-type="text-short">Кол 1 <span class="resize-handle"></span></th>
                     <th data-type="text-short">Тип 2 <span class="resize-handle"></span></th>
