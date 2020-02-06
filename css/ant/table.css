@@ -4,28 +4,10 @@
 /*                                          */
 /*==========================================*/
 
-/* .gridContainer__table {
-    display: grid;
-    grid-template-columns: repeat(20, 0.8fr);
-    grid-template-columns: minmax(150px, 1.33fr) minmax(150px, 2.33fr);
-    grid-template-rows: repeat(5, 0.8fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-} */
-* {
-    box-sizing: border-box;
-}
-
-html,
-body {
-    padding: 0;
-    margin: 0;
-}
-
 table {
-    /* min-width: 98vw; */
-    /* width: auto; */
-    flex: 2;
+    min-width: 98vw;
+    width: auto;
+    flex: 1;
     display: grid;
     border-collapse: collapse;
     border-spacing: 5px;
@@ -82,8 +64,6 @@ tr {
 
 thead {
     font-family: 'CoreSansDS35Regular';
-    font-size: 1.125rem;
-    vertical-align: middle;
 }
 
 th,
@@ -91,8 +71,8 @@ td {
     padding: 10px 0px;
     overflow: hidden;
     text-align: center;
-    /* text-overflow: ellipsis; */
-    /* white-space: nowrap; */
+    /* text-overflow: ellipsis; "..."вместо текста который не уместился */
+    /* white-space: nowrap; чтобы строки не переносились */
 }
 
 .text-long {
@@ -105,7 +85,6 @@ th {
     word-wrap: break-word; /* Перенос длинных слов */
     top: 0;
     background-color: #6B727B;
-    /* text-align: left; */
     border-right: 1px dotted white;
     font-weight: normal;
     font-size: 1.1rem;
