@@ -86,9 +86,10 @@
 
                             <div class="frst">
                                 <label class="" for="inpSizeWx"> Ширина </label>
-                                <input class="mainInput" size="5" type="text" min="2" max="20" pattern="[0-9]+" id="inpSizeWx" placeholder="" name="package_wx" required>
-                                <span class="fa fa-info-circle icospan"></span>
-                                <label class="" for="sizeWx"> мм </label>
+                                <input id="inpSizeWx" class="mainInput" size="5" type="text" min="2" max="20" pattern="[0-9]+" placeholder="" name="package_wx" required>
+                                <!-- Span с иконкой и всплывающей подсказкой, объясняющей, что надо делать (Иконка видна только при focus на input и при пустом input в режиме редактирования) -->
+                                <span title="Это поле обязательно к заполнению" class="fa fa-info-circle icospan"></span>
+                                <label class="" for="sizeWx"> мм </label><!-- Здесь for="sizeWx" не соответствует id="inpSizeWx" у input (хотя должен соответствовать) - если бы соответствовал, то по клику на данный label input с соотв. ID становился бы в focus) Сейчас не становится. -->
                             </div>
 
                             <div class="scnd">
