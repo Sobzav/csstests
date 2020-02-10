@@ -6,8 +6,8 @@
     // $db_host = '172.20.10.3';
     $db_host = 'localhost:3306';
     $db_name = 'sobzav';            // имя базы данных
-    $db_user = 'admin';             // имя пользователя
-    $db_pass = 'admin';             // пароль
+    $db_user = 'sbus';             // имя пользователя  ИЗМЕНЕН!!
+    $db_pass = 'eAwNRYiofwMFD4lg';             // пароль  ИЗМЕНЕН!!
 
     error_log("connecting to the mySql server on $db_host", 0);
     

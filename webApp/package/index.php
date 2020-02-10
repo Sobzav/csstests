@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
-    <link rel="stylesheet" type="text/css" href="css\style.css" />
+    <!-- <link rel="stylesheet" type="text/css" href="css\style.css" /> -->
+    <link rel="stylesheet" href="/css/ant/style.css">
     <title> Упаковка </title>
 </head>
 
@@ -150,7 +151,7 @@
                                 <!-- Second grid Line -->
                                 <div class="frth">
                                     <label class="" for="inpNy_"> Количество<br>по вертикали </label>
-                                    <input class="subInput" size="1" type="text" id="inpNy_" name="package_wy_">
+                                    <input class="subInput" size="1" type="number" id="inpNy_" name="package_wy_">
                                     <label class="" for="inpNy_"> шт </label>
                                 </div>
 

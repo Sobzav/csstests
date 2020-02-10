@@ -43,6 +43,11 @@ option {
     margin: 0 0.2rem;
     border: 1px solid var(--color-crBrown);  /* Добавил border ко всем эл-там ввода чтобы не скакала верстка при изменении статуса input на required*/
 }
+input[type=number] {
+    width: 3.46em;  /* Ограничение ширины для цифрового типа */
+    padding-right: 0; /* Чтобы кнопки набора цифр были вплотную к правому краю */
+}
+
 select {
     vertical-align: middle;
     border-style: none;
@@ -91,11 +96,11 @@ input:required ~ span.icospan {
 }
 
 /* НЕИСПОЛЬЗУЕМЫЙ Элемент - change required - invalid input */
-input:invalid {
+/* input:invalid {
     background-color: #FBF0F0;
     border: 1px solid #EAC6C9;
     box-shadow: inset 0px 1px 2px rgba(0,0,0,0.5);
-}
+} */
 
 /* НЕИСПОЛЬЗУЕМЫЙ Элемент - change required - variant - иконка с Font Awesome примененная к label перед input */
 label i {

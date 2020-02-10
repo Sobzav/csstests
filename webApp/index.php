@@ -7,6 +7,7 @@
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <!-- <link rel="stylesheet" type="text/css" href="..\reset.css" /> -->
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
+    
     <title> Упаковка </title>
 </head>
 
@@ -166,7 +167,7 @@
 
                                 <div class="inputBlock ml-8 mr-2">
                                     <label class="inputLabel" for="inpNy1"> Количество<br>по вертикали </label>
-                                    <input class="" size="1" type="text" id="inpNy1" name="package_wy1">
+                                    <input class="" size="1" type="number" id="inpNy1" name="package_wy1">
                                     <label class="inputLabel" for="inpNy1"> шт </label>
                                 </div>
 

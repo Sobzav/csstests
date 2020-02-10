@@ -162,7 +162,7 @@
                             <!-- Second grid Line -->
                             <div class="frth">
                                 <label class="" for="inpNy_"> Количество<br>по вертикали </label>
-                                <input class="subInput" size="1" type="text" id="inpNy_" name="package_wy_">
+                                <input class="subInput" size="1" type="number" id="inpNy_" name="package_wy_">
                                 <label class="" for="inpNy_"> шт </label>
                             </div>
 
@@ -226,10 +226,9 @@
     <!--скрипты для стилей -->
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/jquery.validate.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/package.js"></script>
-    <script src="js/subblock.js"></script>
-    <script src="js/main.js"></script>
+    <script src="webApp/package/main.js"></script>
+    <script src="webApp/package/package.js"></script>
+    <script src="webApp/package/subblock.js"></script>
     <!-- <script src="http://10.30.50.10/webapp/package/main.js"></script> -->
 
 </body>
