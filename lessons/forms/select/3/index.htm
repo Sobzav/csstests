@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!--[if IE 7 ]> <html lang="en" class="ie7"> <![endif]-->
+<!--[if IE 8 ]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9 ]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html>
+<!--<![endif]-->
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<meta charset="utf-8">
+		<title>Пользовательские стили для формы на чистом CSS</title>
+		<link rel="stylesheet" media="screen" href="css/style.css">
+		
+		<!-- Данный код для того чтобы стили работали в IE 6-8 -->
+		<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+	</head>
+	
+	<body>
+		
+		<div style="margin-bottom:20px;">
+			<h1>Пользовательские стили для элементов формы</h1>	
+		</div>
+		
+		<h2 id="first">Чекбоксы и радиокнопки (IE9+, FF, Opera, Webkit)</h2>
+		
+		<p><input id="male" type="checkbox"><label for="male">Чекбокс</label><br>
+			<input checked="checked" name="option" id="female" type="radio"><label for="female">Радиокнопка 1</label>
+			<input name="option" id="female2" type="radio"><label for="female2">Радиокнопка 2</label>
+		</p>
+		
+		<h2>Выпадающий список (IE8+, FF, Webkit)</h2>
+		<div class="styled"><select>
+			<option selected="selected">Элемент 1</option>
+			<option>Элемент 2</option>
+			<option>Элемент 3</option>
+			</select>
+		</div>
+		
+		<h2>Кнопка для загрузки файла (Webkit)</h2>
+		<p><input type="file" value="Обзор"></p>
+		
+		<h2>Текстовое поле и текстовая область (IE9+, FF, Opera, Webkit)</h2>
+		<p><input placeholder="Введите текст..." type="text"></p>
+		<p><textarea placeholder="Введите текст..."></textarea>		
+		</p><p><input value="« Назад" type="button"> <input value="Вперед »" type="submit"> </p>
+	</body>
+</html>

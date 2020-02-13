@@ -311,6 +311,14 @@ window.addEventListener("load", () => {
     //
 
 
+    // Настраиваем разрешение <canvas>
+    // пропорции должны соответствовать размерам <canvas> в CSS
+    canvas.width = 1000;
+    canvas.height = 1000;    
+
+    // Делает все инпуты недоступными для редактирования
+    setDomElementsEnabled('.disabled, .mainInput, .subInput');
+
     // структура хранящая количество блоков в count
     // и блоки в item с количеством горизонтальных рядов
     // и количеством элементов в каждом ряде
@@ -407,13 +415,6 @@ window.addEventListener("load", () => {
     }
     console.groupEnd("main.addSubBlockElements }");
 
-
-    // Настраиваем разрешение <canvas>
-    canvas.width = 1000;
-    canvas.height = 1000;    
-
-    // Делает все инпуты недоступными для редактирования
-    setDomElementsEnabled('.disabled, .mainInput, .subInput');
 
 
 
@@ -963,8 +964,6 @@ window.addEventListener("load", () => {
             // сохраняем копию выбранного элемента для отмены изменений
             // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
-            // делаем поля внутренних элементов доступными
-            setDomElementsEnabled('.subInput', true);
             setDomElementsEnabled('#btnCopy', false);
                 
             // Меняем кнопке текст с "Редактировать" на "Назад"
@@ -1094,7 +1093,17 @@ window.addEventListener("load", () => {
 
         // если выделенный элемент существует
         if (pack) {
-
+            
+            // проверим корректность введенных данных
+            if (packs.some( function(item) {
+    
+                return (item.code == pack.code) && (item != pack);
+            })) {
+    
+                setStatus('Сохранение невозможно, элемент с таким Обозначением уже существует', 7000);
+                return false;
+            }
+    
             // если данный элемент является новым
             if (pack.id === 0) {
                 
@@ -1153,7 +1162,7 @@ window.addEventListener("load", () => {
                     }
                 });
     
-            // иначе обновляем существующий элемент в БД
+            // если элемент уже существует, то обновляем его в БД
             } else {
 
                 console.time();

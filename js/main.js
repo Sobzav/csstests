@@ -47,7 +47,7 @@ const btn = {
     Retry	        : 0x00080000, 	// A "Retry" button defined with the AcceptRole.
     Ignore	        : 0x00100000, 	// An "Ignore" button defined with the AcceptRole.
     NoButton	    : 0x00000000, 	// An invalid button.        
-}
+};
 
 
 
@@ -66,119 +66,139 @@ var packs = [];
 //
 
 
-// -------------------------------------------------------
-// Функция | Возвращает адекватные координаты мыши
-//           внутри клиентской области <canvas>
-//
-function getMousePos(canvas, event) {
-    var rect = canvas.getBoundingClientRect();
-    return {
-      x: event.clientX - rect.left,
-      y: event.clientY - rect.top
-    }
-}
-
-
-// -------------------------------------------------------
-// Функция | подгоняем размер тега <input> под его содержимое
-//           если параметр min = true то размер всегда будет минимально возможным
-//
-function tuneInputSize(target, min = false) {
-    if (min) {
-        target.size = target.value.length;
-    } else if (target.size < target.value.length) {
-        target.size = target.value.length;
-    }
-}
-
-
-// -------------------------------------------------------
-// Функция | Поиск элемента в массиве packs
-//           По атрибуту id
-//           Возвращает указатель на элемент массива (объект)
-//           или false массив пуст или в нем нет выделенного элемента
-//
-function getPackById(id) {
-    console.group("main.getPackById { id: %o", id);
-
-    if (typeof id === 'undefined') {
-        console.warn('id: is undefined');
+    // -------------------------------------------------------
+    // Функция | Генерирует уникальный ID
+    //
+    function generateId() {
+        console.groupCollapsed("global.generateId { ");
         console.groupEnd();
-        return false;
+        return Math.random().toString(36).substr(2, 7);
     }
 
-    if (typeof id === null) {
-        console.warn('id: is null');
-        console.groupEnd();
-        return false;
+
+    // -------------------------------------------------------
+    // Функция | Возвращает адекватные координаты мыши
+    //           внутри клиентской области <canvas>
+    //
+    function getMousePos(canvas, event) {
+        var rect = canvas.getBoundingClientRect();
+        return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+        }
     }
 
-    // если контейнер элементов не пуст
-    // и id не пустое значение
-    if (packs) {
 
-        // смотрим какой из элементов с заданным id
-        var pack = packs.find(obj => obj.id === id);
+    // -------------------------------------------------------
+    // Функция | подгоняем размер тега <input> под его содержимое
+    //           если параметр min = true то размер всегда будет минимально возможным
+    //
+    function tuneInputSize(target, min = false) {
+        if (min) {
+            target.size = target.value.length;
+        } else if (target.size < target.value.length) {
+            target.size = target.value.length;
+        }
+    }
 
-        // если эелемент существует
-        if (pack) {
-            
+
+    // -------------------------------------------------------
+    // Функция | Поиск элемента в массиве packs
+    //           По атрибуту id
+    //           Возвращает указатель на элемент массива (объект)
+    //           или false массив пуст или в нем нет выделенного элемента
+    //
+    function getPackById(id) {
+        console.group("main.getPackById { id: %o", id);
+
+        if (typeof id === 'undefined') {
+            console.warn('id: is undefined');
             console.groupEnd();
-            return pack;
-            
+            return false;
+        }
+
+        if (typeof id === null) {
+            console.warn('id: is null');
+            console.groupEnd();
+            return false;
+        }
+
+        // если контейнер элементов не пуст
+        // и id не пустое значение
+        if (packs) {
+
+            // смотрим какой из элементов с заданным id
+            var pack = packs.find(obj => obj.id === id);
+
+            // если эелемент существует
+            if (pack) {
+                
+                console.groupEnd();
+                return pack;
+                
+                // если такого элемента нет возвращаем false
+            } else {
+                console.warn('pack: %o', pack);
+                console.warn('id: %o doesn`t exist', id);
+                console.groupEnd();
+                return false;
+            }
+
+        // если контейнер пуст то возвращаем false
+        } else {
+            console.warn('packs: %o', packs);
+            console.groupEnd();
+            return false;
+        }
+    }
+
+
+    // -------------------------------------------------------
+    // Функция | Поиск элемента в массиве packs
+    //           По атрибуту listItem <option>
+    //           Возвращает указатель на элемент массива (объект)
+    //           или false когда массив пуст или в нем нет выделенного элемента
+    //              Если параметр regExp содержит шаблон регулярного выражения
+    //           то он будет использован для поиска совпадений
+    //
+    function getPackByListItem(listItem, regExp = false) {
+        console.groupCollapsed("main.getPackByListItem { listItem: %o", listItem);
+
+        // если контейнер элементов не пуст
+        // и listItem не пустое значение
+        if ((packs) && (listItem)) {
+
+            if (regExp) {
+
+                // смотрим какой из элементов в массиве packs содержит искомый listItem в свойстве
+                // для сравнения используем регулярное выражение
+                var pack = packs.find(obj => regExp.test(obj.listItem.id));
+            } else {
+
+                // смотрим какой из элементов в массиве packs содержит искомый listItem в свойстве
+                var pack = packs.find(obj => obj.listItem.id == listItem.id);
+            }
+
+            // если эелемент существует
+            if (pack) {
+
+                console.groupEnd();
+                return pack;
+
             // если такого элемента нет возвращаем false
+            } else {
+                console.warn('listItem: %o doesn`t exist', listItem);
+                console.groupEnd();
+                return false;
+            }
+
+        // если контейнер пуст то возвращаем false
         } else {
-            console.warn('pack: %o', pack);
-            console.warn('id: %o doesn`t exist', id);
+            console.warn('packs is emptyt: %o', packs);
             console.groupEnd();
             return false;
         }
-
-    // если контейнер пуст то возвращаем false
-    } else {
-        console.warn('packs: %o', packs);
-        console.groupEnd();
-        return false;
     }
-}
-
-
-// -------------------------------------------------------
-// Функция | Поиск элемента в массиве packs
-//           По атрибуту listItem <option>
-//           Возвращает указатель на элемент массива (объект)
-//           или false массив пуст или в нем нет выделенного элемента
-//
-function getPackByListItem(listItem) {
-    console.groupCollapsed("main.getPackByListItem { listItem: %o", listItem);
-
-    // если контейнер элементов не пуст
-    // и listItem не пустое значение
-    if ((packs) && (listItem)) {
-
-        // смотрим какой из элементов в массиве packs содержит искомый listItem в свойстве
-        var pack = packs.find(obj => obj.id == listItem.id.split(".")[2]);
-
-        // если эелемент существует
-        if (pack) {
-
-            console.groupEnd();
-            return pack;
-
-        // если такого элемента нет возвращаем false
-        } else {
-            console.warn('listItem: %o doesn`t exist', listItem);
-            console.groupEnd();
-            return false;
-        }
-
-    // если контейнер пуст то возвращаем false
-    } else {
-        console.warn('packs is emptyt: %o', packs);
-        console.groupEnd();
-        return false;
-    }
-}
 
 
 
@@ -271,7 +291,7 @@ window.addEventListener("load", () => {
     const inpPayload = domElementById("inpPayload");
     const inpSizeWx = domElementById("inpSizeWx");
     const inpSizeWy = domElementById("inpSizeWy");
-    const inpSizeH = domElementById("inpSizeH");
+    const inpSizeWz = domElementById("inpSizeWz");
     const inpColor = domElementById("inpColor");
     const inpVolume = domElementById("inpVolume");
     const checkBoxHasContent = domElementById("checkBoxHasContent");
@@ -290,6 +310,14 @@ window.addEventListener("load", () => {
     // ИНИЦИАЛИЗАЦИЯ |
     //
 
+
+    // Настраиваем разрешение <canvas>
+    // пропорции должны соответствовать размерам <canvas> в CSS
+    canvas.width = 1000;
+    canvas.height = 1000;    
+
+    // Делает все инпуты недоступными для редактирования
+    setDomElementsEnabled('.disabled, .mainInput, .subInput');
 
     // структура хранящая количество блоков в count
     // и блоки в item с количеством горизонтальных рядов
@@ -388,13 +416,6 @@ window.addEventListener("load", () => {
     console.groupEnd("main.addSubBlockElements }");
 
 
-    // Настраиваем разрешение <canvas>
-    canvas.width = 1000;
-    canvas.height = 1000;    
-
-    // Делает все инпуты недоступными для редактирования
-    setDomElementsEnabled('.disabled, .mainInput, .subInput');
-
 
 
     // -------------------------------------------------------
@@ -445,30 +466,18 @@ window.addEventListener("load", () => {
             var selectedOption = list.selectedOptions[0];
             console.log('selectedOption: %o', selectedOption);
 
-            var selectedOptionId = selectedOption.id;
-            console.log('selectedOptionId: %o', selectedOptionId);
+            var pack = getPackByListItem(selectedOption);
+            console.log('selectedPack: %o', pack);
 
-            var selectedPackId = selectedOptionId.split(".")[2]
-            console.log('selectedPackId: %o', selectedPackId);
-
-            // смотрим какой из элементов выбран в списке
-            var pack = packs.find(obj => obj.id == selectedPackId);
-
-            if (pack) {
-                
-                console.log('pack selected: %o', pack);
-                console.groupEnd();
-                return pack;
-            } else {
+            if (!pack) {
                 console.warn('pack list has no selected item');
-                console.groupEnd();
-                return false;
             }
         } else {
             console.warn('packs (%o) is emptyt or list.selectedOptions (%o) is empty', packs, list.selectedOptions);
-            console.groupEnd();
-            return false;
         }
+
+        console.groupEnd();
+        return pack;
     }
 
 
@@ -512,7 +521,7 @@ window.addEventListener("load", () => {
     //                  color: "000000",
     //                  wx: "",
     //                  wy: "",
-    //                  h: "",
+    //                  wz: "",
     //                  payload: "",
     //                  material_id: null,
     //                  material_name: null,
@@ -538,7 +547,7 @@ window.addEventListener("load", () => {
         pack.setSize(
             parseInt(data['wx']),   // размеры элемента из базы
             parseInt(data['wy']),   // размеры элемента из базы
-            parseInt(data['h'])     // размеры элемента из базы
+            parseInt(data['wz'])     // размеры элемента из базы
         );               
         pack.color = "#" + data['color'];           // цвет элемента из базы
 
@@ -566,7 +575,7 @@ window.addEventListener("load", () => {
                 newSubPack.color = "#" + sub.color;
                 newSubPack.wx = parseInt(sub.wx);
                 newSubPack.wy = parseInt(sub.wy);
-                newSubPack.h = parseInt(sub.h);
+                newSubPack.wz = parseInt(sub.wz);
 
                 pack.pushTo(rowIndex -1, colIndex -1, newSubPack);
                 
@@ -574,7 +583,7 @@ window.addEventListener("load", () => {
             });
         }
 
-        console.groupEnd("main.packsCreate pack = %o }", pack);
+        console.groupEnd();
         return pack;
     }
 
@@ -591,7 +600,8 @@ window.addEventListener("load", () => {
         packs.push(pack);
 
         // даем уникальный id для <option>
-        var optionId = "opt.main." + pack.id;
+        var idSufix = generateId();
+        var optionId = "opt.main." + pack.id + "." + idSufix;
 
         // создаем новый элемент в выпадающий список список на форме
         pack.listItem = createOption(optionId, pack.code);
@@ -604,7 +614,7 @@ window.addEventListener("load", () => {
         for(var blockIndex = 0; blockIndex < subBlock.count; blockIndex++) {
             
             // даеем уникальный id для <option>
-            var optionId = "opt.sub." + pack.id;
+            var optionId = "opt.sub." + pack.id + "." + idSufix;
     
             // создаем <option> соответствующий очередному pack
             var subOption = createOption(optionId, pack.code);
@@ -624,13 +634,12 @@ window.addEventListener("load", () => {
     function packsRemove(pack) {
         console.group("main.packsRemove { pack = %o ", pack);
 
-        // удаляем элемент из списков selCode1...selCode[N]
-        subInp.forEach(subInpItem => {
-            if (subInpItem.nodeName === "SELECT") {
+        // удаляем элемент из выпадающих списков внутренних прямоугольников на форме
+        for(var blockIndex = 0; blockIndex < subBlock.count; blockIndex++) {
 
-                subInpItem.remove(pack.listItem.index)
-            }
-        });
+            // удаляем элемент <option> в <select> текцщего блока внутренних элементов
+            subBlock.item[blockIndex].selCode.remove(pack.listItem.index)
+        }
 
         // удаляем элемент из списка selCode
         selCode.remove(pack.listItem.index);
@@ -804,7 +813,7 @@ window.addEventListener("load", () => {
     // Привязываем события изменения размеров элемента
     inpSizeWx.addEventListener('change', eventItemChanged);
     inpSizeWy.addEventListener('change', eventItemChanged);
-    inpSizeH.addEventListener('change', eventItemChanged);
+    inpSizeWz.addEventListener('change', eventItemChanged);
 
     // Привязываем событие изменения цвета элемента
     inpColor.addEventListener('change', eventItemChanged);          
@@ -939,8 +948,9 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
-    // Функция | Переключает форму и все необходимые элементы
+    // Функция | - Переключает форму и все необходимые элементы
     //           в режим редактирования и обратно
+    //           - Сохраняем эелемент если он был изменен
     //
     function setEditMode(editMode) {
         console.group('setEditMode editMode=%o', editMode);
@@ -954,8 +964,6 @@ window.addEventListener("load", () => {
             // сохраняем копию выбранного элемента для отмены изменений
             // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
-            // делаем поля внутренних элементов доступными
-            setDomElementsEnabled('.subInput', true);
             setDomElementsEnabled('#btnCopy', false);
                 
             // Меняем кнопке текст с "Редактировать" на "Назад"
@@ -972,10 +980,9 @@ window.addEventListener("load", () => {
             
             // отключаем режим редактирования [ НАЗАД ]
             
-            console.log('selectedPack.changed = %o', selectedPack.changed);
             // если элемент был изменен
+            console.log('selectedPack.changed = %o', selectedPack.changed);
             if (selectedPack.changed) {
-                
                 
                 // Предлагаем пользователю сохранить изменения
                 var reply = messageBox('Тип "' + selectedPack.code + '" был изменен, хотите сохранить?');
@@ -1086,7 +1093,17 @@ window.addEventListener("load", () => {
 
         // если выделенный элемент существует
         if (pack) {
-
+            
+            // проверим корректность введенных данных
+            if (packs.some( function(item) {
+    
+                return (item.code == pack.code) && (item != pack);
+            })) {
+    
+                setStatus('Сохранение невозможно, элемент с таким Обозначением уже существует', 7000);
+                return false;
+            }
+    
             // если данный элемент является новым
             if (pack.id === 0) {
                 
@@ -1103,10 +1120,11 @@ window.addEventListener("load", () => {
                         "package_code": pack.code,
                         "package_name": pack.name,
                         "package_payload": pack.payload,
-                        "package_h": pack.h,
+                        "package_wz": pack.wz,
                         "package_wx": pack.wx,
                         "package_wy": pack.wy,
-                        "package_color": pack.color.replace("#", "")
+                        "package_color": pack.color.replace("#", ""),
+                        "subItem": pack.item
                     },
                     
                     // Получаем ответ сервера
@@ -1144,12 +1162,27 @@ window.addEventListener("load", () => {
                     }
                 });
     
-            // иначе обновляем существующий элемент в БД
+            // если элемент уже существует, то обновляем его в БД
             } else {
 
                 console.time();
 
                 // формируем данные для отправки на сервер
+                var subItem = function() {
+                    var result = [];
+                    for (var rowIndex = 0; rowIndex < pack.rowCount; rowIndex++) {
+                        for (var colIndex = 0; colIndex < pack.getColCount(rowIndex); colIndex++) {
+                            result.push({
+                                "sub_package_id": pack.item[rowIndex][colIndex].id,
+                                "row": (rowIndex + 1),
+                                "col": (colIndex + 1)
+                            });
+                        }
+                    }
+                    return result;
+                }
+                console.log('subItem: %o', subItem());
+
                 // Выполняем асинхронный запрос POST (UPDATE)
                 $.ajax({
                     type: "POST",
@@ -1160,10 +1193,11 @@ window.addEventListener("load", () => {
                         "package_code": pack.code,
                         "package_name": pack.name,
                         "package_payload": pack.payload,
-                        "package_h": pack.h,
+                        "package_wz": pack.wz,
                         "package_wx": pack.wx,
                         "package_wy": pack.wy,
-                        "package_color": pack.color.replace("#", "")
+                        "package_color": pack.color.replace("#", ""),
+                        "subItem": subItem()
                     },
                     
                     // Если сохранение успешно:
@@ -1229,7 +1263,7 @@ window.addEventListener("load", () => {
                 color: pack.color.replace("#", ""),
                 wx: pack.wx,
                 wy: pack.wy,
-                h: pack.h,
+                wz: pack.wz,
                 payload: pack.payload,
                 material_id: pack.material_id,
                 photo_id: pack.photo_id,
@@ -1244,7 +1278,7 @@ window.addEventListener("load", () => {
             // newPack.color = ;
             // newPack.wx = ;
             // newPack.wy = pack.wy;
-            // newPack.h = pack.h;
+            // newPack.wz = pack.wz;
             // newPack.payload = ;
             // newPack.material_id = ;
             // newPack.photo_id = ;
@@ -1355,18 +1389,18 @@ window.addEventListener("load", () => {
                     pack.color = e.target.value;
                     break;
                 case 'inpSizeWx':
-                    pack.wx = parseInt(e.target.value)
+                    pack.wx = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
                     break;
                 case 'inpSizeWy':
-                    pack.wy = parseInt(e.target.value);
+                    pack.wy = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
                     break;
-                case 'inpSizeH':
-                    pack.h = parseInt(e.target.value);
+                case 'inpSizeWz':
+                    pack.wz = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
                     break;
             }            
             
             // вычисляем объем элемента
-            inpVolume.innerText = pack.h * pack.wx * pack.wy;
+            inpVolume.innerText = pack.wz * pack.wx * pack.wy;
 
             // обновим изображение элемента
             pack.reDraw();  
@@ -1424,8 +1458,14 @@ window.addEventListener("load", () => {
         var pack ;
         for (var index = 1; index < selCode.options.length; index++) {
 
+            var selectedOption = selCode.options[index];
+
             // берем pack который соответствует текущему <option>
-            pack = getPackByListItem(selCode.options[index]);
+            var regSufix = selectedOption.id.match(/\w*$/g)[0];
+            var regStr = 'opt\\.[a-z]+\\.\\d+\\.' + regSufix + '$';
+            var regExp = new RegExp(regStr, 'g');
+
+            pack = getPackByListItem(selectedOption, regExp);
 
             // обновляем текст <option>
             selCode.options[index].innerText = pack.code;
@@ -1444,7 +1484,7 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
-    // Слот | Привязываем событие клика на список
+    // Слот | Обрабатываем событие клика на список
     //
     function eventListClicked(e) {
         console.group('eventListClicked {');
@@ -1499,11 +1539,11 @@ window.addEventListener("load", () => {
         inpCodeEdit.value = pack.code;
         inpName.value = pack.name;
         inpPayload.value = pack.payload;
-        inpSizeH.value = pack.h;
+        inpSizeWz.value = pack.wz;
         inpSizeWx.value = pack.wx;
         inpSizeWy.value = pack.wy;
         inpColor.value = pack.color;
-        inpVolume.innerText = pack.h * pack.wx * pack.wy;
+        inpVolume.innerText = pack.wz * pack.wx * pack.wy;
 
         // если у элемента pack есть внутренние элементы
         if (pack) {
@@ -1578,7 +1618,7 @@ window.addEventListener("load", () => {
                 color: "000000",
                 wx: "0",
                 wy: "0",
-                h: "0",
+                wz: "0",
                 payload: "0",
                 material_id: null,
                 material_name: null,
