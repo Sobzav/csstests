@@ -70,17 +70,6 @@ console.log("main.warehouse: %o", warehouse);
 // ГЛОБАЛЬНЫЕ ФУНКЦИИ |
 //
 
-
-    // -------------------------------------------------------
-    // Функция | Генерирует уникальный ID
-    //
-    function generateId() {
-        console.groupCollapsed("global.generateId { ");
-        console.groupEnd();
-        return Math.random().toString(36).substr(2, 7);
-    }
-
-
     // -------------------------------------------------------
     // Функция | Возвращает адекватные координаты мыши
     //           внутри клиентской области <canvas>
@@ -299,6 +288,7 @@ window.addEventListener("load", () => {
     const inpSizeWz = domElementById("inpSizeWz");
     const inpColor = domElementById("inpColor");
     const inpVolume = domElementById("inpVolume");
+    const inpVolumeUnit = domElementById("inpVolumeUnit");
     const checkBoxHasContent = domElementById("checkBoxHasContent");
     const btnEdit = domElementById("btnEdit");
     const btnCopy = domElementById("btnCopy");
@@ -315,6 +305,15 @@ window.addEventListener("load", () => {
     // ИНИЦИАЛИЗАЦИЯ |
     //
 
+    // Настраиваем разрешение <canvas>
+    canvas.style.width = '550px';
+    canvas.style.height = '1770px';
+    canvas.width = 550;
+    canvas.height = 1770;    
+
+    // Делает все инпуты недоступными для редактирования
+    setDomElementsEnabled('.disabled, .mainInput, .subInput');
+
 
     // структура хранящая количество блоков в count
     // и блоки в item с количеством горизонтальных рядов
@@ -329,6 +328,7 @@ window.addEventListener("load", () => {
 
     // флагн режима редактирования
     var editMode = false;
+
 
 
     // -------------------------------------------------------
@@ -409,13 +409,6 @@ window.addEventListener("load", () => {
     }
     console.groupEnd("main.addSubBlockElements }");
 
-
-    // Настраиваем разрешение <canvas>
-    canvas.width = 550;
-    canvas.height = 1770;    
-
-    // Делает все инпуты недоступными для редактирования
-    setDomElementsEnabled('.disabled, .mainInput, .subInput');
 
 
 
@@ -545,55 +538,16 @@ window.addEventListener("load", () => {
         pack.code = data.code;  //['code'];
         pack.name = data.name;  //['name'];
         pack.payload = parseInt(data.payload);   // грузоподъемность в граммах
-        pack.x = data.x;
-        pack.y = data.y;
+        pack.color = "#" + data.color;           // цвет элемента из базы
+        pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height};
+        pack.x = data.x ? data.x : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
+        pack.y = data.y ? data.y : 0;           // если в data есть координата, то беерем ее, иначе берем 0
         pack.setSize(
             parseInt(data.wx),   // размеры элемента из базы
             parseInt(data.wy),   // размеры элемента из базы
             parseInt(data.wz)     // размеры элемента из базы
         );               
-        pack.color = "#" + data.color;           // цвет элемента из базы
-        pack.dispW = canvas.width;
-        pack.dispH = canvas.height;
         pack.autoFit = 'contain';
-
-        // // получаем внутренние элементы из структуры data
-        // var subItem = data.item;
-
-        // если внутренние элементы есть
-        // if (subItem) {
-
-        //     // то создаем массив внутренних элементов
-        //     // внутри текущего элемента
-        //     subItem.forEach(sub => {
-        //         console.log("subItem = %o }", sub);
-
-        //         var newSubPack = new PackageContainerItem(parseInt(sub.id), canvas);
-        //         newSubPack.code = sub.code;
-        //         newSubPack.name = sub.name;
-        //         newSubPack.color = "#" + sub.color;
-        //         // newSubPack._border = 10;
-        //         // newSubPack._borderColor = "#000000";
-        //         newSubPack.disposition = {   //  это соответствие пространственных осей внутреннего элемента осям его контейнера
-        //             wx: 'wz',
-        //             wy: 'wx',
-        //             wz: 'wy'
-        //         };
-        //         newSubPack.x = sub.x;
-        //         newSubPack.y = sub.y;
-        //         newSubPack.setSize(
-        //             parseInt(sub.wx),
-        //             parseInt(sub.wy),
-        //             parseInt(sub.wz)
-        //         )
-        //         newSubPack.autoFit = 'none';
-        //         newSubPack.scale = pack.scale;
-
-        //         pack.item.push(newSubPack);
-                
-        //         newSubPack.show();
-        //     });
-        // }
 
         console.groupEnd();
         return pack;
@@ -729,6 +683,20 @@ window.addEventListener("load", () => {
                 // запись это вся информация одного элемента 
 
         
+                // -------------------------------------------------------
+                // Загружаем данные W A R E H O U S E 
+                console.group("main.warehouseLoad { ");
+                warehouse.forEach(line => {
+                    
+                    // Создаем новый элемент
+                    var pack = packsCreate(line);
+
+                    packsAdd(pack);
+                });
+
+                
+                console.groupEnd();
+    
                 // перебираем записи прострочно и создаем из каждой элемент массива packs
                 rows.forEach(row => {
 
@@ -740,8 +708,8 @@ window.addEventListener("load", () => {
                     // добавляем созданный элемент в массив и выпадающие списки
                     packsAdd(pack);
                 });
-        
-                // successFunction();
+                            
+                successFunction();
             },
             
             // если запрос серверу вернул ошибку
@@ -749,31 +717,8 @@ window.addEventListener("load", () => {
                 
                 errorFunction();
             }
-
-            
-            
         );   
-
-
-        // -------------------------------------------------------
-        // Загружаем данные W A R E H O U S E 
-            console.group("main.warehouseLoad {");
-            warehouse.forEach(line => {
-                
-                // Создаем новый элемент
-                var pack = packsCreate(line);
-
-                packsAdd(pack);
-            }
-
-            );
-
-            successFunction();
-
-            console.groupEnd();
-
-
-        console.group("main.packsLoad }");
+        console.group();
     }
 
 
@@ -875,18 +820,18 @@ window.addEventListener("load", () => {
         // если выделенный элемент есть
         if (pack) {
             
+            var scale = pack.scale;
+
             // то меняем выбранному элементу масштам
             if (evt.deltaY < 0) {
                 console.log('canvas zoom out: ' + evt.deltaY);
-                pack.scale = pack.scale * 1.05;
+                scale = scale * 1.05;
             }
             if (evt.deltaY > 0) {
                 console.log('canvas zoom in: ' + evt.deltaY);
-                pack.scale = pack.scale * 0.95;
+                scale = scale * 0.95;
             }
-
-            // обновим изображение элемента
-            pack.reDraw();
+            pack.scale = scale;
         }
 
         var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
@@ -906,20 +851,32 @@ window.addEventListener("load", () => {
     //        Вывод сообщения о текущей позиции курсора мыши
     //
     canvas.addEventListener('mousemove', function(evt) {
-        // console.group('eventMouseDown { ');
+        // console.group('eventMouseMove { ');
 
         var mousePos = getMousePos(canvas, evt);
-        var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        lblStatusInfo.innerText = message;
 
-        // console.groupEnd('eventMouseDown }');
+        // получаем выделленый элемент
+        var pack = selectedPack;
+        
+        // если выбранный элемент существует
+        if (pack) {
+            
+            var message = 'Mouse pos: ' + mousePos.x + ',' + mousePos.y + ' | Scaled pos: ' + mousePos.x * selectedPack.scale + ',' + mousePos.y * selectedPack.scale;
+            lblStatusInfo.innerText = message;
+    
+            // то передаем элементу координаты курсора
+            // console.log('item mouse move: %o', pack);
+            // var pos = getMousePos(canvas, evt)
+            // pack.onMouseOver(pos.x, pos.y);
+        }
+        // console.groupEnd();
     }, false);
 
 
     // -------------------------------------------------------
     // Слот | Привязываем события клика на элементе
     //
-    function eventMouseDown(e) {
+    function eventMouseDown(evt) {
         console.group('eventMouseDown {', editMode);
 
         // получаем выделленый элемент
@@ -930,11 +887,58 @@ window.addEventListener("load", () => {
 
             // то передаем клик элементу
             // console.log('item mouse down: %o', pack);
-            var pos = getMousePos(canvas, e)
-            pack.onClick(pos.x, pos.y);
-            // pack.onClick(event.clientX, event.clientY);
+            var pos = getMousePos(canvas, evt)
+            var selected = pack.onClick(pos.x, pos.y);
+            
+            // если выделенный элемент есть
+            if (selected) {
+                // меняем выбранный элемент
+                pack.item.forEach( function(item, index) {
+                    if (item.hashCode == selectedPack.selectedItem[0].hashCode) {
+                        pack = pack.item[index];
+                    }
+                });
+
+                pack.item.forEach( function(item, index) {
+                    if (item.hashCode == selectedPack.selectedItem[0].selectedItem[0].hashCode) {
+                        pack = pack.item[index];
+                    }
+                });
+                console.log('selectedItems: %o', pack);
+
+                pack.disposition = {
+                    x: 'x',
+                    y: 'y',
+                    wx: 'wx',
+                    wy: 'wy',
+                    wz: 'wz'
+                };
+                pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height};
+                pack.autoFit = 'contain'
+
+                // запоминаем текущий элемент как ранее выбранный
+                prevousPack = selectedPack;
+
+                // Скрываем ранее выбранный элемент на <canvas>
+                if (selectedPack) {
+                    selectedPack.hide();
+                }
+
+                // Запоминаем выбранный элемент как текущий
+                selectedPack = pack;
+
+                // Показываем текущий элемент на <canvas>
+                if (selectedPack) {
+                    selectedPack.show();
+                }
+
+                // Показываем свойства элемента
+                // Передаем блокам внутренних элементов какой элемент сейчамс выбран
+                // что бы они отобразили внутреннее содержимое выбранного элемента
+                packsShowInfo(selectedPack);
+            }
         }
-        console.groupEnd('eventMouseDown }');
+        console.groupEnd();
     }
 
 
@@ -1000,8 +1004,6 @@ window.addEventListener("load", () => {
             // сохраняем копию выбранного элемента для отмены изменений
             // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
-            // делаем поля внутренних элементов доступными
-            setDomElementsEnabled('.subInput', true);
             setDomElementsEnabled('#btnCopy', false);
                 
             // Меняем кнопке текст с "Редактировать" на "Назад"
@@ -1041,9 +1043,6 @@ window.addEventListener("load", () => {
                     // и если выбранный элемнт является новым
                     if (selectedPack.id == 0) {
                         console.log('элемент новый возвращаемся к ранее выбранному!!!', prevousPack);
-                        
-                        // убираем его с <canvas>
-                        selectedPack.hide();
                         
                         // удаляем новый и не сохраненный элемент
                         packsRemove(selectedPack);
@@ -1427,11 +1426,21 @@ window.addEventListener("load", () => {
                     break;
             }            
             
-            // вычисляем объем элемента
-            inpVolume.innerText = pack.wz * pack.wx * pack.wy;
+            // вычисляем объем элемента в кубических миллиметрах
+            var volume = pack.wx * pack.wy * pack.wz;
+            if (volume > 99999999) {
+                volume = volume / 1000000;      // переводим в кубические метры
+                inpVolumeUnit.innerHTML = 'м' + '2'.sup();
+            } else if ((volume > 999) && (volume <= 99999999)) {
+                volume = volume / 10000;        // переводим в кубические сантиметры
+                inpVolumeUnit.innerHTML = 'см' + '2'.sup();
+            } else {
+                inpVolumeUnit.innerHTML = 'мм' + '2'.sup();
+            }
+            inpVolume.innerText = volume;
 
             // обновим изображение элемента
-            pack.reDraw();  
+            // pack.reDraw();  
 
             // помечаем что элемент изменен
             pack.changed = true;
@@ -1707,8 +1716,7 @@ window.addEventListener("load", () => {
         setSelectedPack(selCode, packs);
 
         // делаем элементы в выпадающем списке упрощенными (только ТИП)
-        selCodeOpened = false;
-        setSelectItemsDetiled(e.target, false);
+        // selCodeOpened = false;
         selCode.blur();
         
         console.groupEnd('eventListItemChanged }');

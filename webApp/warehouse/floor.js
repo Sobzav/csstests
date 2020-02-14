@@ -19,9 +19,22 @@ function log() {
 }
 
 
-// функция осветляет или затемняет цвет в парамеетре color,
-// переданный в формате #rrggbb
-// на велдечину percent, переданную в процентах 
+// -------------------------------------------------------
+// Функция | Генерирует уникальный ID
+//
+function generateId(len) {
+    // console.groupCollapsed("global.generateId { ");
+    // console.groupEnd();
+    var arr = new Uint8Array((len || 7) / 2)
+    window.crypto.getRandomValues(arr)
+    return Array.from(arr, dec => ('0' + dec.toString(16)).substr(-2)).join('')
+  }
+
+
+// -------------------------------------------------------
+// Функция | осветляет или затемняет цвет в парамеетре color,
+//           переданный в формате #rrggbb
+//           на велдечину percent, переданную в процентах 
 function shadeColor (color = "#000000", percent = 0) {
     var num = parseInt (color.slice(1), 16); 
     var amt = Math.round(2.55 * percent);
@@ -43,57 +56,56 @@ function shadeColor (color = "#000000", percent = 0) {
 //
 class PackageSimple {
 
-    //_id;            // id экземпляра упаковки в базе данных
-    //_code;          // обозначение
-    //_name;          // наименование экземпляра упаковки 
-    // _material;      // название материала из которого сделана упаковка
-    // _payload;       // id линии
-    // _wz;             // высота элемента
-    // _wx;            // размер элемента в гортзонтальной плоскости по оси x
-    // _wy;            // резмер элемента в гортзонтальной плоскости по оси y
-    // width;          //
-    // height;      
-    // _color;         // цвет элемента (по умолчанию #202020)
     
-    // _yScale;        // масштаб по вертикали
-    // _xScale;        // масштаб пл горизонтали
-    // _scale;         // масштаб отображения на canvas
-    // _d;             // отступ от края canvas в частях от размера canvas
-    // _dI;            // коэффициент для размеров элемента учитывающий отступ
-    // _dC;            // коэффициент для расчета масштаба учитывающий отступ
-
-    // статуса ВЫБРАН / НЕ ВЫБРАН 
-    // _selected;
-
-    // объект canvas на котором элемент будет отображен
-    // _canvas;
-
-    // получаем 2d контекст, 
-    // это объект для вывода всей графики 
-    // _ctx;
-
-    // Создаем элемент
+    // -------------------------------------------------------
+    // Метод | Создаем элемент
     constructor(id = 0, canvas) {
-        console.group("class PackageSimple.constructor {");
-        console.log("id = %i", id);
+        console.group("class PackageSimple.constructor { id: %i", id);
         
-        this._hidden = true;
-        
+        this.hashCode = generateId(7);
+        // технологические свойства элемента
+        //
         this._id = id;
+        this._code;                 // обозначение
+        this._name;                 // наименование 
+        this._material;             // название материала из которого сделан
+        this._payload;              // вес который выдерживает
 
-        this._color = '#202020';        // цвет элемента (по умолчанию #202020)
+        // Графические свойства отображения
+        //
+        this._canvas = canvas;       // объект canvas на котором элемент будет отображен
+        this._ctx = this._canvas.getContext('2d');
 
+        this._color = '#202020';    // цвет элемента (по умолчанию #202020)
+
+        this._border = 0;
+        this._borderColor = "#000000";
+        
         this._selectedColor = shadeColor(this._color, 20);
 
-        this._yScale = 1;     // масштаб по вертикали
-        this._xScale = 1;     // масштаб пл горизонтали
-        this._scale = 1;     // масштаб отображения на canvas
-        this._pd = 3;       // внутренний отступ в px
-        this._d = 1.0;       // внешний отступ (1 - без отсьупа, 1.01 - отступ в 1%)
-        this._x = 0;
-        this._y = 0;
-        this._x0 = 0;
-        this._y0 = 0;
+        // Геометрические сврйства элемента
+        //
+        this._yScale = 1;           // масштаб по вертикали
+        this._xScale = 1;           // масштаб пл горизонтали
+        this._scale = 1;            // масштаб отображения на canvas
+
+        this._autoFit = 'none';     // contain / none
+
+        this._padding = 0;          // внутренний отступ в px
+        // this._margin = 1.0;         // внешний отступ (1 - без отсьупа, 1.01 - отступ в 1%)
+        
+        this._wx = 0;               // размер вправо от левого верхнего угла с фронта
+        this._wy = 0;               // размер вниз от левого верхнего угла с фронта
+
+        this._viewBox = {           // размер прямоугольника в который должен вписаться элемент при autoFit != 'none
+            x: 0,
+            y: 0,
+            wx: this._canvas.width,
+            wy: this._canvas.height
+        }
+        
+        this._x = 0;                // координаты верхнего левого угла прямоугольника элемента
+        this._y = 0;                // координаты верхнего левого угла прямоугольника элемента
 
         // расположение элемента в контейнере
         //  это соответствие пространственных осей элемента осям его контейнера
@@ -105,181 +117,252 @@ class PackageSimple {
             wz: 'wz'
         };
 
-        this._border = 1;
-        this._borderColor = "#000000";
-        
-        // статуса ВЫБРАН / НЕ ВЫБРАН 
-        this._selected = false;
-        
-        // объект canvas на котором элемент будет отображен
-        this.canvas = canvas;
+        // поведенческие свойства элемента
+        //
+        this._hidden = true;        // если false, то элемент видимый
+        this._selected = false;     // статуса ВЫБРАН / НЕ ВЫБРАН 
+        this._changed = false;      // если true то элемент был изменен
 
-        // если true то элемент был изменен
-        this._changed = false;
-
-        console.groupEnd("class PackageSimple.constructor }");
+        console.groupEnd();
     }
 
 
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
     set id(value) {this._id = value;}
 
     get id() {return this._id;}
 
 
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
     set code(value) {this._code = value;}
 
     get code() {return this._code;}
 
 
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
     set name(value) {this._name = value;}
 
     get name() {return this._name;}
 
 
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
     set material(value) {this._material = value;}
 
     get material() {return this._material;}
 
 
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
     set payload(value) {this._payload = value;}
 
     get payload() {return this._payload;}
 
 
-    set wx(value) {
-        this._dispW = value;
-        this.setSize(value, this._wy, this._wz, true);}
-        
-    get wx() {return this._wx;}
-        
-        
-    set wy(value) {
-        this._dispH = value;
-        this.setSize(this._wx, value, this._wz, true);}
-    
-    get wy() {return this._wy;}
-    
-    
-    set wz(value) {this.setSize(this._wx, this._wy, value, true);}
-
-    get wz() {return this._wz;}
-
-
-    set x0(value) {this._x0 = value;}
-
-    get x0() {return this._x0;}
-
-
-    set y0(value) {this._y0 = value;}
-
-    get y0() {return this._y0;}
-
-
-    set x(value) {this._x = value;}
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
+    set x(value) {
+        this._x = value;
+        this.setSize(this._wx, this._wy, this._wz, true);
+    }
 
     get x() {return this._x;}
 
 
-    set y(value) {this._y = value;}
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
+    set y(value) {
+        this._y = value;
+        this.setSize(this._wx, this._wy, this._wz, true);
+    }
 
     get y() {return this._y;}
 
 
-    set dispW(value) {
-        this._dispW = value;
-        this.setSize(this._wx, this._wy, this._wz, true);}
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
+    set wx(value) {
+        this.setSize(value, this._wy, this._wz, true);
+    }
+        
+    get wx() {return this._wx;}
+        
+        
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
+    set wy(value) {
+        this.setSize(this._wx, value, this._wz, true);
+    }
+    
+    get wy() {return this._wy;}
+    
+    
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
+    set wz(value) {
+        this.setSize(this._wx, this._wy, value, true);
+    }
 
-    get dispW() {return this._dispW;}
+    get wz() {return this._wz;}
 
 
-    set dispH(value) {
-        this._dispH = value;
-        this.setSize(this._wx, this._wy, this._wz, true);}
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
+    set viewBox(value) {
+        this._viewBox = value;
+        this.setSize(this._wx, this._wy, this._wz, true);
+    }
 
-    get dispH() {return this.dispH;}
+    get viewBox() {return this._viewBox;}
 
 
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
     set scale(value) {this._scale = value;}
 
     get scale() {return this._scale;}
 
 
+    // -------------------------------------------------------
+    // Свойство | 
+    //
+    set autoFit(value) {
+        this._autoFit = value;
+        this.setSize(this._wx, this._wy, this._wz, true);
+    }
+
+    get autoFit() {return this._autoFit;}
+
+
+    // -------------------------------------------------------
+    // Свойство | 
+    //
     set selected(value) {this.setSelected(value)}
 
     get selected() {return this._selected;}
 
 
+    // -------------------------------------------------------
+    // Свойство | 
+    //
     set canvas(value) {
         this._canvas = value;
                 
-        // получаем 2d контекст, 
-        // это объект для вывода всей графики 
+        // получаем 2d контекст (объект для вывода всей графики)
         this._ctx = this._canvas.getContext('2d');
-
-        if (!this._hidden) {this.draw();}
     }
 
     get canvas() {return this._canvas;}
 
 
+    // -------------------------------------------------------
+    // Свойство | 
+    //
     set color(color) {
-        console.groupCollapsed("class PackageSimple.set color: %o", color);
-
-        if (!this._hidden) {this.clear();}
-
         this._color = color;
         this._selectedColor = shadeColor(color, 20);
-
-        if (!this._hidden) {this.draw();}
-
-        console.groupEnd("class PackageSimple.set color");
     }
 
-    get color() {
-        return this._color;
-    }
+    get color() {return this._color;}
 
 
+    // -------------------------------------------------------
+    // Свойство | 
+    //
     set changed(value) {this._changed = value;}
 
     get changed() {return this._changed;}
 
 
-    // изменение размеров элемента
+    // -------------------------------------------------------
+    // Метод | Изменение размеров элемента
+    //
     setSize(
         wx = 0, // размер элемента по горизонтали по оси y
         wy = 0, // размер элемента по горизонтали по оси x
         wz = 0,   // высота элемента
         force = false) {
 
-        console.groupCollapsed("class PackageSimple.setSize { id=%o; wx=%o; wy=%o; wh=%o; force=%o", this._id, wx, wy, wz, force);
+        // console.groupCollapsed("class PackageContainerItem.setSize { id=%o; wx=%o; wy=%o; wh=%o; force=%o", this._id, wx, wy, wz, force);
         
         // если размеры элемента изменились
         if ((this._wx != wx) || (this._wy != wy) || (this._wz != wz) || force) {
-
-            // стираем элемент в текущих размерах и позиции
-            if (!this._hidden) {this.clear();}
 
             // сохраняем новые значения размеров
             this._wx = wx;
             this._wy = wy;
             this._wz = wz;
-                     
-            // рисуем элемент в новых размерах и позиции
-            if (!this._hidden) {this.draw();}
+         
+            // Определяем поведение autoFit 
+            switch (this._autoFit) {
+
+                // если autoFit = 'contain' то подгоняем масштаб что бы вписать элемент в контейнер не изменяя пропорции
+                case 'contain':
+                    // console.log("autoFit : contain");
+
+                    this._xScale = this._wx / this._viewBox.wx;
+                    this._yScale = this._wy / this._viewBox.wy;
+
+                    this._scale = Math.max(this._xScale, this._yScale);
+
+                    this._x = (this._viewBox.wx * this._scale - this._wx) / 2;
+                    this._y = (this._viewBox.wy * this._scale - this._wy) / 2;
+
+                    // console.log("viewBox: %o", this._viewBox);
+                    // console.log("_xScale=" + this._xScale + " _yScale=" + this._yScale);
+                    
+                    // console.log("_scale=" + this._scale);
+                    // console.log("_x=" + this._x  + " _y=" + this._y);
+                    break;
+
+                // если autoFit = 'none' то не меняем масштаб вписывае
+                case 'none':
+
+                    // console.log("autoFit : none");
+                    break;
+            }
         }
-        console.groupEnd("class PackageSimple.setSize }");
+        // console.groupEnd();
     }
 
-
+    
     // Стираем ячейку на <canvas>
-    clear() {
-        this._ctx.save();
-        this._ctx.scale(1/this._scale, 1/this._scale);
+    clear(clearCanvas) {
 
-        this._ctx.clearRect(this._x0, this._y0, this._wx, this._wy);
+        // если надо очистить всю область canvas
+        if (clearCanvas) {
 
-        this._ctx.restore();
+            this._ctx.clearRect(0, 0, canvas.width, canvas.height);
+        } else {
+
+            var x = this['_' + this.disposition.x];
+            var y = this['_' + this.disposition.y];
+            var wx = this['_' + this.disposition.wx];
+            var wy = this['_' + this.disposition.wy];
+            var wz = this['_' + this.disposition.wz];
+    
+            this._ctx.save();
+            this._ctx.scale(1/this._scale, 1/this._scale);
+    
+            this._ctx.clearRect(this._viewBox.x + x, this._viewBox.y + y, wx, wy);
+    
+            this._ctx.restore();
+        }
     }
 
 
@@ -289,8 +372,8 @@ class PackageSimple {
 
             this._hidden = true;
             
-            // рисуем элемент
-            this.clear();
+            // стираем элемент
+            this.clear(true);
         }
     }
 
@@ -302,10 +385,44 @@ class PackageSimple {
         // рисуем элемент
         this.draw();
     }
+    
+    
+    // Метод | Рисуем рамку если есть ._border > 0
+    //         Закрашиваем прямоугольник на 
+    //         Графику выводлим на ._canvas.context
+    //         
+    drawCube(x, y, wx, wy, wz, selected, ctx, scale) {
+
+        var color = selected ? this._color : this._selectedColor;
+
+        ctx.save();
+        ctx.scale(1/scale, 1/scale);
+
+        ctx.fillStyle = color;
+        
+        ctx.fillRect(
+            this._viewBox.x + x + this._padding,
+            this._viewBox.y + y + this._padding,
+            wx - this._padding * 2,
+            wy - this._padding * 2);
+        
+        if (this._border > 0) {
+            ctx.lineWidth = this._border;
+            ctx.strokeStyle = this._borderColor;
+
+            ctx.strokeRect(
+                this._viewBox.x + x + this._padding + this._border / 2,
+                this._viewBox.y + y + this._padding + this._border / 2,
+                wx - this._padding - this._border,
+                wy - this._padding - this._border);
+        }
+
+        ctx.restore();
+    }
 
 
     // Рисуем ячйку на <canvas>
-    draw(color = this._color) {
+    draw() {
 
         if (!this._hidden) {
 
@@ -318,7 +435,7 @@ class PackageSimple {
                 this['_' + this.disposition.wx],
                 this['_' + this.disposition.wy],
                 this['_' + this.disposition.wz],
-                color,
+                this.selected,
                 this._ctx,
                 this._scale
             );
@@ -331,99 +448,25 @@ class PackageSimple {
 
 
     // перерисуем ячейку на <canvas>
-    reDraw(color = this._color) {
+    reDraw() {
         if (!this._hidden) {
 
             this.clear();
-            this.draw(color);
+            this.draw();
         }
     }
 
 
-    // изменение и запоминание статуса ВЫБРАН / НЕ ВЫБРАН 
-    // усли colored = true то элемент подсетит себя затемнением своего цвета
-    setSelected(selected, colored = false) {
-        console.groupCollapsed("class PackageSimple.setSelected { id=" + this._id + " selected = " + selected);    
+    // -------------------------------------------------------
+    // Метод | Делаем элемент выделенным
+    //
+    setSelected(selected) {
+        // console.groupCollapsed("class PackageSimple.setSelected { id=" + this._id + " selected = " + selected);    
 
         // запоминаем новое состояние
         this._selected = selected;
 
-
-        // если colored = true
-        // элемент должен подсветить себя когда выбран
-        if (colored) {
-            if (this._selected) {
-                // если новый статус "ВЫБРАН"
-                
-                    // выделенный элемент подсвечивает себя цветом
-                    this.reDraw(this._selectedColor);                
-            } else {
-                // если новый статус "НЕ ВЫБРАН"
-                
-                    // перерисовываем елемент в нормальном цвете
-                    this.reDraw();                
-            }
-        } else {
-            this.reDraw();
-        }
-        
-        console.groupEnd("class PackageSimple.setSelected }");    
-    }
-
-
-    // обрабатываем клики мышью
-    onClick(clickX, clickY) {
-        console.group("class PackageSimple.onClick { id: %i; code: %s", this._id, this._code);    
-        
-        // приводим координаты мыши в клиентской области <canvas>
-        // к текущему масштабу
-        clickX = clickX * this._scale * 2;
-        clickY = clickY * this._scale * 2;
-        
-        console.log("click: [%.2f; %.2f]  [x: %.2f y: %.2f z: %.2f]  [wx: %.2f wy: %.2f wz: %.2f]", clickX, clickY, this._x, this._y, this._z, this._wx, this._wy, this._wz);    
-        // проверяем попадает ли клик мыши по горизонтали в ширину ячейки
-        let xClickInside = (clickX > this._x) && (clickX < (this._x + this._wx));
-
-        // проверяем попадает ли по вертикали клик мыши в высоту ячейки
-        let yClickInside = (clickY > this._y) && (clickY < (this._y + this._wy));
-
-        // передаем попадание клика в ячейку
-        // для изменения и запоминания нового статуса "ВЫБРАН"
-        if (xClickInside && yClickInside) {
-            console.log("clicked inside");    
-
-            this.setSelected(!(this._selected), true);
-        } else {
-            console.log("click outside");    
-        }
-        console.groupEnd("class PackageSimple.onClick }");    
-    }
-    
-    // onTouchend(e) { // обрабатываем касания пальцем
-    //     var ex = (e.touches[0].pageX - this.canvas.offsetLeft) | 0;
-    //     var ey = (e.touches[0].pageY - this.canvas.offsetTop) | 0;
-    //     // event(x, y);
-    // }
-    
-    
-    // рисуем прямоугольник на <canvas.context>
-    drawCube(x, y, wx, wy, wz, color, ctx, scale) {
-
-        ctx.save();
-        ctx.scale(1/scale, 1/scale);
-
-        ctx.fillStyle = color;
-        
-        ctx.fillRect(this._x0 + x + this._pd, this._y0 + y + this._pd, wx - this._pd * 2, wy - this._pd * 2);
-        
-        if (this._border > 0) {
-            ctx.lineWidth = this._border;
-            ctx.strokeStyle = this._borderColor;
-
-            ctx.strokeRect( this._x0 + x + this._border / 2 , this._y0 + y + this._border / 2, wx - this._border, wy - this._border);
-        }
-
-        ctx.restore();
+        // console.groupEnd("class PackageSimple.setSelected }");    
     }
 }
 
@@ -443,6 +486,7 @@ class PackageSimple {
 //
 class PackageContainerItem extends PackageSimple {
 
+    // -------------------------------------------------------
     // Метод | Создаем элемент
     //           Если передать data то из этой структуры
     //         будут взяты все параметры элемента и будут созданы внутренние элементы
@@ -469,31 +513,20 @@ class PackageContainerItem extends PackageSimple {
     //              }
     //
     constructor(data, canvas) {
-        console.groupCollapsed("class PackageContainerItem.constructor { id: %i", data.id);
+        console.groupCollapsed("class PackageContainerItem.constructor { data: %i", data.id);
 
         // вызов конструктора родителя
         super(data.id, canvas);
 
-        this._rowCount = 0;
+        // this._rowCount = 0;
 
-        this._colCount = [];
+        // this._colCount = [];
 
+        // массив внутренних элементов
         this.item = [];
 
-        // зазор между вертикальными рядами
-        this._mx = 0;
-
-        // зазор между горизонтальными рядами
-        this._my = 0;
-
-        // внутренний отступ в px
-        this._pd = 0;
-
-        this._border = 0;
-
-        this._scale = 1;
-
-        this._autoFit = 'none'; // contain / none
+        // массив выделенных элементов
+        this.selectedItem = [];
 
         // получаем внутренние элементы из структуры data
         var subItem = data.item;
@@ -508,33 +541,23 @@ class PackageContainerItem extends PackageSimple {
                 var newSubPack = new PackageContainerItem(sub, canvas);
                 newSubPack.code = sub.code;
                 newSubPack.name = sub.name;
-                newSubPack.color = "#" + sub.color;
-                newSubPack._border = 5;
+                newSubPack._border = 1;
                 // newSubPack._borderColor = "#000000";
+                newSubPack.color = "#" + sub.color;
                 if (sub.disposition) {
                     newSubPack.disposition = sub.disposition; //{   //  это соответствие пространственных осей внутреннего элемента осям его контейнера
                 }
-                //     x: 'y',
-                //     y: 'x',
-                //     wx: 'wz',
-                //     wy: 'wx',
-                //     wz: 'wy'
-                // };
-                newSubPack.x0 = this._x;
-                newSubPack.y0 = this._y;
-                newSubPack.x = sub.x;
-                newSubPack.y = sub.y;
+                newSubPack.viewBox = {x: this._x, y: this._y, wx: this._wx, wy: this._wy};
+                newSubPack.x = sub.x ? parseInt(sub.x) : 0;
+                newSubPack.y = sub.y ? parseInt(sub.y) : 0;
                 newSubPack.setSize(
                     parseInt(sub.wx),
                     parseInt(sub.wy),
                     parseInt(sub.wz)
                 )
                 newSubPack.autoFit = 'none';
-                newSubPack.scale = this._scale;
 
                 this.item.push(newSubPack);
-                
-                newSubPack.show();
             });
         }
         console.groupEnd();
@@ -544,36 +567,12 @@ class PackageContainerItem extends PackageSimple {
     // -------------------------------------------------------
     // Свойство | 
     //
-    set wx(value) {this.setSize(value, this._wy, this._wz, true);}
-        
-    get wx() {return this._wx;}
-        
-        
-    // -------------------------------------------------------
-    // Свойство | 
-    //
-    set wy(value) {this.setSize(this._wx, value, this._wz, true);}
-    
-    get wy() {return this._wy;}
-    
-    
-    // -------------------------------------------------------
-    // Свойство | 
-    //
-    set wz(value) {this.setSize(this._wx, this._wy, value, true);}
-
-    get wz() {return this._wz;}
-
-
-    // -------------------------------------------------------
-    // Свойство | 
-    //
     set x(value) {
-        this._x = value;
-        this.item.forEach( sub => {
-            sub.x0 = this._x;
-        });
-        }
+        if (!this._hidden) {this.clear();}
+        super.x = value;
+        this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+        if (!this._hidden) {this.draw();}
+    }
 
     get x() {return this._x;}
 
@@ -582,11 +581,11 @@ class PackageContainerItem extends PackageSimple {
     // Свойство | 
     //
     set y(value) {
-        this._y = value;
-        this.item.forEach( sub => {
-            sub.y0 = this._y;
-        });
-        }
+        if (!this._hidden) {this.clear();}
+        super.y = value;
+        this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+        if (!this._hidden) {this.draw();}
+    }
 
     get y() {return this._y;}
 
@@ -594,32 +593,132 @@ class PackageContainerItem extends PackageSimple {
     // -------------------------------------------------------
     // Свойство | 
     //
-    set dispW(value) {
-        this._dispW = value;
-        this.setSize(this._wx, this._wy, this._wz, true);}
-
-    get dispW() {return this._dispW;}
-
-
+    set wx(value) {
+        if (!this._hidden) {this.clear();}
+        super.wx = value;
+        this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+        if (!this._hidden) {this.draw();}
+    }
+        
+    get wx() {return this._wx;}
+        
+        
     // -------------------------------------------------------
     // Свойство | 
     //
-    set dispH(value) {
-        this._dispH = value;
-        this.setSize(this._wx, this._wy, this._wz, true);}
+    set wy(value) {
+        if (!this._hidden) {this.clear();}
+        super.wy = value;
+        this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+        if (!this._hidden) {this.draw();}
+    }
+    
+    get wy() {return this._wy;}
+    
+    
+    // -------------------------------------------------------
+    // Свойство | 
+    //
+    set wz(value) {
+        if (!this._hidden) {this.clear();}
+        super.wz = value;
+        this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+        if (!this._hidden) {this.draw();}
+    }
 
-    get dispH() {return this.dispH;}
+    get wz() {return this._wz;}
+
+
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    //
+    set viewBox(value) {
+
+        if (!this._hidden) {this.clear();}
+
+        // обновляем viewBox элемента
+        super.viewBox = value;
+
+        // обновляем viewBox внутренних элементов
+        this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+
+        if (!this._hidden) {this.draw();}
+    }
+
+
+    get viewBox() {return this._viewBox;}
+
+
+    // -------------------------------------------------------
+    // Свойство | масштаб отображения MAX(wx/viewBox.wx, wy/viewBox.wy) мм/px
+    //
+    set scale(value) {
+
+        if (this._scale != value) {
+
+            if (!this._hidden) {this.clear(true);}
+
+            // обновляем масштаб элемента
+            super.scale = value;
+    
+            // обновляем масштаб внутренних элементов
+            this.item.forEach( subItem => {
+                subItem.scale = this._scale;
+            });
+
+            if (!this._hidden) {this.draw();}
+        }
+    }
+
+    get scale() {return this._scale;}
 
 
     // -------------------------------------------------------
     // Свойство | 
     //
     set autoFit(value) {
-        this._autoFit = value;
-        this.setSize(this._wx, this._wy, this._wz, true);
+
+        if (this._autoFit != value) {
+
+            if (!this._hidden) {this.clear();}
+
+            // обновляем autoFit элемента
+            super.autoFit = value;
+    
+            // обновляем viewBox внутренних элементов
+            // this.setItemsViewBox(this._x, this._y, this._wx, this._wy);
+            this.item.forEach( subItem => {
+                subItem.viewBox = {x: this._viewBox.x + this._x, y: this._viewBox.y + this._y, wx: this._wx, wy: this._wy};
+            });
+    
+            // обновляем масштаб внутренних элементов
+            this.item.forEach( subItem => {
+                subItem.scale = this._scale;
+            });
+
+            if (!this._hidden) {this.draw();}
+        }
     }
 
     get autoFit() {return this._autoFit;}
+
+    
+    // -------------------------------------------------------
+    // Свойство | 
+    //
+    set color(value) {
+
+        if (this._color != value) {
+
+            if (!this._hidden) {this.clear();}
+
+            super.color = value;
+
+            if (!this._hidden) {this.draw();}
+        }
+    }
+
+    get color() {return this._color;}
 
 
     // -------------------------------------------------------
@@ -629,6 +728,23 @@ class PackageContainerItem extends PackageSimple {
      */
     get rowCount() {
         return this._rowCount;
+    }
+
+
+    // -------------------------------------------------------
+    // Метод | Обновляет viewBox внутренних элементов
+    //
+    setItemsViewBox(x, y, wx, wy) {
+        if (!this._hidden) {this.clear();}
+        this.item.forEach( subItem => {
+            var viewBox = {x, y, wx, wy};
+            viewBox.x = x;
+            viewBox.y = y;
+            viewBox.wx = wx;
+            viewBox.wy = wy;
+            subItem.viewBox = viewBox;
+        });
+        if (!this._hidden) {this.draw();}
     }
 
 
@@ -757,9 +873,11 @@ class PackageContainerItem extends PackageSimple {
     clearItems() {
         console.group("class PackageContainerItem.clearItems { pack: %o", this);
 
+        if (!this._hidden) {this.clear();}
+        
         this.item = [];
-        this._rowCount = 0;
-        this._colCount = [];
+
+        if (!this._hidden) {this.draw();}
 
         console.groupEnd();
     }
@@ -776,125 +894,70 @@ class PackageContainerItem extends PackageSimple {
     }
 
 
-    // -------------------------------------------------------
-    // Метод | Изменение размеров элемента
-    //
-    setSize(
-        wx = 0, // размер элемента по горизонтали по оси y
-        wy = 0, // размер элемента по горизонтали по оси x
-        wz = 0,   // высота элемента
-        force = false) {
-
-        console.groupCollapsed("class PackageContainerItem.setSize { id=%o; wx=%o; wy=%o; wh=%o; force=%o", this._id, wx, wy, wz, force);
-        
-        // если размеры элемента изменились
-        if ((this._wx != wx) || (this._wy != wy) || (this._wz != wz) || force) {
-
-            // стираем элемент в текущей позиции
-            if (!this._hidden) {this.clear();}
-
-            // сохраняем новые значения размеров
-            this._wx = wx;
-            this._wy = wy;
-            this._wz = wz;
-         
-            // Определяем поведение autoFit 
-            switch (this._autoFit) {
-
-                // если autoFit = 'contain' то подгоняем масштаб что бы вписать элемент в контейнер не изменяя пропорции
-                case 'contain':
-                    console.log("autoFit : contain");
-
-                    this._xScale = this._d * this._wx / this._dispW;
-                    this._yScale = this._d * this._wy / this._dispH;
-
-                    this._scale = Math.max(this._xScale, this._yScale);
-
-                    this._x = (this._dispW * this._scale - this._wx) / 2;
-                    this._y = (this._dispH * this._scale - this._wy) / 2;
-
-                    console.log("_dispW=" + this._dispW + " _dispH=" + this._dispH);
-                    console.log("_xScale=" + this._xScale + " _yScale=" + this._yScale);
-                    
-                    console.log("_scale=" + this._scale);
-                    console.log("_x=" + this._x  + " _y=" + this._y);
-                    break;
-
-                // если autoFit = 'none' то не меняем масштаб вписывае
-                case 'none':
-
-                    console.log("autoFit : none");
-                    break;
-            }
-                        
-    
-            if (!this._hidden) {this.draw();}
-
-        }
-        console.groupEnd();
-    }
-
 
     // -------------------------------------------------------
     // Метод | Стираем ячейку на <canvas>
     //
-    clear() {
-        console.groupCollapsed("class PackageContainerItem.clear { item: %o", this);
+    clear(clearCanvas) {
+        // console.groupCollapsed("class PackageContainerItem.clear { item: %o", this);
 
-        this._ctx.clearRect(0, 0, this._dispW, this._dispH);
+        super.clear(clearCanvas);
 
-        console.groupEnd("class PackageContainerItem.clear }");
+        this.item.forEach( subItem => {
+            subItem.clear();
+        });
+
+        // console.groupEnd();
     }
 
     
     // -------------------------------------------------------
     // Метод | Коннтейнер рисует себя и внутренние прямоугольники
     //
-    draw(color = this._color) {
-        console.groupCollapsed("class PackageContainerItem.draw { item: %o", this);
+    draw() {
+        // console.groupCollapsed("class PackageContainerItem.draw { item: %o", this);
 
         if (!this._hidden) {
 
-            // рисуем себя как элементарный прямоугольник
-            super.draw(color);
+            // рисуем элемент
+            super.draw();
 
-            // рисуем внутренние элементы если они есть
-            if (this.item.length > 0 ) {
-                // console.log("item: %o", this.item);    
-
-                // рисуем блоки
-                for (var index = 0; index < this.item.length; index++) {
-                    // console.log("item[%i]: %o", index, this.item[index]);    
-                    
-                    // console.log("class PackageContainerItem.draw { row=" + rowIndex);    
-
-                    // если у елемента не включено автомасштабирование
-                    if (this.item[index].autoFit == 'none') {
-
-                        // то даем внутреннему элементу масштаб контейнера
-                        this.item[index].scale = this._scale;
-                    }
-                    // this.item[index]._borderColor = this.color;
-                    
-                    this.item[index].draw();
-                }
-            }
+            // рисуем блоки
+            this.item.forEach( subItem => {
+                subItem.draw();
+            });
         }
-        console.groupEnd();
+        // console.groupEnd();
     }
 
 
     // -------------------------------------------------------
-    // Метод | Перерисуем ячейку на <canvas>
+    // Метод | Перерисуем элемент
     //
-    reDraw(color = this._color) {
-        console.groupCollapsed("class PackageContainerItem.reDraw {");
+    reDraw() {
+        // console.groupCollapsed("class PackageContainerItem.reDraw {");
         if (!this._hidden) {
 
             this.clear();
-            this.draw(color);
+            this.draw();
         }
-        console.groupEnd("class PackageContainerItem.reDraw {");
+        // console.groupEnd();
+    }
+
+
+    // -------------------------------------------------------
+    // Метод | Перерисуем все внутренние элементы
+    //
+    reDrawItems() {
+        // console.groupCollapsed("class PackageContainerItem.reDrawItems {");
+        if (!this._hidden) {
+
+            this.item.forEach( subItem => {
+                subItem.clear();
+                subItem.draw();
+            });
+        }
+        // console.groupEnd();
     }
 
 
@@ -902,13 +965,18 @@ class PackageContainerItem extends PackageSimple {
     // Метод | Делаем элемент не видимым
     //
     hide() {
+        // console.groupCollapsed("class PackageContainerItem.hide {");
         if (!this._hidden) {
 
-            this._hidden = true;
-            
-            // рисуем элемент
-            this.clear();
+            // скрываем элемент
+            super.hide();
+
+            // скрываем внутренние элементы
+            this.item.forEach( subItem => {
+                subItem.hide();
+            });
         }
+        // console.groupEnd();
     }
 
 
@@ -916,12 +984,150 @@ class PackageContainerItem extends PackageSimple {
     // Метод | Делаем элемент видимым
     //
     show() {
+        // console.groupCollapsed("class PackageContainerItem.show {");
         if (this._hidden) {
-            this._hidden = false;
             
             // рисуем элемент
-            this.draw();
+            super.show();
+
+            // показываем внутренние элементы
+            this.item.forEach( subItem => {
+                subItem.show();
+            });
         }
+        // console.groupEnd();
     }
     
+
+    // -------------------------------------------------------
+    // Слот | Обрабатываем перемещение указателя мыши
+    //
+    // 
+    mouseInRect(mouseX, mouseY) {
+        // console.group("class PackageContainerItem.mouseInRect { id: %i; code: %s", this._id, this._code);    
+
+        // приводим координаты к плоскости настроенной в .disposition
+        var x0 = this._viewBox.x;
+        var y0 = this._viewBox.y;
+        var x = this['_' + this.disposition.x];
+        var y = this['_' + this.disposition.y];
+        var z = this['_' + this.disposition.z];
+        var wx = this['_' + this.disposition.wx];
+        var wy = this['_' + this.disposition.wy];
+        var wz = this['_' + this.disposition.wz];
+
+        // приводим координаты мыши в клиентской области <canvas>
+        // к текущему масштабу
+        var _mouseX = (mouseX * this._scale);
+        var _mouseY = (mouseY * this._scale);
+        
+        // проверяем попадает ли указатель мыши по горизонтали в ширину ячейки
+        let xClickInside = (_mouseX > (this._viewBox.x + x)) && (_mouseX < (this._viewBox.x + x + wx));
+        
+        // проверяем попадает ли по вертикали указатель мыши в высоту ячейки
+        let yClickInside = (_mouseY > (this._viewBox.y + y)) && (_mouseY < (this._viewBox.y + y + wy));
+        
+        // проверяем попадание курсора в ячейку
+        var mouseInRect = xClickInside && yClickInside;
+        if (mouseInRect) {
+            // console.log("mouse inside");    
+            // console.log("mouse: [%.2f; %.2f]  [x0: %.2f y0: %.2f]  [x: %.2f y: %.2f z: %.2f]  [wx: %.2f wy: %.2f wz: %.2f]", _mouseX, _mouseY, x0, y0, x, y, z, wx, wy, wz);    
+            // console.log("canvas: [%.2f; %.2f]  canvas.style[%i; %i]", this._canvas.width, this._canvas.height);
+        } else {
+            // console.log("click outside");    
+            this.reDraw();                
+        }
+        return mouseInRect
+    }
+
+    // -------------------------------------------------------
+    // Слот | Обрабатываем перемещение указателя мыши
+    //
+    // 
+    onMouseOver(mouseX, mouseY) {
+        // console.group("class PackageContainerItem.onMouseOver { id: %i; code: %s", this._id, this._code);    
+        
+        // если элемент видимый
+        if (!this._hidden) {
+        
+            // передаем попадание указателя мыши в ячейку
+            if (this.mouseInRect(mouseX, mouseY)) {
+    
+                // выделенный элемент подсвечивает себя цветом
+                this._border = 2 * this._scale;
+                this._borderColor = "#ff0000";                
+                this.draw();                
+            } else {
+                
+                this._border = 0;
+                this._borderColor = "#000000";                
+                // перерисовываем елемент в нормальном цвете
+                this.draw();                
+            }
+    
+            //  передаем событие дальше внутренним элементам
+            var itemCount = this.item.length;
+            if (itemCount > 0) {
+                for (var index = 0; index < itemCount; index++) {
+                    this.item[index].onMouseOver(mouseX, mouseY);
+                }
+            }
+        } else {
+            
+            return false;
+        }
+        // console.groupEnd();    
+    }
+    
+    
+    // -------------------------------------------------------
+    // Слот | Обрабатываем клики мышью
+    // 
+    onClick(mouseX, mouseY) {
+        // console.group("class PackageContainerItem.onClick { pack: %o; code: %s", this, this._code);    
+                
+        // если элемент видимый
+        if (!this._hidden) {
+
+            // снимаем выделение со всех внутренних элементов
+            this.selectedItem.forEach( subItem => {
+                subItem.setSelected(false);
+            });
+            this.selectedItem = [];
+    
+            // передаем попадание клика в ячейку
+            // для изменения и запоминания нового статуса "ВЫБРАН"
+            if (this.mouseInRect(mouseX, mouseY)) {
+    
+                if (!this._hidden) {this.clear();}
+                
+                // выделенный элемент подсвечивает себя цветом
+                this.setSelected(!(this._selected), true);
+    
+                if (!this._hidden) {this.draw();}
+            } else {
+            }
+    
+            if (this._selected) {
+    
+                // this.selectedItem.push(this);
+            }
+    
+            //  передаем событие дальше внутренним элементам
+            var subSelected;
+            this.item.forEach( subItem => {
+                subSelected = subItem.onClick(mouseX, mouseY);
+                if (subSelected) {
+                    this.selectedItem.push(subItem);
+                }
+            });
+    
+            // возвращаем массив выбранных элементов: [this, item0.selected, item1.selected, ...]
+            return (this._selected || this.selectedItem.length > 0);
+        } else {
+
+            return false;
+        }
+        // console.groupEnd();    
+    }
 }

@@ -157,7 +157,7 @@
 
                                 <div class="ffth">
                                     <label class="" for="inpNx_"> Количество<br>по горизонтали </label>
-                                    <input class="subInput" size="1" type="text" id="inpNx_" name="package_wx_">
+                                    <input class="subInput" size="1" type="number" id="inpNx_" name="package_wx_">
                                     <label class="" for="inpNx_"> шт </label>
                                 </div>
 

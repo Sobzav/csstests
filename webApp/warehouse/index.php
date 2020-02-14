@@ -33,12 +33,12 @@
                     <!-- Список всех элементов в базе  -->
                     <option id="0"> Новый </option>
                 </select>
-                <input class="hidden" size="4" type="text" id="inpCodeEdit" name="package_code">
+                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
             </div>
             <!-- Растягивающийся блок с input  -->
             <div class="input-flex">
                 <label class="" for="inpName"> Наименование </label>
-                <input class="" type="text" id="inpName" name="package_name">
+                <input class="mainInput" type="text" id="inpName" name="package_name">
             </div>
             <!-- Кнопка справа  -->
             <div style="" class="dr">
@@ -55,7 +55,7 @@
 
             <!-- Left item -->
             <input type="hidden" name="package_id">
-            <div class="item-1">
+            <!-- <div class="item-1"> -->
 
                 <!-- Изображение -->
                 <canvas class="" id="canvas">
@@ -63,7 +63,7 @@
                     }
                     error: Browser does not support canvas element.
                 </canvas>
-            </div>
+            <!-- </div> -->
             <!-- характеристики -->
             <!-- Right item -->
             <div class="item-2">
@@ -105,7 +105,7 @@
                             <div class="sxth">
                                 <label class="" for="inpVolume"> Объем = </label>
                                 <label class="" type="text" id="inpVolume" name="package_value"> 0 </label>
-                                <label class="" for="inpVolume"> мм&sup2 </label>
+                                <label class="" for="inpVolume" id="inpVolumeUnit"> мм&sup2 </label>
                             </div>
 
                         </div>
@@ -150,13 +150,13 @@
                                 <!-- Second grid Line -->
                                 <div class="frth">
                                     <label class="" for="inpNy_"> Количество<br>по вертикали </label>
-                                    <input class="subInput" size="1" type="text" id="inpNy_" name="package_ny_">
+                                    <input class="subInput" size="1" type="number" id="inpNy_" name="package_ny_">
                                     <label class="" for="inpNy_"> шт </label>
                                 </div>
 
                                 <div class="ffth">
                                     <label class="" for="inpNx_"> Количество<br>по горизонтали </label>
-                                    <input class="subInput" size="1" type="text" id="inpNx_" name="package_nx_">
+                                    <input class="subInput" size="1" type="number" id="inpNx_" name="package_nx_">
                                     <label class="" for="inpNx_"> шт </label>
                                 </div>
 
@@ -207,7 +207,7 @@
                 <label class="status-label"> | </label>
                 <label class="status-label" id="lblStatus"> </label>
                 <label class="status-label"> | </label>
-                <label hidden class="status-label" id="lblStatusInfo"> </label>
+                <label class="status-label" id="lblStatusInfo"> </label>
                 <label hidden class="status-label"> | </label>
             </div>
         </section>
@@ -216,11 +216,10 @@
     <!--скрипты для стилей -->
     <script src="../jquery/jquery-3.4.1.min.js"></script>
     <script src="../jquery/jquery.validate.js"></script>
-    <!-- <script src="../package/package.js"></script> -->
     <script src="../package/subblock.js"></script>
-    <script src="warehouse.js"></script>
-    <script src="floor.js"></script>
-    <script src="main.js"></script>
+    <script src="warehouse.js?n=1"></script>
+    <script src="floor.js?n=1"></script>
+    <script src="main.js?n=1"></script>
 </body>
 
 <footer>

@@ -119,8 +119,8 @@ section.section__main {
 }
 
 .item-1 canvas {
-    width: 30vh;
-    height: 90vh;
+    width: 450px;
+    height: 1350px;
     object-fit: contain;
     border-width: 1px;
     border-style: dotted;
