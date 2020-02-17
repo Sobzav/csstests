@@ -1,4 +1,12 @@
 <?php
+// Добавлять в отчет все ошибки PHP
+error_reporting(E_ALL);
+
+// подключаем логгер
+@require_once '../plog.php';
+
+plog("|----------------------------------------------------------------|");
+plog("|                     setPackage.php                             |");
 
 // загружаем настройки и
 // подключаемся к серверу mysql
@@ -43,13 +51,12 @@ $errCount = 0;
 $errDump = "\n";
 
 // делаем запрос в БД
-// если успешно
+// и запрос выполнен если успешно
 if ($mySqli->query($query)) {
     // echo "Record updated successfully";
 
-    // дезаем обновление внутренних элементов
+    // делаем обновление внутренних элементов
     require_once 'updatePlacePrototype.php';
-
 } else {
     $errCount ++;
     $errDump .= $mySqli->error ."\n";

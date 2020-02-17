@@ -65,8 +65,9 @@ if ($result = $mySqli->query($query)) {
         $query = " 
             SELECT
                 place_prototype.sub_package_id,
-                place_prototype.row,
-                place_prototype.col,
+                place_prototype.x,
+                place_prototype.y,
+                package.id,
                 package.code,
                 package.name,
                 package.material_id,
@@ -96,8 +97,8 @@ if ($result = $mySqli->query($query)) {
             )
             WHERE place_prototype.package_id = $id
             ORDER BY
-                place_prototype.row,
-                place_prototype.col;
+                place_prototype.y,
+                place_prototype.x;
         ";
 
         // если внутренние элементы есть
@@ -116,7 +117,7 @@ if ($result = $mySqli->query($query)) {
             // их количество больше 0 
             if (count($subItem) > 0) {
 
-                $row["subItem"] = $subItem;
+                $row["item"] = $subItem;
             }
         }
 

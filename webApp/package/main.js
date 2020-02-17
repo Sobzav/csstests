@@ -50,6 +50,9 @@ const btn = {
 };
 
 
+var canvas;
+
+
 
 // -------------------------------------------------------
 // ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ |
@@ -60,21 +63,12 @@ const btn = {
 var packs = [];
 
 
+// console.log("main.warehouse: %o", warehouse);
+
 
 // -------------------------------------------------------
 // ГЛОБАЛЬНЫЕ ФУНКЦИИ |
 //
-
-
-    // -------------------------------------------------------
-    // Функция | Генерирует уникальный ID
-    //
-    function generateId() {
-        console.groupCollapsed("global.generateId { ");
-        console.groupEnd();
-        return Math.random().toString(36).substr(2, 7);
-    }
-
 
     // -------------------------------------------------------
     // Функция | Возвращает адекватные координаты мыши
@@ -138,15 +132,15 @@ var packs = [];
                 
                 // если такого элемента нет возвращаем false
             } else {
-                console.warn('pack: %o', pack);
-                console.warn('id: %o doesn`t exist', id);
+                console.log('pack: %o', pack);
+                console.log('id: %o doesn`t exist', id);
                 console.groupEnd();
                 return false;
             }
 
         // если контейнер пуст то возвращаем false
         } else {
-            console.warn('packs: %o', packs);
+            console.log('packs: %o', packs);
             console.groupEnd();
             return false;
         }
@@ -162,7 +156,7 @@ var packs = [];
     //           то он будет использован для поиска совпадений
     //
     function getPackByListItem(listItem, regExp = false) {
-        console.groupCollapsed("main.getPackByListItem { listItem: %o", listItem);
+        // console.groupCollapsed("main.getPackByListItem { listItem: %o", listItem);
 
         // если контейнер элементов не пуст
         // и listItem не пустое значение
@@ -182,20 +176,20 @@ var packs = [];
             // если эелемент существует
             if (pack) {
 
-                console.groupEnd();
+                // console.groupEnd();
                 return pack;
 
             // если такого элемента нет возвращаем false
             } else {
-                console.warn('listItem: %o doesn`t exist', listItem);
-                console.groupEnd();
+                // console.log('listItem: %o doesn`t exist', listItem);
+                // console.groupEnd();
                 return false;
             }
 
         // если контейнер пуст то возвращаем false
         } else {
-            console.warn('packs is emptyt: %o', packs);
-            console.groupEnd();
+            // console.log('packs is emptyt: %o', packs);
+            // console.groupEnd();
             return false;
         }
     }
@@ -294,6 +288,7 @@ window.addEventListener("load", () => {
     const inpSizeWz = domElementById("inpSizeWz");
     const inpColor = domElementById("inpColor");
     const inpVolume = domElementById("inpVolume");
+    const inpVolumeUnit = domElementById("inpVolumeUnit");
     const checkBoxHasContent = domElementById("checkBoxHasContent");
     const btnEdit = domElementById("btnEdit");
     const btnCopy = domElementById("btnCopy");
@@ -302,7 +297,7 @@ window.addEventListener("load", () => {
     const lblStatusChanged = domElementById("lblStatusChanged");
     const lblStatusInfo = domElementById("lblStatusInfo");
     // получаем и сохраняем указатель на <canvas> где будет вся графика
-    const canvas = domElementById("canvas");
+    canvas = domElementById("canvas");
 
 
 
@@ -310,14 +305,15 @@ window.addEventListener("load", () => {
     // ИНИЦИАЛИЗАЦИЯ |
     //
 
-
     // Настраиваем разрешение <canvas>
-    // пропорции должны соответствовать размерам <canvas> в CSS
-    canvas.width = 1000;
-    canvas.height = 1000;    
+    // canvas.style.width = '550px';
+    // canvas.style.height = '1770px';
+    canvas.width = 500;
+    canvas.height = 500;    
 
     // Делает все инпуты недоступными для редактирования
     setDomElementsEnabled('.disabled, .mainInput, .subInput');
+
 
     // структура хранящая количество блоков в count
     // и блоки в item с количеством горизонтальных рядов
@@ -330,11 +326,9 @@ window.addEventListener("load", () => {
     // ссылка на текущий выбранный элемент
     var selectedPack;
 
-    // копия текущего элемента для отмены изменений
-    var beforChangePack = new PackageContainerItem(0, canvas);
-
     // флагн режима редактирования
     var editMode = false;
+
 
 
     // -------------------------------------------------------
@@ -536,52 +530,30 @@ window.addEventListener("load", () => {
         
         // Создаем новый элемент
         var pack = new PackageContainerItem(
-            parseInt(data['id']),       // id элемента, получен из базы
-            canvas                      // canvas где будет отображен элемент
+            data,                   // данные элемента, получен из базы
+            settings,               // настройки элементов и внутренних элементов
+            canvas                  // canvas где будет отображен элемент
         );
 
         // заполняем все свойства элемента из структуры data
-        pack.code = data.code;  //['code'];
-        pack.name = data.name;  //['name'];
-        pack.payload = parseInt(data['payload']);   // грузоподъемность в граммах
+        pack.code = data.code;
+        pack.name = data.name;
+        pack.payload = parseInt(data.payload);   // грузоподъемность в граммах
+        pack.color = "#" + data.color;           // цвет элемента из базы
+        pack.padding = settings.padding;
+        pack.border = settings.border;
+        pack.showText = settings.showText;
+        pack.textColor = settings.textColor;
+        pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height},
+        pack.x = data.x ? parseInt(data.x) : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
+        pack.y = data.y ? parseInt(data.y) : 0;           // если в data есть координата, то беерем ее, иначе берем 0
         pack.setSize(
-            parseInt(data['wx']),   // размеры элемента из базы
-            parseInt(data['wy']),   // размеры элемента из базы
-            parseInt(data['wz'])     // размеры элемента из базы
+            parseInt(data.wx),   // размеры элемента из базы
+            parseInt(data.wy),   // размеры элемента из базы
+            parseInt(data.wz)     // размеры элемента из базы
         );               
-        pack.color = "#" + data['color'];           // цвет элемента из базы
-
-        // получаем внутренние элементы из структуры data
-        var subItem = data['subItem'];
-
-        // если внутренние элементы есть
-        if (subItem) {
-            var rowIndex;
-            var colIndex;
-
-            // то создаем массив внутренних элементов
-            // внутри текущего элемента
-            subItem.forEach(sub => {
-                console.log("subItem = %o }", sub);
-
-                // получаем ряд и столбец
-                // в которых расположен данный внутренний элдемент
-                rowIndex = parseInt(sub.row);
-                colIndex = parseInt(sub.col);
-
-                var newSubPack = new PackageSimple(parseInt(sub.sub_package_id), canvas);
-                newSubPack.code = sub.code;
-                newSubPack.name = sub.name;
-                newSubPack.color = "#" + sub.color;
-                newSubPack.wx = parseInt(sub.wx);
-                newSubPack.wy = parseInt(sub.wy);
-                newSubPack.wz = parseInt(sub.wz);
-
-                pack.pushTo(rowIndex -1, colIndex -1, newSubPack);
-                
-                newSubPack.show();
-            });
-        }
+        pack.autoFit = settings.autoFit;
+        pack.active = settings.active;
 
         console.groupEnd();
         return pack;
@@ -634,12 +606,13 @@ window.addEventListener("load", () => {
     function packsRemove(pack) {
         console.group("main.packsRemove { pack = %o ", pack);
 
-        // удаляем элемент из выпадающих списков внутренних прямоугольников на форме
-        for(var blockIndex = 0; blockIndex < subBlock.count; blockIndex++) {
+        // удаляем элемент из списков selCode1...selCode[N]
+        subInp.forEach(subInpItem => {
+            if (subInpItem.nodeName === "SELECT") {
 
-            // удаляем элемент <option> в <select> текцщего блока внутренних элементов
-            subBlock.item[blockIndex].selCode.remove(pack.listItem.index)
-        }
+                subInpItem.remove(pack.listItem.index)
+            }
+        });
 
         // удаляем элемент из списка selCode
         selCode.remove(pack.listItem.index);
@@ -659,7 +632,7 @@ window.addEventListener("load", () => {
     //           возвращает данные в формате json в случае успеха
     //           либо false в случае ошибки
     //
-    function requestToServer(type, url, dataType, successFunction, errorFunction) {
+    function requestToServer(type, url, dataType, data, successFunction, errorFunction) {
         console.group("main.requestToServer { url = %o ", url);
 
         console.time();
@@ -669,6 +642,7 @@ window.addEventListener("load", () => {
             type: type,
             url: url,
             dataType: dataType,
+            data,
 
             // получаем ответ в случае успеха
             success: function(jsonResponce, textStatus, jqXHR) {
@@ -705,7 +679,7 @@ window.addEventListener("load", () => {
         console.group("main.packsLoad {");
 
         // отправляем запрос серверу
-        requestToServer('POST', 'getPackage.php', 'json',
+        requestToServer('POST', 'getPackage.php', 'json', {},
 
             // если успешно и сервер вернул данные
             function(jsonResponce) {
@@ -716,6 +690,19 @@ window.addEventListener("load", () => {
                 // запись это вся информация одного элемента 
 
         
+                // -------------------------------------------------------
+                // Загружаем данные W A R E H O U S E 
+                // console.group("main.warehouseLoad { ");
+                // warehouse.forEach(line => {
+                    
+                //     // Создаем новый элемент
+                //     var pack = packsCreate(line);
+
+                //     packsAdd(pack);
+                // });
+                // console.groupEnd();
+    
+
                 // перебираем записи прострочно и создаем из каждой элемент массива packs
                 rows.forEach(row => {
 
@@ -727,7 +714,7 @@ window.addEventListener("load", () => {
                     // добавляем созданный элемент в массив и выпадающие списки
                     packsAdd(pack);
                 });
-        
+                            
                 successFunction();
             },
             
@@ -737,7 +724,7 @@ window.addEventListener("load", () => {
                 errorFunction();
             }
         );   
-        console.group("main.packsLoad }");
+        console.group();
     }
 
 
@@ -839,18 +826,18 @@ window.addEventListener("load", () => {
         // если выделенный элемент есть
         if (pack) {
             
+            var scale = pack.scale;
+
             // то меняем выбранному элементу масштам
             if (evt.deltaY < 0) {
                 console.log('canvas zoom out: ' + evt.deltaY);
-                pack.scale = pack.scale * 1.05;
+                scale = scale * 1.05;
             }
             if (evt.deltaY > 0) {
                 console.log('canvas zoom in: ' + evt.deltaY);
-                pack.scale = pack.scale * 0.95;
+                scale = scale * 0.95;
             }
-
-            // обновим изображение элемента
-            pack.reDraw();
+            pack.scale = scale;
         }
 
         var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
@@ -870,20 +857,33 @@ window.addEventListener("load", () => {
     //        Вывод сообщения о текущей позиции курсора мыши
     //
     canvas.addEventListener('mousemove', function(evt) {
-        // console.group('eventMouseDown { ');
+        // console.group('eventMouseMove { ');
 
-        var mousePos = getMousePos(canvas, evt);
-        var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y;
-        lblStatusInfo.innerText = message;
+        var pos = getMousePos(canvas, evt);
 
-        // console.groupEnd('eventMouseDown }');
+        // получаем выделленый элемент
+        var pack = selectedPack;
+        
+        // если выбранный элемент существует
+        if (pack) {
+            
+            var message = 'Mouse pos: ' + pos.x + ',' + pos.y + ' | Scaled pos: ' + pos.x * selectedPack.scale + ',' + pos.y * selectedPack.scale;
+            lblStatusInfo.innerText = message;
+    
+            // то передаем элементу координаты курсора
+            // console.log('item mouse move: %o', pack);
+            // var pos = getMousePos(canvas, evt)
+            var mouseOver = pack.onMouseOver(pos.x, pos.y);
+            if (mouseOver) {canvas.style.cursor = 'pointer'} else {canvas.style.cursor = 'auto'}
+        }
+        // console.groupEnd();
     }, false);
 
 
     // -------------------------------------------------------
     // Слот | Привязываем события клика на элементе
     //
-    function eventMouseDown(e) {
+    function eventMouseDown(evt) {
         console.group('eventMouseDown {', editMode);
 
         // получаем выделленый элемент
@@ -894,11 +894,60 @@ window.addEventListener("load", () => {
 
             // то передаем клик элементу
             // console.log('item mouse down: %o', pack);
-            var pos = getMousePos(canvas, e)
-            pack.onClick(pos.x, pos.y);
-            // pack.onClick(event.clientX, event.clientY);
+            var pos = getMousePos(canvas, evt)
+            var selected = pack.onClick(pos.x, pos.y);
+            
+            console.log('selectedItems: %o', pack.selectedItem);
+
+            // если выделенный элемент есть
+            if (selected && false) {
+                // меняем выбранный элемент
+                pack.item.forEach( function(item, index) {
+                    if (item.hashCode == selectedPack.selectedItem[0].hashCode) {
+                        pack = pack.item[index];
+                    }
+                });
+
+                pack.item.forEach( function(item, index) {
+                    if (item.hashCode == selectedPack.selectedItem[0].selectedItem[0].hashCode) {
+                        pack = pack.item[index];
+                    }
+                });
+                console.log('selectedItems: %o', pack);
+
+                pack.disposition = {
+                    x: 'x',
+                    y: 'y',
+                    wx: 'wx',
+                    wy: 'wy',
+                    wz: 'wz'
+                };
+                pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height};
+                pack.autoFit = 'contain'
+
+                // запоминаем текущий элемент как ранее выбранный
+                prevousPack = selectedPack;
+
+                // Скрываем ранее выбранный элемент на <canvas>
+                if (selectedPack) {
+                    selectedPack.hide();
+                }
+
+                // Запоминаем выбранный элемент как текущий
+                selectedPack = pack;
+
+                // Показываем текущий элемент на <canvas>
+                if (selectedPack) {
+                    selectedPack.show();
+                }
+
+                // Показываем свойства элемента
+                // Передаем блокам внутренних элементов какой элемент сейчамс выбран
+                // что бы они отобразили внутреннее содержимое выбранного элемента
+                packsShowInfo(selectedPack);
+            }
         }
-        console.groupEnd('eventMouseDown }');
+        console.groupEnd();
     }
 
 
@@ -960,11 +1009,13 @@ window.addEventListener("load", () => {
         if (editMode) {
         
             // включаем режим редактирования [ РЕДАКТИРОВАТЬ ]
+            editMode = true;
 
             // сохраняем копию выбранного элемента для отмены изменений
             // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
             setDomElementsEnabled('#btnCopy', false);
+            if (selectedPack.item) {setDomElementsEnabled('.subInput', true);}
                 
             // Меняем кнопке текст с "Редактировать" на "Назад"
             btnEdit.innerText = 'Назад'
@@ -1003,9 +1054,6 @@ window.addEventListener("load", () => {
                     // и если выбранный элемнт является новым
                     if (selectedPack.id == 0) {
                         console.log('элемент новый возвращаемся к ранее выбранному!!!', prevousPack);
-                        
-                        // убираем его с <canvas>
-                        selectedPack.hide();
                         
                         // удаляем новый и не сохраненный элемент
                         packsRemove(selectedPack);
@@ -1093,148 +1141,73 @@ window.addEventListener("load", () => {
 
         // если выделенный элемент существует
         if (pack) {
-            
-            // проверим корректность введенных данных
-            if (packs.some( function(item) {
-    
-                return (item.code == pack.code) && (item != pack);
-            })) {
-    
-                setStatus('Сохранение невозможно, элемент с таким Обозначением уже существует', 7000);
-                return false;
-            }
-    
-            // если данный элемент является новым
-            if (pack.id === 0) {
+
+            // Формируем данные для отправки на сервер
+            var url;
+            var subItems = [];
+            pack.item.forEach( item => {
+                subItems.push({
+                    'sub_package_id': item.id,
+                    'x': item.x,
+                    'y': item.y
+                });
+            });
+
+            if (pack.id == 0) {
                 
-                console.timeEnd();
+                // элемент новый
+                url = "addPackage.php";
+            } else {
+                
+                // елемеент уже еесть в БД
+                url = "setPackage.php";
+            }
 
-                // формируем данные для отправки на сервер
-                // Выполняем асинхронный запрос POST (INSERT)
-                $.ajax({
-                    type: "POST",
-                    url: "addPackage.php",
-                    dataType: "json",
-                    data: { 
-                        "package_id": pack.id,
-                        "package_code": pack.code,
-                        "package_name": pack.name,
-                        "package_payload": pack.payload,
-                        "package_wz": pack.wz,
-                        "package_wx": pack.wx,
-                        "package_wy": pack.wy,
-                        "package_color": pack.color.replace("#", ""),
-                        "subItem": pack.item
-                    },
-                    
-                    // Получаем ответ сервера
+            // отправляем запрос серверу POST (UPDATE)
+            requestToServer('POST', url, 'json',
+                { 
+                    "package_id": pack.id,
+                    "package_code": pack.code,
+                    "package_name": pack.name,
+                    "package_payload": pack.payload,
+                    "package_wz": pack.wz,
+                    "package_wx": pack.wx,
+                    "package_wy": pack.wy,
+                    "package_color": pack.color.replace("#", ""),
+                    "item": subItems
+                },
 
-                    // Если сохранение успешно:
-                    success: function(jsonResponce, textStatus, jqXHR){
-                        
-                        // Вызов: Добавление нового элемента 
-                        // Вызов: Показать элемент
-                        var result = JSON.parse(jsonResponce);
-                        
-                        console.log('ответ сервера: %o', result);
-                        console.timeEnd();
+                // если успешно и сервер вернул данные
+                function(jsonResponce) {
+        
+                    // если элемент был новый то
+                    if (pack.id == 0) {
 
                         // обновляем id элемента
-                        pack.id = result.package_id;
-
-                        // помечаем что элемент сохранен
-                        pack.changed = false;
-                        lblStatusChanged.innerText = "";
-
-                        // показываем сообщение в statusbar
-                        setStatus('Сохранено', 3000);
-                    },
-                    
-                    // если были ошибки
-                    error: function(XMLHttpRequest, textStatus, jqXHR) {
-                        
-                        // вывод сообщения об ошибке в statusbar
-                        setStatus('Сервер вернул ошибку ' + textStatus, 3000);
-                        
-                        console.warn('textStatus: ' + textStatus);
-                        console.timeEnd();
-                        console.warn('jqXHR: %o', jqXHR);
-                    }
-                });
-    
-            // если элемент уже существует, то обновляем его в БД
-            } else {
-
-                console.time();
-
-                // формируем данные для отправки на сервер
-                var subItem = function() {
-                    var result = [];
-                    for (var rowIndex = 0; rowIndex < pack.rowCount; rowIndex++) {
-                        for (var colIndex = 0; colIndex < pack.getColCount(rowIndex); colIndex++) {
-                            result.push({
-                                "sub_package_id": pack.item[rowIndex][colIndex].id,
-                                "row": (rowIndex + 1),
-                                "col": (colIndex + 1)
-                            });
-                        }
-                    }
-                    return result;
-                }
-                console.log('subItem: %o', subItem());
-
-                // Выполняем асинхронный запрос POST (UPDATE)
-                $.ajax({
-                    type: "POST",
-                    url: "setPackage.php",
-                    dataType: "json",
-                    data: { 
-                        "package_id": pack.id,
-                        "package_code": pack.code,
-                        "package_name": pack.name,
-                        "package_payload": pack.payload,
-                        "package_wz": pack.wz,
-                        "package_wx": pack.wx,
-                        "package_wy": pack.wy,
-                        "package_color": pack.color.replace("#", ""),
-                        "subItem": subItem()
-                    },
-                    
-                    // Если сохранение успешно:
-                    success: function(jsonResponce, textStatus, jqXHR){
-
-                        // Вызов: Добавление нового элемента 
-                        // Вызов: Показать элемент
                         var result = JSON.parse(jsonResponce);
-                        
-                        console.log('ответ сервера: %o', result);
-                        console.timeEnd();
-                        
-                        // помечаем что элемент сохранен
-                        pack.changed = false;
-                        lblStatusChanged.innerText = "";
-
-                        // показываем сообщение в statusbar
-                        setStatus('Сохранено', 3000);
-                    },
-                    
-                    // если были ошибки
-                    error: function(XMLHttpRequest, textStatus, jqXHR) {
-                        
-                        // вывод сообщения об ошибке на странице
-                        setStatus('Сервер вернул ошибку ' + textStatus, 3000);
-                        
-                        console.warn('textStatus: ' + textStatus);
-                        console.timeEnd();
-                        console.warn('jqXHR: %o', jqXHR);
+                        pack.id = result.package_id;
                     }
-                });
-            }
+
+                    // помечаем что элемент сохранен
+                    pack.changed = false;
+                    lblStatusChanged.innerText = "";
+
+                    // показываем сообщение в statusbar
+                    setStatus('Сохранено', 5000);
+                },
+                
+                // если запрос серверу вернул ошибку
+                function(XMLHttpRequest, textStatus) {
+                    
+                    // вывод сообщения об ошибке на странице
+                    setStatus('Сервер вернул ошибку ' + textStatus, 5000);
+                }
+            );   
 
         // вероятно ни один элемент не выделен, сообщаем об этом
         } else {
 
-            setStatus('Сохранение неудачно. Не выбран ни один тип', 3000);
+            setStatus('Сохранение неудачно. Ничего не выбрано', 3000);
             console.log('pack пуст или не существует !!!');
         }
         
@@ -1249,18 +1222,17 @@ window.addEventListener("load", () => {
     //           И включает режим редактирования
     //
     function packCopy(pack) {
-        console.group('packSave { pack = %o', pack);
+        console.group('packCopy { pack: %o', pack);
 
         // если выделенный элемент существует
         if (pack) {
-            console.group('!!! В разработке !!!', pack);
 
-            // Создаем новый элемент
-            var newPack = packsCreate({
+            var data = {
                 id: "0",
                 code: pack.code + '-copy',
                 name: pack.name,
                 color: pack.color.replace("#", ""),
+                disposition: pack.disposition,
                 wx: pack.wx,
                 wy: pack.wy,
                 wz: pack.wz,
@@ -1269,33 +1241,65 @@ window.addEventListener("load", () => {
                 photo_id: pack.photo_id,
                 created: null,
                 updated: null,
-                deleted: null
+                deleted: null,
+                item: []
+            };
+
+            // копируем внутренние элементы выбранного
+            pack.item.forEach( item => {
+                data.item.push(
+                    {
+                        id: item.id,
+                        code: item.code,
+                        name: item.name,
+                        color: item.color,
+                        disposition: item.disposition,
+                        x: item.x,
+                        y: item.y,
+                        wx: item.wx,
+                        wy: item.wy,
+                        wz: item.wz,
+                        payload: item.payload,
+                        material_id: item.material_id,
+                        photo_id: item.photo_id,
+                        created: null,
+                        updated: null,
+                        deleted: null
+                    }
+                )
             });
 
-            // копируем его
-            // newPack.code = ;
-            // newPack.name = ;
-            // newPack.color = ;
-            // newPack.wx = ;
-            // newPack.wy = pack.wy;
-            // newPack.wz = pack.wz;
-            // newPack.payload = ;
-            // newPack.material_id = ;
-            // newPack.photo_id = ;
-            // newPack.created = ;
-            // newPack.updated = pack.updated;
-            // newPack.deleted = pack.deleted;
-
-            newPack._rowCount = pack._rowCount;
-            newPack._colCount = Object.assign({}, pack._colCount);
-            newPack.item = Object.assign({}, pack.item);
+            // Создаем новый элемент копируя выбранный
+            var newPack = packsCreate(data);
 
             // добавляем его в выпадающий список и в массив
             packsAdd(newPack);
                         
-            // включаем режим редактирования
-            editMode = true;
-            setEditMode(editMode);
+            console.log('newPack = %o', newPack);
+
+            // запоминаем текущий элемент как ранее выбранный
+            prevousPack = selectedPack;
+    
+            // Скрываем ранее выбранный элемент на <canvas>
+            if (selectedPack) {
+                selectedPack.hide();
+            }
+    
+            // Запоминаем выбранный элемент как текущий
+            selectedPack = newPack;
+    
+            // Показываем текущий элемент на <canvas>
+            if (selectedPack) {
+                selectedPack.show();
+            }
+    
+            // Показываем свойства элемента
+            // Передаем блокам внутренних элементов какой элемент сейчамс выбран
+            // что бы они отобразили внутреннее содержимое выбранного элемента
+            packsShowInfo(selectedPack);
+            
+                // включаем режим редактирования
+            setEditMode(true);
 
         } else {
             
@@ -1303,30 +1307,6 @@ window.addEventListener("load", () => {
             console.groupEnd();
             return false;
         }
-
-        console.log('newPack = %o', newPack);
-
-        // запоминаем текущий элемент как ранее выбранный
-        prevousPack = selectedPack;
-
-        // Скрываем ранее выбранный элемент на <canvas>
-        if (selectedPack) {
-            selectedPack.hide();
-        }
-
-        // Запоминаем выбранный элемент как текущий
-        selectedPack = newPack;
-
-        // Показываем текущий элемент на <canvas>
-        if (selectedPack) {
-            selectedPack.show();
-        }
-
-        // Показываем свойства элемента
-        // Передаем блокам внутренних элементов какой элемент сейчамс выбран
-        // что бы они отобразили внутреннее содержимое выбранного элемента
-        packsShowInfo(selectedPack);
-        
         console.groupEnd();
     }
 
@@ -1399,11 +1379,21 @@ window.addEventListener("load", () => {
                     break;
             }            
             
-            // вычисляем объем элемента
-            inpVolume.innerText = pack.wz * pack.wx * pack.wy;
+            // вычисляем объем элемента в кубических миллиметрах
+            var volume = pack.wx * pack.wy * pack.wz;
+            if (volume > 99999999) {
+                volume = volume / 1000000;      // переводим в кубические метры
+                inpVolumeUnit.innerHTML = 'м' + '2'.sup();
+            } else if ((volume > 999) && (volume <= 99999999)) {
+                volume = volume / 10000;        // переводим в кубические сантиметры
+                inpVolumeUnit.innerHTML = 'см' + '2'.sup();
+            } else {
+                inpVolumeUnit.innerHTML = 'мм' + '2'.sup();
+            }
+            inpVolume.innerText = volume;
 
             // обновим изображение элемента
-            pack.reDraw();  
+            // pack.reDraw();  
 
             // помечаем что элемент изменен
             pack.changed = true;
@@ -1475,7 +1465,7 @@ window.addEventListener("load", () => {
             }
         }
 
-        console.groupEnd('setSelectItemsDetiled }');
+        console.groupEnd();
     }
 
 
@@ -1679,12 +1669,10 @@ window.addEventListener("load", () => {
         setSelectedPack(selCode, packs);
 
         // делаем элементы в выпадающем списке упрощенными (только ТИП)
-        selCodeOpened = false;
-        setSelectItemsDetiled(e.target, false);
+        // selCodeOpened = false;
         selCode.blur();
         
         console.groupEnd('eventListItemChanged }');
     }
 
 });
-  

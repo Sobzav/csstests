@@ -63,7 +63,7 @@ var canvas;
 var packs = [];
 
 
-console.log("main.warehouse: %o", warehouse);
+// console.log("main.warehouse: %o", warehouse);
 
 
 // -------------------------------------------------------
@@ -132,15 +132,15 @@ console.log("main.warehouse: %o", warehouse);
                 
                 // если такого элемента нет возвращаем false
             } else {
-                console.warn('pack: %o', pack);
-                console.warn('id: %o doesn`t exist', id);
+                console.log('pack: %o', pack);
+                console.log('id: %o doesn`t exist', id);
                 console.groupEnd();
                 return false;
             }
 
         // если контейнер пуст то возвращаем false
         } else {
-            console.warn('packs: %o', packs);
+            console.log('packs: %o', packs);
             console.groupEnd();
             return false;
         }
@@ -156,7 +156,7 @@ console.log("main.warehouse: %o", warehouse);
     //           то он будет использован для поиска совпадений
     //
     function getPackByListItem(listItem, regExp = false) {
-        console.groupCollapsed("main.getPackByListItem { listItem: %o", listItem);
+        // console.groupCollapsed("main.getPackByListItem { listItem: %o", listItem);
 
         // если контейнер элементов не пуст
         // и listItem не пустое значение
@@ -176,20 +176,20 @@ console.log("main.warehouse: %o", warehouse);
             // если эелемент существует
             if (pack) {
 
-                console.groupEnd();
+                // console.groupEnd();
                 return pack;
 
             // если такого элемента нет возвращаем false
             } else {
-                console.warn('listItem: %o doesn`t exist', listItem);
-                console.groupEnd();
+                // console.log('listItem: %o doesn`t exist', listItem);
+                // console.groupEnd();
                 return false;
             }
 
         // если контейнер пуст то возвращаем false
         } else {
-            console.warn('packs is emptyt: %o', packs);
-            console.groupEnd();
+            // console.log('packs is emptyt: %o', packs);
+            // console.groupEnd();
             return false;
         }
     }
@@ -384,7 +384,7 @@ window.addEventListener("load", () => {
         subBlockContainer.appendChild(newSubBlock);
 
         // показываем блок внутренних элементов
-        // newSubBlock.classList.remove('hidden');
+        newSubBlock.classList.remove('hidden');
 
         // добавляем блок внутренних элементов
         subBlock.add(
@@ -498,7 +498,7 @@ window.addEventListener("load", () => {
         item.innerText = itemText;
 
         console.log("option: %o }",  item);
-        console.groupEnd("main.createOption }");
+        console.groupEnd();
         return item;
     }
     
@@ -531,23 +531,29 @@ window.addEventListener("load", () => {
         // Создаем новый элемент
         var pack = new PackageContainerItem(
             data,                   // данные элемента, получен из базы
+            settings,               // настройки элементов и внутренних элементов
             canvas                  // canvas где будет отображен элемент
         );
 
         // заполняем все свойства элемента из структуры data
-        pack.code = data.code;  //['code'];
-        pack.name = data.name;  //['name'];
+        pack.code = data.code;
+        pack.name = data.name;
         pack.payload = parseInt(data.payload);   // грузоподъемность в граммах
         pack.color = "#" + data.color;           // цвет элемента из базы
-        pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height};
-        pack.x = data.x ? data.x : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
-        pack.y = data.y ? data.y : 0;           // если в data есть координата, то беерем ее, иначе берем 0
+        pack.padding = settings.padding;
+        pack.border = settings.border;
+        pack.showText = settings.showText;
+        pack.textColor = settings.textColor;
+        pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height},
+        pack.x = data.x ? parseInt(data.x) : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
+        pack.y = data.y ? parseInt(data.y) : 0;           // если в data есть координата, то беерем ее, иначе берем 0
         pack.setSize(
             parseInt(data.wx),   // размеры элемента из базы
             parseInt(data.wy),   // размеры элемента из базы
             parseInt(data.wz)     // размеры элемента из базы
         );               
-        pack.autoFit = 'contain';
+        pack.autoFit = settings.autoFit;
+        pack.active = settings.active;
 
         console.groupEnd();
         return pack;
@@ -626,7 +632,7 @@ window.addEventListener("load", () => {
     //           возвращает данные в формате json в случае успеха
     //           либо false в случае ошибки
     //
-    function requestToServer(type, url, dataType, successFunction, errorFunction) {
+    function requestToServer(type, url, dataType, data, successFunction, errorFunction) {
         console.group("main.requestToServer { url = %o ", url);
 
         console.time();
@@ -636,6 +642,7 @@ window.addEventListener("load", () => {
             type: type,
             url: url,
             dataType: dataType,
+            data,
 
             // получаем ответ в случае успеха
             success: function(jsonResponce, textStatus, jqXHR) {
@@ -672,7 +679,7 @@ window.addEventListener("load", () => {
         console.group("main.packsLoad {");
 
         // отправляем запрос серверу
-        requestToServer('POST', 'getPackage.php', 'json',
+        requestToServer('POST', 'getPackage.php', 'json', {},
 
             // если успешно и сервер вернул данные
             function(jsonResponce) {
@@ -693,10 +700,9 @@ window.addEventListener("load", () => {
 
                     packsAdd(pack);
                 });
-
-                
                 console.groupEnd();
     
+
                 // перебираем записи прострочно и создаем из каждой элемент массива packs
                 rows.forEach(row => {
 
@@ -799,10 +805,11 @@ window.addEventListener("load", () => {
     // Привязываем событие изменения цвета элемента
     inpColor.addEventListener('change', eventItemChanged);          
 
-    // Привязываем события клика на элементе
+    // Привязываем событие клика на элементе
     canvas.addEventListener("mousedown", eventMouseDown);
 
-
+    // Привязываем событие двойного клика на элементе
+    canvas.addEventListener("dblclick", eventMouseDblClick);
 
     // -------------------------------------------------------
     // Слот | Масштабирование элемента на canvas
@@ -853,7 +860,7 @@ window.addEventListener("load", () => {
     canvas.addEventListener('mousemove', function(evt) {
         // console.group('eventMouseMove { ');
 
-        var mousePos = getMousePos(canvas, evt);
+        var pos = getMousePos(canvas, evt);
 
         // получаем выделленый элемент
         var pack = selectedPack;
@@ -861,23 +868,24 @@ window.addEventListener("load", () => {
         // если выбранный элемент существует
         if (pack) {
             
-            var message = 'Mouse pos: ' + mousePos.x + ',' + mousePos.y + ' | Scaled pos: ' + mousePos.x * selectedPack.scale + ',' + mousePos.y * selectedPack.scale;
+            var message = 'Mouse pos: ' + pos.x + ',' + pos.y + ' | Scaled pos: ' + pos.x * selectedPack.scale + ',' + pos.y * selectedPack.scale;
             lblStatusInfo.innerText = message;
     
             // то передаем элементу координаты курсора
             // console.log('item mouse move: %o', pack);
             // var pos = getMousePos(canvas, evt)
-            // pack.onMouseOver(pos.x, pos.y);
+            var mouseOver = pack.onMouseOver(pos.x, pos.y);
+            if (mouseOver) {canvas.style.cursor = 'pointer'} else {canvas.style.cursor = 'auto'}
         }
         // console.groupEnd();
     }, false);
 
 
     // -------------------------------------------------------
-    // Слот | Привязываем события клика на элементе
+    // Слот | Обрабатываем событие клика на элементе
     //
     function eventMouseDown(evt) {
-        console.group('eventMouseDown {', editMode);
+        console.group('eventMouseDown {');
 
         // получаем выделленый элемент
         var pack = selectedPack;
@@ -890,6 +898,31 @@ window.addEventListener("load", () => {
             var pos = getMousePos(canvas, evt)
             var selected = pack.onClick(pos.x, pos.y);
             
+            console.log('selectedItems: %o', pack.selectedItem);
+        }
+        console.groupEnd();
+    }
+
+
+    // -------------------------------------------------------
+    // Слот | Обрабатываем события двойного клика на элементе
+    //
+    function eventMouseDblClick(evt) {
+        console.group('eventMouseDblClick {');
+
+        // получаем выделленый элемент
+        var pack = selectedPack;
+
+        // если выделенный элемент есть
+        if (pack) {
+
+            // то передаем клик элементу
+            // console.log('item mouse down: %o', pack);
+            var pos = getMousePos(canvas, evt)
+            var selected = pack.onDblClick(pos.x, pos.y);
+            
+            console.log('selectedItems: %o', pack.selectedItem);
+
             // если выделенный элемент есть
             if (selected) {
                 // меняем выбранный элемент
@@ -905,6 +938,11 @@ window.addEventListener("load", () => {
                     }
                 });
                 console.log('selectedItems: %o', pack);
+
+                var li = document.createElement('li');
+                li.classList.add('nav-item');
+                li.innerText = pack.code;
+                domElementById('nav').appendChild(li);
 
                 pack.disposition = {
                     x: 'x',
@@ -1005,6 +1043,7 @@ window.addEventListener("load", () => {
             // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
             setDomElementsEnabled('#btnCopy', false);
+            if (selectedPack.item) {setDomElementsEnabled('.subInput', true);}
                 
             // Меняем кнопке текст с "Редактировать" на "Назад"
             btnEdit.innerText = 'Назад'
@@ -1131,18 +1170,30 @@ window.addEventListener("load", () => {
         // если выделенный элемент существует
         if (pack) {
 
-            // если данный элемент является новым
-            if (pack.id === 0) {
-                
-                console.timeEnd();
+                // Формируем данные для отправки на сервер
+                var url;
+                var subItems = [];
+                pack.item.forEach( item => {
+                    subItems.push({
+                        'sub_package_id': item.id,
+                        'x': item.x,
+                        'y': item.y
+                    });
+                });
 
-                // формируем данные для отправки на сервер
-                // Выполняем асинхронный запрос POST (INSERT)
-                $.ajax({
-                    type: "POST",
-                    url: "addPackage.php",
-                    dataType: "json",
-                    data: { 
+                if (pack.id == 0) {
+                
+                    // элемент новый
+                    url = "addPackage.php";
+                } else {
+                    
+                    // елемеент уже еесть в БД
+                    url = "setPackage.php";
+                }
+    
+                // отправляем запрос серверу POST (UPDATE)
+                requestToServer('POST', url, 'json',
+                    { 
                         "package_id": pack.id,
                         "package_code": pack.code,
                         "package_name": pack.name,
@@ -1151,117 +1202,40 @@ window.addEventListener("load", () => {
                         "package_wx": pack.wx,
                         "package_wy": pack.wy,
                         "package_color": pack.color.replace("#", ""),
-                        "subItem": pack.item
+                        "item": subItems
                     },
                     
-                    // Получаем ответ сервера
-
-                    // Если сохранение успешно:
-                    success: function(jsonResponce, textStatus, jqXHR){
-                        
-                        // Вызов: Добавление нового элемента 
-                        // Вызов: Показать элемент
-                        var result = JSON.parse(jsonResponce);
-                        
-                        console.log('ответ сервера: %o', result);
-                        console.timeEnd();
+                // если успешно и сервер вернул данные
+                function(jsonResponce) {
+        
+                    // если элемент был новый то
+                    if (pack.id == 0) {
 
                         // обновляем id элемента
-                        pack.id = result.package_id;
-
-                        // помечаем что элемент сохранен
-                        pack.changed = false;
-                        lblStatusChanged.innerText = "";
-
-                        // показываем сообщение в statusbar
-                        setStatus('Сохранено', 3000);
-                    },
-                    
-                    // если были ошибки
-                    error: function(XMLHttpRequest, textStatus, jqXHR) {
-                        
-                        // вывод сообщения об ошибке в statusbar
-                        setStatus('Сервер вернул ошибку ' + textStatus, 3000);
-                        
-                        console.warn('textStatus: ' + textStatus);
-                        console.timeEnd();
-                        console.warn('jqXHR: %o', jqXHR);
-                    }
-                });
-    
-            // иначе обновляем существующий элемент в БД
-            } else {
-
-                console.time();
-
-                // формируем данные для отправки на сервер
-                var subItem = function() {
-                    var result = [];
-                    for (var rowIndex = 0; rowIndex < pack.rowCount; rowIndex++) {
-                        for (var colIndex = 0; colIndex < pack.getColCount(rowIndex); colIndex++) {
-                            result.push({
-                                "sub_package_id": pack.item[rowIndex][colIndex].id,
-                                "row": (rowIndex + 1),
-                                "col": (colIndex + 1)
-                            });
-                        }
-                    }
-                    return result;
-                }
-                console.log('subItem: %o', subItem());
-
-                // Выполняем асинхронный запрос POST (UPDATE)
-                $.ajax({
-                    type: "POST",
-                    url: "setPackage.php",
-                    dataType: "json",
-                    data: { 
-                        "package_id": pack.id,
-                        "package_code": pack.code,
-                        "package_name": pack.name,
-                        "package_payload": pack.payload,
-                        "package_wz": pack.wz,
-                        "package_wx": pack.wx,
-                        "package_wy": pack.wy,
-                        "package_color": pack.color.replace("#", ""),
-                        "subItem": subItem()
-                    },
-                    
-                    // Если сохранение успешно:
-                    success: function(jsonResponce, textStatus, jqXHR){
-
-                        // Вызов: Добавление нового элемента 
-                        // Вызов: Показать элемент
                         var result = JSON.parse(jsonResponce);
-                        
-                        console.log('ответ сервера: %o', result);
-                        console.timeEnd();
-                        
-                        // помечаем что элемент сохранен
-                        pack.changed = false;
-                        lblStatusChanged.innerText = "";
-
-                        // показываем сообщение в statusbar
-                        setStatus('Сохранено', 3000);
-                    },
-                    
-                    // если были ошибки
-                    error: function(XMLHttpRequest, textStatus, jqXHR) {
-                        
-                        // вывод сообщения об ошибке на странице
-                        setStatus('Сервер вернул ошибку ' + textStatus, 3000);
-                        
-                        console.warn('textStatus: ' + textStatus);
-                        console.timeEnd();
-                        console.warn('jqXHR: %o', jqXHR);
+                        pack.id = result.package_id;
                     }
-                });
-            }
+
+                    // помечаем что элемент сохранен
+                    pack.changed = false;
+                    lblStatusChanged.innerText = "";
+
+                    // показываем сообщение в statusbar
+                    setStatus('Сохранено', 5000);
+                },
+                
+                // если запрос серверу вернул ошибку
+                function(XMLHttpRequest, textStatus) {
+                    
+                    // вывод сообщения об ошибке на странице
+                    setStatus('Сервер вернул ошибку ' + textStatus, 5000);
+                }
+            );   
 
         // вероятно ни один элемент не выделен, сообщаем об этом
         } else {
 
-            setStatus('Сохранение неудачно. Не выбран ни один тип', 3000);
+            setStatus('Сохранение неудачно. Ничего не выбрано', 3000);
             console.log('pack пуст или не существует !!!');
         }
         
@@ -1512,7 +1486,7 @@ window.addEventListener("load", () => {
             }
         }
 
-        console.groupEnd('setSelectItemsDetiled }');
+        console.groupEnd();
     }
 
 
@@ -1723,4 +1697,3 @@ window.addEventListener("load", () => {
     }
 
 });
-  

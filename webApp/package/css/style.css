@@ -111,10 +111,10 @@ section.section__main {
     /* margin: 1.25rem 0.75rem 1.25rem 0; */
     margin: 0.5rem 0.85rem 0.5rem 0;
     padding: 1.5rem;
-    border-width: 1px;
-    border-style: dotted;
+    /* border-width: 1px; */
+    /* border-style: dotted; */
     background-color: var(--color-chateauGrey);
-    border-color: var(--color-chiffon);
+    /* border-color: var(--color-chiffon); */
     ;
 }
 
@@ -122,7 +122,7 @@ section.section__main {
     width: 500px;
     height: 500px;
     object-fit: contain;
-    border-width: 1px;
+    border-width: 0.1px;
     border-style: dotted;
     border-color: var(--color-chiffon);
 }

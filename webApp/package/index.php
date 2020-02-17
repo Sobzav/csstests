@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
-    <!-- <link rel="stylesheet" type="text/css" href="css\style.css" /> -->
-    <link rel="stylesheet" href="/css/ant/style.css">
+    <link rel="stylesheet" type="text/css" href="css\style.css" />
     <title> Упаковка </title>
 </head>
 
@@ -34,12 +33,12 @@
                     <!-- Список всех элементов в базе  -->
                     <option id="0"> Новый </option>
                 </select>
-                <input class="hidden" size="4" type="text" id="inpCodeEdit" name="package_code">
+                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
             </div>
             <!-- Растягивающийся блок с input  -->
             <div class="input-flex">
                 <label class="" for="inpName"> Наименование </label>
-                <input class="" type="text" id="inpName" name="package_name">
+                <input class="mainInput" type="text" id="inpName" name="package_name">
             </div>
             <!-- Кнопка справа  -->
             <div style="" class="dr">
@@ -106,7 +105,7 @@
                             <div class="sxth">
                                 <label class="" for="inpVolume"> Объем = </label>
                                 <label class="" type="text" id="inpVolume" name="package_value"> 0 </label>
-                                <label class="" for="inpVolume"> мм&sup2 </label>
+                                <label class="" for="inpVolume" id="inpVolumeUnit"> мм&sup2 </label>
                             </div>
 
                         </div>
@@ -151,13 +150,13 @@
                                 <!-- Second grid Line -->
                                 <div class="frth">
                                     <label class="" for="inpNy_"> Количество<br>по вертикали </label>
-                                    <input class="subInput" size="1" type="number" id="inpNy_" name="package_wy_">
+                                    <input class="subInput" size="1" type="text" id="inpNy_" name="package_wy_">
                                     <label class="" for="inpNy_"> шт </label>
                                 </div>
 
                                 <div class="ffth">
                                     <label class="" for="inpNx_"> Количество<br>по горизонтали </label>
-                                    <input class="subInput" size="1" type="number" id="inpNx_" name="package_wx_">
+                                    <input class="subInput" size="1" type="text" id="inpNx_" name="package_wx_">
                                     <label class="" for="inpNx_"> шт </label>
                                 </div>
 
@@ -208,7 +207,7 @@
                 <label class="status-label"> | </label>
                 <label class="status-label" id="lblStatus"> </label>
                 <label class="status-label"> | </label>
-                <label hidden class="status-label" id="lblStatusInfo"> </label>
+                <label class="status-label" id="lblStatusInfo"> </label>
                 <label hidden class="status-label"> | </label>
             </div>
         </section>
@@ -217,9 +216,10 @@
     <!--скрипты для стилей -->
     <script src="../jquery/jquery-3.4.1.min.js"></script>
     <script src="../jquery/jquery.validate.js"></script>
-    <script src="package.js"></script>
-    <script src="subblock.js"></script>
-    <script src="main.js"></script>
+    <script src="settings.js?n=1"></script>
+    <script src="package.js?n=1"></script>
+    <script src="subblock.js?n=1"></script>
+    <script src="main.js?n=1"></script>
 </body>
 
 <footer>

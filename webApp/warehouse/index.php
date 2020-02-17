@@ -47,6 +47,22 @@
 
         </section>
 
+        <!--  Sub-TOP - панель навигации -->
+        <section class="section__nav">
+
+            <!-- Выбор уровня -->
+            <!-- <div class=""> -->
+                <!-- список уровней -->
+                <!-- <label class="" for="navCode"> Обозначение </label> -->
+                <ul class="nav" id="nav">
+                    <!-- Список уровней  -->
+                    <li class="nav-first-item" id="1"> Уровень 1 </li>
+                </ul>
+                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
+            <!-- </div> -->
+
+        </section>
+
         <!-- Информация об упаковке -->
 
         <!-- Изображение и характеристики -->
@@ -150,13 +166,13 @@
                                 <!-- Second grid Line -->
                                 <div class="frth">
                                     <label class="" for="inpNy_"> Количество<br>по вертикали </label>
-                                    <input class="subInput" size="1" type="number" id="inpNy_" name="package_ny_">
+                                    <input class="subInput" size="1" type="text" id="inpNy_" name="package_ny_">
                                     <label class="" for="inpNy_"> шт </label>
                                 </div>
 
                                 <div class="ffth">
                                     <label class="" for="inpNx_"> Количество<br>по горизонтали </label>
-                                    <input class="subInput" size="1" type="number" id="inpNx_" name="package_nx_">
+                                    <input class="subInput" size="1" type="text" id="inpNx_" name="package_nx_">
                                     <label class="" for="inpNx_"> шт </label>
                                 </div>
 
@@ -217,8 +233,9 @@
     <script src="../jquery/jquery-3.4.1.min.js"></script>
     <script src="../jquery/jquery.validate.js"></script>
     <script src="../package/subblock.js"></script>
+    <script src="settings.js?n=1"></script>
     <script src="warehouse.js?n=1"></script>
-    <script src="floor.js?n=1"></script>
+    <script src="../package/package.js?n=1"></script>
     <script src="main.js?n=1"></script>
 </body>
 

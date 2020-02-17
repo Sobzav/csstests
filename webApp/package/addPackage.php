@@ -1,5 +1,8 @@
 <?php
 
+// подключаем логгер
+@require_once '../plog.php';
+
 // загружаем настройки и
 // подключаемся к серверу mysql
 @include '../connection.php';
@@ -49,9 +52,13 @@ $errCount = 0;
 $errDump = "\n";
 
 // делаем запрос в БД
+// и запрос выполнен если успешно
 if ($mySqli->query($query)) {
     // echo "Record updated successfully";
     $package_id = $mySqli->insert_id;
+
+    // делаем обновление внутренних элементов
+    require_once 'updatePlacePrototype.php';
 } else {
     $errCount ++;
     $errDump .= $mySqli->error ."\n";
