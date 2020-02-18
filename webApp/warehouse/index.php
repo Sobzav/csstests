@@ -21,25 +21,24 @@
 
         </header>
 
+        <!--  Sub-TOP - панель навигации -->
+        <!-- <section class="section__nav">
 
+        </section> -->
         <!--  Sub-TOP - панель выбора элемента -->
         <section class="section__main">
-
-            <!-- Выбор Типа -->
-            <div style="" class="">
-                <!-- выпадающий список элементов -->
-                <label class="" for="selCode"> Обозначение </label>
-                <select class="select-type" id="selCode" name="package_code">
-                    <!-- Список всех элементов в базе  -->
-                    <option id="0"> Новый </option>
-                </select>
+            <!-- Выбор уровня -->
+            <!-- <div class=""> -->
+                <!-- список уровней -->
+                <!-- <label class="" for="navCode"> Обозначение </label> -->
+                <ul class="nav" id="nav">
+                    <!-- Список уровней  -->
+                    <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
+                </ul>
                 <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
-            </div>
-            <!-- Растягивающийся блок с input  -->
-            <div class="input-flex">
-                <label class="" for="inpName"> Наименование </label>
-                <input class="mainInput" type="text" id="inpName" name="package_name">
-            </div>
+            <!-- </div> -->
+
+
             <!-- Кнопка справа  -->
             <div style="" class="dr">
                 <button class="" id="btnEdit"> Редактировать </button>
@@ -47,21 +46,7 @@
 
         </section>
 
-        <!--  Sub-TOP - панель навигации -->
-        <section class="section__nav">
 
-            <!-- Выбор уровня -->
-            <!-- <div class=""> -->
-                <!-- список уровней -->
-                <!-- <label class="" for="navCode"> Обозначение </label> -->
-                <ul class="nav" id="nav">
-                    <!-- Список уровней  -->
-                    <li class="nav-first-item" id="1"> Уровень 1 </li>
-                </ul>
-                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
-            <!-- </div> -->
-
-        </section>
 
         <!-- Информация об упаковке -->
 
@@ -83,6 +68,25 @@
             <!-- характеристики -->
             <!-- Right item -->
             <div class="item-2">
+
+            <!-- Выбор Типа -->
+            <div style="display: flex;" class="">
+                <!-- выпадающий список элементов -->
+                <label class="" for="selCode"> Обозначение </label>
+                <select class="select-type" id="selCode" name="package_code">
+                    <!-- Список всех элементов в базе  -->
+                    <option id="0"> Новый </option>
+                </select>
+                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
+           
+            <!-- Растягивающийся блок с input  -->
+            <div class="input-flex">
+                <label class="" for="inpName"> Наименование </label>
+                <input class="mainInput" type="text" id="inpName" name="package_name">
+            </div>
+            </div>
+
+
                 <header class="header__general">
                     <div class="label-heading"> Размеры </div>
                 </header>

@@ -469,25 +469,33 @@ class SubBlockContainer {
 
         console.group("class SubBlockContainer.add { index: %i", index);
 
-        this.item[index] = new SubBlock(
-            index, 
-            selCode,
-            inpNx,
-            inpNy,
-            inpSizeWx,
-            inpSizeWy,
-            inpTotal
-        );
+        if (
+            selCode &&
+            inpNx &&
+            inpNy &&
+            inpSizeWx &&
+            inpSizeWy &&
+            inpTotal) {
+            
+            var item = new SubBlock(
+                index, 
+                selCode,
+                inpNx,
+                inpNy,
+                inpSizeWx,
+                inpSizeWy,
+                inpTotal
+            );
 
-        // подписываемся на сигналы блока
-        this.item[index].sizeChanged = (item) => this.onItemSizeChanged(item);
-        this.item[index].contentChanged = (item) => this.onItemContentChanged(item);
+            // подписываемся на сигналы блока
+            item.sizeChanged = (item) => this.onItemSizeChanged(item);
+            item.contentChanged = (item) => this.onItemContentChanged(item);
 
-        // увеличиваем количество блоков если необходимо
-        if (index >= this._count) {
-            this._count = index + 1;
+            this.item.push(item);
+
+            // увеличиваем количество блоков
+            this._count++;
         }
-
         console.groupEnd();
     }
 

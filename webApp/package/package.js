@@ -409,12 +409,17 @@ class PackageSimple {
 
             this._ctx.clearRect(0, 0, canvas.width, canvas.height);
         } else {
+            var _x = this.disposition.x;
+            var _y = this.disposition.y;
+            var _wx = this.disposition.wx;
+            var _wy = this.disposition.wy;
+            var _wz = this.disposition.wz;
 
-            var x = this['_' + this.disposition.x];
-            var y = this['_' + this.disposition.y];
-            var wx = this['_' + this.disposition.wx];
-            var wy = this['_' + this.disposition.wy];
-            var wz = this['_' + this.disposition.wz];
+            var x = this[_x];
+            var y = this[_y];
+            var wx = this[_wx];
+            var wy = this[_wy];
+            var wz = this[_wz];
     
             this._ctx.save();
             this._ctx.scale(1/this._scale, 1/this._scale);
@@ -493,7 +498,7 @@ class PackageSimple {
         if (this._showText) {
 
             ctx.fillStyle = '#ffffff';
-            ctx.font = _wx * 0.5 + 'px CoreSansDS25Light';
+            ctx.font = Math.min(_wx, _wy) * 0.5 + 'px CoreSansDS25Light';
             ctx.fillText(text, _x + _wx * 0.05, _y + _wy * 0.9, _wx * 0.9);
         }
 
@@ -510,11 +515,11 @@ class PackageSimple {
 
             // this.ctx.fillRect(this.x, this.y, this.width, this.height);
             window.requestAnimationFrame(() => this.drawCube(
-                this['_' + this.disposition.x],
-                this['_' + this.disposition.y],
-                this['_' + this.disposition.wx],
-                this['_' + this.disposition.wy],
-                this['_' + this.disposition.wz],
+                this[this.disposition.x],
+                this[this.disposition.y],
+                this[this.disposition.wx],
+                this[this.disposition.wy],
+                this[this.disposition.wz],
                 this.selected,
                 this._ctx,
                 this._scale,
@@ -999,10 +1004,11 @@ class PackageContainerItem extends PackageSimple {
         var wy = this['_' + this.disposition.wy];
         var wz = this['_' + this.disposition.wz];
 
+        var dpi = this._canvas.width / parseInt(this._canvas.style.width);
         // приводим координаты мыши в клиентской области <canvas>
         // к текущему масштабу
-        var _mouseX = (mouseX * this._scale);
-        var _mouseY = (mouseY * this._scale);
+        var _mouseX = (mouseX * this._scale * dpi);
+        var _mouseY = (mouseY * this._scale * dpi);
         
         // проверяем попадает ли указатель мыши по горизонтали в ширину ячейки
         let xClickInside = (_mouseX > (this._viewBox.x + x)) && (_mouseX < (this._viewBox.x + x + wx));
@@ -1145,14 +1151,14 @@ class PackageContainerItem extends PackageSimple {
             //  передаем событие дальше внутренним элементам
             var subSelected;
             this.item.forEach( subItem => {
-                subSelected = subItem.onClick(mouseX, mouseY);
+                subSelected = subItem.onDblClick(mouseX, mouseY);
                 if (subSelected) {
-                    this.selectedItem.push(subItem);
+                    this.selectedItem.push(subSelected);
                 }
             });
     
-            // возвращаем массив выбранных элементов: [this, item0.selected, item1.selected, ...]
-            return (this._selected || this.selectedItem.length > 0);
+            // елемент активный, то возвращает себя, иначе возвращает первый выбранный внутренний элемент
+            return this._active ? (this._selected ? this : false) : this.selectedItem[0];
         } else {
 
             return false;

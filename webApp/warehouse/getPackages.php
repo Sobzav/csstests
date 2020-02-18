@@ -8,9 +8,6 @@
 // подключаемся к серверу mysql
 @include '../connection.php';
 
-// получаем id элемента
-$package_id = $_POST["package_id"];
-
 // сохраняем запрос SELECT в строку
 $query = " 
     SELECT
@@ -42,7 +39,6 @@ $query = "
         package.photo_id = package_photo.id OR
         package.photo_id = NULL
     )
-    WHERE package.id = $package_id
     ORDER BY package.code;
 ";
 
