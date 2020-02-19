@@ -461,8 +461,8 @@ class PackageSimple {
 
         var color = selected ? this._selectedColor : this._color;
         var borderColor = this._mouseOver ? this._mouseOverColor : this._borderColor;
-        var border = this._mouseOver ? scale * this._mouseOverBorder / 10 : scale * this._border / 10;
-        var padding = scale * this._padding / 10;
+        var border = 0;//this._mouseOver ? scale * this._mouseOverBorder / 10 : scale * this._border / 10;
+        var padding = 0;//scale * this._padding / 10;
 
         var _x = this._viewBox.x + x + padding;
         var _y = this._viewBox.y + y + padding;
@@ -847,8 +847,8 @@ class PackageContainerItem extends PackageSimple {
                 item.padding = settings.padding;
                 item.disposition = settings.disposition;
                 item.viewBox = {x: this._x, y: this._y, wx: this._wx, wy: this._wy};
-                item.x = sub.x ? parseInt(sub.x) : 0;
-                item.y = sub.y ? parseInt(sub.y) : 0;
+                item.x = sub.x ? parseFloat(sub.x) : 0;
+                item.y = sub.y ? parseFloat(sub.y) : 0;
                 item.setSize(
                     parseInt(sub.wx),
                     parseInt(sub.wy),

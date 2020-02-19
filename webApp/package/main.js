@@ -306,10 +306,10 @@ window.addEventListener("load", () => {
     //
 
     // Настраиваем разрешение <canvas>
-    // canvas.style.width = '550px';
-    // canvas.style.height = '1770px';
-    canvas.width = 500;
-    canvas.height = 500;    
+    canvas.style.width = "500px";
+    canvas.style.height = "500px";
+    canvas.width = parseInt(canvas.style.width) * 2;
+    canvas.height = parseInt(canvas.style.height) * 2;    
 
     // Делает все инпуты недоступными для редактирования
     setDomElementsEnabled('.disabled, .mainInput, .subInput');
@@ -545,8 +545,8 @@ window.addEventListener("load", () => {
         pack.showText = settings.showText;
         pack.textColor = settings.textColor;
         pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height},
-        pack.x = data.x ? parseInt(data.x) : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
-        pack.y = data.y ? parseInt(data.y) : 0;           // если в data есть координата, то беерем ее, иначе берем 0
+        pack.x = data.x ? parseFloat(data.x) : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
+        pack.y = data.y ? parseFloat(data.y) : 0;           // если в data есть координата, то беерем ее, иначе берем 0
         pack.setSize(
             parseInt(data.wx),   // размеры элемента из базы
             parseInt(data.wy),   // размеры элемента из базы
@@ -1015,7 +1015,7 @@ window.addEventListener("load", () => {
             // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
             setDomElementsEnabled('#btnCopy', false);
-            if (selectedPack.item) {setDomElementsEnabled('.subInput', true);}
+            if (selectedPack.item.length > 0) {setDomElementsEnabled('.subInput', true);}
                 
             // Меняем кнопке текст с "Редактировать" на "Назад"
             btnEdit.innerText = 'Назад'
@@ -1418,6 +1418,12 @@ window.addEventListener("load", () => {
             
             // блокируем делаем инпуты
             setDomElementsEnabled('.subInput', false);
+
+            // очищаем внутренние элементы блоков
+            subBlock.clear();
+            subBlock.clearData();
+            subBlock.updateTotal();
+            subBlock.updatePack();
         }
 
         // получаем выделенный элемент
@@ -1552,7 +1558,6 @@ window.addEventListener("load", () => {
 
                 // очищаем поля внутренних элементов
                 subBlock.showInfo(pack);
-                // subBlock.clear();
             }
         } else {
 
@@ -1560,7 +1565,6 @@ window.addEventListener("load", () => {
 
             // очищаем поля внутренних элементов
             subBlock.showInfo(pack);
-            // subBlock.clear();
         }
 
 

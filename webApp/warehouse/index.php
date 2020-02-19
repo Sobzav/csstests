@@ -193,15 +193,7 @@
 
                 </section>
                 <section class="section__subsumm">
-                    <div class="flex flex-row my-1 hidden">
-
-                        <div class="inputBlock-base flex flex-grow justify-end items-center mx-2 mt-4">
-                            <label class="summ inputLabel label-heading my-1 mx-1" for="inpTotal"> Общее количество = </label>
-                            <label class="summ inputLabel label-heading" type="text" id="inpTotal" name="package_total"> 0 </label>
-                            <label class="inputLabel label-heading my-1 mx-1" for="inpTotal"> шт </label>
-                        </div>
-
-                    </div>
+                 <!--Здесь было общее крол-->
                 </section>
             </div>
             <!--right item-->

@@ -176,8 +176,8 @@ class SubBlock {
     slotSizeChanged(event) {
         console.group("class SubBlock.slotSizeChanged { block: %i", this._index);
 
-        var rowCount = this._inpNy.value;
-        var colCount = this._inpNx.value;
+        var rowCount = parseInt(this._inpNy.value);
+        var colCount = parseInt(this._inpNx.value);
 
         this.setSize(rowCount, colCount);
 
@@ -549,26 +549,51 @@ class SubBlockContainer {
 
             // Удаляем все внутри pack
             pack.clearItems();
+            pack.hide();
 
             // Проходим по всем блокам и создаем внутренние элеементы pack
             var x = 0;
             var y = 0;
-            var subBlock, rowCount, colCount, blockSubPack;
+            var dy = 0;
+            var dx = 0;
+            var subBlock, rowCount = 0, colCount, blockSubPack, blockSubPackWy = 0;
             for (var index = 0; index < this._count; index++) {
+                
+                // текущий блок внутренних элементов
                 subBlock = this.item[index];
-                rowCount = subBlock.rowCount;
-                colCount = subBlock.colCount;
+
                 // элемент выбранный в списке блока
                 blockSubPack = getPackById(subBlock.subPackId);
+
+                rowCount += subBlock.rowCount;
+                blockSubPackWy += blockSubPack ? blockSubPack.wy : 0;
+            }
+            dy = (pack.wy - blockSubPackWy) / (rowCount + 1);
+            
+            for (var index = 0; index < this._count; index++) {
+                
+                // текущий блок внутренних элементов
+                subBlock = this.item[index];
+
+                // элемент выбранный в списке блока
+                blockSubPack = getPackById(subBlock.subPackId);
+
+                rowCount = subBlock.rowCount;
+                colCount = subBlock.colCount;
+                // dy = (pack.wy - rowCount * blockSubPack.wy) / (rowCount + 1);
+                dx = (pack.wx - colCount * blockSubPack.wx) / (colCount + 1);
 
                 if ((rowCount > 0) && (colCount > 0) && (blockSubPack)) {
                     console.log("добаляем в блок: %o элементы типа %o", subBlock, blockSubPack);
 
-                    pack.hide();
-
                     for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {
 
+                        // расчитываем координату y конца текущего элемента
+                        y += dy;
+
                         for (var colIndex = 0; colIndex < colCount; colIndex++) {
+                            // расчитываем координату x конца текущего элемента
+                            x += dx;
 
                             // Создаем новый внутренний элемент
                             pack.createItems([
@@ -577,31 +602,26 @@ class SubBlockContainer {
                                         code: blockSubPack.code,
                                         name: blockSubPack.name,
                                         color: blockSubPack.color,
-                                        // viewBox: {x: pack.x, y: pack.y, wx: pack.width, wy: pack.height},
-                                        x: parseInt(x),
-                                        y: parseInt(y),
-                                        wx: parseInt(blockSubPack.wx),
-                                        wy: parseInt(blockSubPack.wy),
-                                        wz: parseInt(blockSubPack.wz)
+                                        x: x,
+                                        y: y,
+                                        wx: blockSubPack.wx,
+                                        wy: blockSubPack.wy,
+                                        wz: blockSubPack.wz
                                     }
                                 ],
                                 settings.item
                             );
-
                             // расчитываем координату x следующего элемента
                             x += blockSubPack.wx;
                         }
                         // обнуляем координату x
                         x = 0;
-
                         // расчитываем координату y следующего элемента
                         y += blockSubPack.wy;
                     } 
-                    pack.show();
                 }
-                // обнуляем координату x
-                x = 0;
             }            
+            pack.show();
         }
 
         // обнеовляем изображение текущего элемента pack
@@ -624,7 +644,7 @@ class SubBlockContainer {
         this.updatePack();
 
         // обновляем изображение элемента pack
-        this._pack.reDraw();
+        this._pack.draw();
 
         console.groupEnd();
     }

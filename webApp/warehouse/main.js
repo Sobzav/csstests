@@ -549,8 +549,8 @@ window.addEventListener("load", () => {
         pack.showText = settings.showText;
         pack.textColor = settings.textColor;
         pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height},
-        pack.x = data.x ? parseInt(data.x) : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
-        pack.y = data.y ? parseInt(data.y) : 0;           // если в data есть координата, то беерем ее, иначе берем 0
+        pack.x = data.x ? parseFloat(data.x) : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
+        pack.y = data.y ? parseFloat(data.y) : 0;           // если в data есть координата, то беерем ее, иначе берем 0
         pack.setSize(
             parseInt(data.wx),   // размеры элемента из базы
             parseInt(data.wy),   // размеры элемента из базы
@@ -862,6 +862,7 @@ window.addEventListener("load", () => {
     canvas.addEventListener('wheel', function(evt) {
         console.group('canvas.addEventListener wheel {');
 
+        return false;
         evt.preventDefault();
 
         var mousePos = getMousePos(canvas, evt);

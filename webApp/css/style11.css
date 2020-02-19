@@ -1,17 +1,9 @@
-@import 'reset.css';
-@import 'myFontsWebfontsKit.css';
-@import 'atomic.css';
-@import 'modal.css';
-@import 'forms.css';
-@import 'table.css';
-@import 'grids.css';
-
-
+@import '../../css/MyFontsWebfontsKit.css';
+@import '../../css/atomic.css';
 
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 :root {
@@ -22,30 +14,26 @@
     --color-black: #000000;
     --color-white: #ffffff;
     --color-tr: transparent;
-    /* Цвета модальных окон */
+/* Цвета модальных окн */
     --color-info: #90cdf4;
     --color-alert: #fc8181;
-    --color-disabled: #2d3748;
+    /* --color-alert: #fefcbf; */
 }
 
 body {
     font-family: 'CoreSansDS25Light';
     background-color: var(--color-raven);
+    /* background-color: var(--color-crBrown); */
 }
 
 /* GRID-Контейнер для всего содержимого страницы */
 .gridContainer {
     display: grid;
     /* background-color: var(--color-raven); */
-    /* Слышен звон сабль */
-    /* Там мой корабль */
-    /* Пойду тудабль */
-    /* margin: 0 1.5rem; по левой стороне */
-    margin: 0 auto;     /* по центру */
+    margin: 0 1.5rem;
     width: max-content;
-    padding: 0 1.5rem;  /* Чтобы полоса прокрутки появлялась раньше */ 
     grid-template-columns: repeat(2, min-content);
-    grid-template-rows: repeat(5, min-content);
+    grid-template-rows: repeat(6, min-content);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 }
@@ -55,9 +43,8 @@ body {
 }
 
 /* Отступ слева для элемента div Заголовка правой стороны, Отступ слева для элемента div Заголовка секции Sub с чекбоксом */
-header.header__general div,
-header.header__sub div {
-    margin: 0.5em 0.5em 0.5em 1em;
+header.header__general div, header.header__sub div {
+    margin: 0 0.5em 1.2em 1.2em;
 }
 
 .section__main {
@@ -65,25 +52,50 @@ header.header__sub div {
     grid-area: 2 / 1 / 3 / 3;
 }
 
+/* .section__nav {
+    display: flex;
+    grid-area: 3 / 1 / 4 / 3;
+    padding: 0 0.5rem;
+} */
+
+.section__main .nav {
+display: flex;
+}
+
+.section__main .nav, .nav-item, .nav-first-item {
+    display: inline;
+}
+
+.nav-item label, .nav-first-item label{
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-line: underline;
+    font-size: 1.1rem;
+}
+
+.nav-item::before {
+    content: " > ";
+}
+
 .item-1 {
     display: grid;
-    grid-area: 3 / 1 / 4 / 2;
+    grid-area: 4 / 1 / 5 / 2;
 }
 
 .item-2 {
     display: grid;
-    grid-area: 3 / 2 / 4 / 3;
+    grid-area: 4 / 2 / 6 / 3;
 }
 
 .bottom-block__buttons {
     display: flex;
-    grid-area: 4 / 1 / 5 / 3;
+    grid-area: 5 / 1 / 7 / 3;
     width: 100%;
 }
 
 .status-bar {
     display: grid;
-    grid-area: 5 / 1 / 6 / 3;
+    grid-area: 6 / 1 / 8 / 3;
 }
 
 /* MAIN: If убрать "display: flex;"=> оно станет "block" => отображение для мобильных - в один столбец */
@@ -100,8 +112,12 @@ section.section__main {
     padding: 0 0.5rem;
 }
 
+.section__main .nav {
+    display: flex;
+    flex: 1 0 auto;
+}
 
-/* Растягивающийся input */
+/* Растягивающийся элемент - input и ".section__main .nav" (хлебные крошки в section__main) */
 .input-flex {
     display: flex;
     flex: 1 0 auto;
@@ -124,17 +140,18 @@ section.section__main {
     /* margin: 1.25rem 0.75rem 1.25rem 0; */
     margin: 0.5rem 0.85rem 0.5rem 0;
     padding: 1.5rem;
-    /* border-width: 1px; */
-    /* border-style: dotted; */
+    border-width: 1px;
+    border-style: dotted;
     background-color: var(--color-chateauGrey);
-    /* border-color: var(--color-chiffon); */
+    border-color: var(--color-chiffon);
+    ;
 }
 
 .item-1 canvas {
-    width: 500px;
-    height: 500px;
+    width: 450px;
+    height: 1350px;
     object-fit: contain;
-    border-width: 0px;
+    border-width: 1px;
     border-style: dotted;
     border-color: var(--color-chiffon);
 }
@@ -147,11 +164,11 @@ section.section__main {
     min-width: 459px;
 }
 
-/* Верх правой панели с вводом высоты ширины и глубины */
+/* Верх правой панели с вводом высоты ширины и глцбины */
 .section-general {
-    /* flex-direction: row; */
-    /* font-size: .875rem; */
-    display: block;
+    flex-direction: row;
+    font-size: .875rem;
+    display: flex;
 }
 
 /* TOP - Панель с заголовком */
@@ -160,6 +177,7 @@ section.section__main {
     padding: 0 0.5rem;
     justify-content: center;
     border-bottom: 1px dotted var(--color-chiffon);
+    ;
     display: flex;
 }
 
@@ -181,12 +199,136 @@ label {
     font-size: 1.125rem;
     display: flex;
 }
+/* ==================== */
+/* == МОДАЛЬНОЕ ОКНО == */
+/* ==================== */
+
+.dialog-modal{
+    display: none;
+    position: fixed; /* Stay in place */
+    z-index: 100; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* GRID-Контейнер для всего содержимого модального окна */
+.gridContainer__modal {
+    display: grid;
+    background-color: var(--color-raven);
+    grid-template-columns: minmax(16em, 25em);
+    grid-template-rows: unset;
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    /* border: 1px dotted var(--color-chiffon); */
+    box-shadow: 0px 5px 20px rgba(0,0,0,.5);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0 1.25rem 1.25rem 1.25rem;
+}
+
+.gridContainer__modal main {
+    display: grid;
+    padding: 0.75rem 0 0 0;
+    grid-row-gap: 0.75em;
+}
+
+/* Распределение текста по всей ширине окна */
+.gridContainer__modal main p {
+    text-align: justify;
+}
+
+/* Настройка цвета для фона информационного диалогового окна */
+.modal-info {
+    background-color: var(--color-info);
+}
+
+/* Настройка цвета для фона ALERT диалогового окна */
+.modal-alert {
+    background-color: var(--color-alert);
+}
+
+/* Заголовок модального окна */
+.header-top__modal {
+    height: 2rem;
+    /* padding: 0 0.5rem; */
+    justify-content: center;
+    border-bottom: 1px dotted var(--color-chiffon);
+    display: flex;
+}
+
+header.header__modal div {
+    /* margin: 0 0.5em; */
+}
+
+.gridContainer__modal header {
+    display: flex;
+}
+
+/* Заголовок в TOP - Панели */
+header.header-top__modal div {
+    align-content: center;
+    display: grid;
+    font-family: 'CoreSansDS35Regular';
+    font-size: 1.34rem;
+}
+
+.section-modal {
+    display: grid;
+}
+
+.bottom-block__buttons--modal {
+    display: flex;
+    /* padding-top: 0.2rem; */
+}
+
+.bottom-block__buttons--modal {
+    justify-content: flex-end;  
+}
+
+.bottom-block__buttons--modal button.button-right {
+    margin: 0 0 0 1.5rem;
+}
 
 .header__sub label.label-heading {
     padding-left: 0.1em;
 }
 
-/* Здесь был input  */
+input {
+    align-content: center;
+    border-style: none;
+    font-size: 0.8rem;
+}
+
+select {
+    vertical-align: middle;
+    border-style: none;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+input,
+select,
+option {
+    display: inline-block;
+    vertical-align: middle;
+    font-family: 'CoreSansDS25Light';
+    font-size: 0.8rem;
+    white-space: nowrap;
+    color: var(--color-white);
+    background-color: var(--color-crBrown);
+    box-sizing: border-box;
+    padding: 0 0.5rem 0 0.25rem;
+    text-align: start;
+    margin: 0 0.2rem;
+}
 
 option {
     padding-left: 0;
@@ -292,26 +434,6 @@ section.section__main div:nth-child(2) {
     padding: 0 0.1rem;
 }
 
-/* ================================================================== */
-/* Настройка FLEX 3x1 для правой секции general Ширина-Высота-Глубина */
-/* ================================================================== */
-
-.section-general__flex {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    margin: 0.3em 0 1em 0;
-}
-
-
-.section-general__flex div {
-    flex: 1 1 auto;
-}
-
-/* ================================================================== */
-/*                     GRIDs для правой секции                        */
-/* ================================================================== */
-
 .section-general__grid,
 .section-sub__grid {
     display: grid;
@@ -322,128 +444,6 @@ section.section__main div:nth-child(2) {
     display: flex;
     align-items: center;
 }
-/* ================================================================== */
-/* Настройка grid 4x2 для правой секции general Ширина-Высота-Глубина */
-/* ================================================================== */
-
-.section-general__grid--4x2 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    grid-column-gap: 0.3rem;
-    grid-row-gap: 1rem;
-    align-items: center;
-    margin-bottom: 1.2rem;
-}
-
-.section-general__grid--4x2 .frst {
-    grid-area: 1 / 1 / 2 / 2;
-}
-
-.section-general__grid--4x2 .scnd {
-    grid-area: 1 / 2 / 2 / 3;
-}
-
-.section-general__grid--4x2 .thrd {
-    grid-area: 1 / 3 / 2 / 4;
-}
-
-.section-general__grid--4x2 .frth {
-    grid-area: 1 / 4 / 2 / 5;
-}
-
-.section-general__grid--4x2 .ffth {
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-.section-general__grid--4x2 .sxth {
-    grid-area: 2 / 2 / 3 / 3;
-}
-
-.section-general__grid--4x2 .snth {
-    grid-area: 2 / 3 / 3 / 4;
-}
-
-.section-general__grid--4x2 .eith {
-    grid-area: 2 / 4 / 3 / 5;
-}
-
-.section-general__grid--4x2 .nith {
-    grid-area: 3 / 2 / 4 / 3;
-}
-
-.section-general__grid--4x2 .teth {
-    grid-area: 3 / 3 / 4 / 4;
-}
-
-.section-general__grid--4x2 .elth {
-    grid-area: 3 / 4 / 4 / 5;
-}
-.section-general .title {
-    font-family: 'CoreSansDS35Regular';
-    font-size: 1.1rem;
-    display: flex;
-    margin-left: 1em;
-}
-
-/* ================================================================== */
-/* Настройка grid 3x5 для правой секции general Ширина-Высота-Глубина */
-/* ================================================================== */
-
-.section-general__grid--3x5 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(5, 1fr); 
-    grid-column-gap: 0.3rem;
-    grid-row-gap: 0rem;
-    align-items: center;
-    margin-bottom: 1.2rem;
-}
-
-.section-general__grid--3x5 .frst {
-    grid-area: 1 / 1 / 2 / 4;
-}
-
-.section-general__grid--3x5 .scnd {
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-.section-general__grid--3x5 .thrd {
-    grid-area: 2 / 2 / 3 / 3;
-}
-
-.section-general__grid--3x5 .frth {
-    grid-area: 2 / 3 / 3 / 4;
-}
-
-.section-general__grid--3x5 .ffth {
-    grid-area: 3 / 1 / 4 / 4;
-}
-
-.section-general__grid--3x5 .sxth {
-    grid-area: 4 / 1 / 5 / 2;
-}
-
-.section-general__grid--3x5 .snth {
-    grid-area: 4 / 2 / 5 / 3;
-}
-
-.section-general__grid--3x5 .eith {
-    grid-area: 4 / 3 / 5 / 4;
-}
-
-.section-general__grid--3x5 .nith {
-    grid-area: 5 / 1 / 6 / 2;
-}
-
-.section-general__grid--3x5 .teth {
-    grid-area: 5 / 2 / 6 / 3;
-}
-
-.section-general__grid--3x5 .elth {
-    grid-area: 5 / 3 / 6 / 4;
-}
-
 
 /* ================================================================== */
 /* Настройка grid 3x2 для правой секции general Ширина-Высота-Глубина */
@@ -491,8 +491,7 @@ section.section__main div:nth-child(2) {
     grid-area: 2 / 3 / 3 / 4;
 }
 
-.section-general__grid--3x2 label {
-    /* Убираем чтобы все было едино */
+.section-general__grid--3x2 label { /* Убираем чтобы все было едино */
     /* padding-right: 0.2rem;
     padding-left: 0.1rem; */
 }
@@ -509,7 +508,6 @@ section.section__main div:nth-child(2) {
     justify-self: center;
     padding-right: 0.7em;
 }
-
 /* ================================================================= */
 /* Настройка grid 5x2 для правой секции sub Ширина-Высота-количество */
 /* ================================================================= */
@@ -527,7 +525,6 @@ section.section__main div:nth-child(2) {
     /* margin-top: 0.5rem;
     margin-bottom: 0.75rem; */
 }
-
 .section-sub__grid--5x2 div {
     /* background-color: DodgerBlue; */
 }
@@ -538,17 +535,14 @@ section.section__main div:nth-child(2) {
     /* padding-right: 0.2rem;
     padding-left: 0.2rem; */
 }
-
 /* Added пробел после цифры в таблице */
 .nmbr label {
     padding-right: 0.5rem;
 }
-
 /* Added пробел для ячейки Всего */
 .sxth label.summ {
     padding: 0 0.1rem;
 }
-
 /* Нулевой блок Грида 5x2 - цифра */
 .section-sub__grid--5x2__nmbr {
     grid-area: 1 / 1 / 2 / 2;
@@ -616,7 +610,9 @@ section.section__main div:nth-child(2) {
     justify-self: end;
 }
 
-.section-sub__grid--5x2 .sxth label {}
+.section-sub__grid--5x2 .sxth label {
+
+}
 
 /* класс для увеличенной разрядки букв для текста ВСЕГО */
 .summ {
@@ -627,7 +623,7 @@ section.section__main div:nth-child(2) {
 /* Кнопки внизу страницы - по правой стороне */
 .bottom-block__buttons {
     justify-content: flex-end;
-    /* padding: 0 0.5rem; */
+    padding: 0 0.5rem;
 }
 
 .bottom-block__buttons button.button-right {
@@ -646,7 +642,6 @@ section.section__main div:nth-child(2) {
     white-space: nowrap;
 
 }
-
 /* Статус-бар */
 .status-bar .status-label {
     vertical-align: middle;

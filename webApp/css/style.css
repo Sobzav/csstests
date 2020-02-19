@@ -314,7 +314,7 @@ section.section__main div:nth-child(2) {
 /* Кнопки внизу страницы - по правой стороне */
 .bottom-block__buttons {
     justify-content: flex-end;
-    padding: 0 0.5rem;
+    /* padding: 0 0.5rem; */
 }
 
 .bottom-block__buttons button.button-right {

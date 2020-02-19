@@ -20,7 +20,7 @@ const settings = {
             wz: 'wz'
         },
         active: true,
-        padding: 20,
+        padding: 0,
         border: 0,
         borderColor: '#000000',
         // showText: true,
