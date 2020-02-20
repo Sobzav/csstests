@@ -22,19 +22,19 @@
         </header>
 
         <!--  Sub-TOP - панель навигации -->
-        <!-- <section class="section__nav">
 
-        </section> -->
         <!--  Sub-TOP - панель выбора элемента -->
         <section class="section__main">
-            <!-- Выбор уровня -->
-            <!-- <div class=""> -->
-                <!-- список уровней -->
-                <!-- <label class="" for="navCode"> Обозначение </label> -->
+
                 <ul class="nav" id="nav">
                     <!-- Список уровней  -->
                     <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
                 </ul>
+
+                <ul class="nav" id="nav">
+                    <!-- Список уровней  -->
+                    <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
+                <li value="0" class="nav-first-item"><label>511</label></li><li value="2" class="nav-item"><label>B500.1</label></li><li value="3" class="nav-item"><label>B500.12</label></li></ul>
                 <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
             <!-- </div> -->
 

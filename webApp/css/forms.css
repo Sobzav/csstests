@@ -31,7 +31,7 @@ input,
 input:valid,
 select,
 option {
-    vertical-align: middle;
+    /* vertical-align: middle; */
     font-family: 'CoreSansDS25Light';
     font-size: 0.8rem;
     white-space: nowrap;
@@ -43,6 +43,7 @@ option {
     margin: 0 0.2rem;
     border: 1px solid var(--color-crBrown);  /* Добавил border ко всем эл-там ввода чтобы не скакала верстка при изменении статуса input на required*/
 }
+
 input[type=number] {
     width: 3.46em;  /* Ограничение ширины для цифрового типа */
     padding-right: 0; /* Чтобы кнопки набора цифр были вплотную к правому краю */

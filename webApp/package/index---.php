@@ -22,26 +22,26 @@
         </header>
 
         <!--  Sub-TOP - панель выбора элемента - FIRST VAR -->
-        <section class="section__main " id="selectPanel">
-            <!-- Выбор Типа -->
-            <!-- Выпадающий список элементов -->
-            <div class="wide-100">
-                <label class="" for="selCode"> Обозначение </label>
-                <select class="wide-100" id="selCode" name="package_code">
-                    <!-- Список всех элементов в базе  -->
-                    <option id="0"> Новый </option>
-                </select>
-                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
-                <!-- END Выпадающий список элементов -->
-                    <!-- Кнопка справа  -->
-                    <div>
-                    <button class="" id="btnEdit"> Редактировать </button>
-                </div>
-            </div>
-        </section> <!-- END FIRST VAR  -->
+<section class="section__main hidden">
+    <!-- Выбор Типа -->
+    <!-- Выпадающий список элементов -->
+    <div class="wide-100">
+        <label class="" for="selCode"> Обозначение </label>
+        <select class="wide-100" id="selCode" name="package_code">
+            <!-- Список всех элементов в базе  -->
+            <option id="0"> Новый </option>
+        </select>
+        <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
+        <!-- END Выпадающий список элементов -->
+            <!-- Кнопка справа  -->
+            <div>
+            <button class="" id="btnEdit"> Редактировать </button>
+        </div>
+    </div>
+</section> <!-- END FIRST VAR  -->
 
          <!-- Sub-TOP - панель выбора элемента - SECOND VAR -->
-        <section class="section__main hidden" id="editPanel">
+        <section class="section__main">
             <div>
                 <label class="" for="selCode"> Обозначение </label>
                 <input class="mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
@@ -52,9 +52,9 @@
             </div>
                 <!-- Кнопка справа  -->
         <div>
-        <button class="" id="btnBack"> Назад </button>
+            <button class="" id="btnEdit"> Редактировать </button>
         </div>
-        </section> <!-- END SECOND VAR -->
+        </section> <!-- END SECOND VAR 
 
 
         <!-- Информация об упаковке -->
@@ -78,7 +78,7 @@
             <div class="item-2">
                 <!-- кнопки -->
                 <section class="bottom-block__buttons">
-                    <button class="button-right" id="btnTurn"> Повернуть отображение </button>
+                <button class="button-right" id="btnCopy"> Повернуть отображение </button>
                     <button class="button-right" id="btnCopy"> Копировать </button>
                     <!-- <button class="" id="btnDelete"> Удалить </button> -->
                     <!-- <button class="" id="btnAdd"> Добавить </button> -->
