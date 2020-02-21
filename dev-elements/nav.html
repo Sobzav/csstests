@@ -2,4 +2,24 @@
     <!-- Список уровней  -->
     <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
 
-<li value="0" class="nav-first-item"><label>511</label></li><li value="2" class="nav-item"><label>B500.1</label></li><li value="3" class="nav-item"><label>B500.12</label></li></ul>
+    <li value="0" class="nav-first-item"><label>511</label></li>
+    <li value="2" class="nav-item"><label>B500.1</label></li>
+    <li value="3" class="nav-item"><label>B500.12</label></li>
+</ul>
+
+
+<div itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+    <a href="http://www.example.com/books" itemprop="url">
+      <span itemprop="title">Books</span>
+    </a> ›
+    <div itemprop="child" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+      <a href="http://www.example.com/books/authors" itemprop="url">
+        <span itemprop="title">Authors</span>
+      </a> ›
+      <div itemprop="child" itemscope itemtype="http://data-vocabulary.org/Breadcrumb">
+        <a href="http://www.example.com/books/authors/stephenking" itemprop="url">
+          <span itemprop="title">Stephen King</span>
+        </a>
+      </div>
+    </div>
+  </div>

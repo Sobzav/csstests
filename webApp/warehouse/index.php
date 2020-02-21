@@ -5,8 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
-    <link rel="stylesheet" type="text/css" href="css\style.css" />
+    <link rel="stylesheet" type="text/css" href="..\css\style.css" />
     <title> Склад </title>
 </head>
 
@@ -26,21 +25,27 @@
         <!--  Sub-TOP - панель выбора элемента -->
         <section class="section__main">
 
-                <ul class="nav" id="nav">
-                    <!-- Список уровней  -->
-                    <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
-                </ul>
+            <!-- <ul class="nav" id="nav">
+                    Список уровней  -->
+            <!-- <li class="nav-first-item" id="1"> Уровень 1 </li>
+                </ul> -->
 
-                <ul class="nav" id="nav">
-                    <!-- Список уровней  -->
-                    <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
-                <li value="0" class="nav-first-item"><label>511</label></li><li value="2" class="nav-item"><label>B500.1</label></li><li value="3" class="nav-item"><label>B500.12</label></li></ul>
-                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
+            <ul class="nav" id="nav"> <!-- Убрал пока id="nav" -->
+                <!-- Список уровней  -->
+                <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
+                <li class="nav-first-item"><span>склад</span><label>5</label></li>
+                <li class="nav-item"><span>секция</span><label>1</label></li>
+                <li class="nav-item"><span>уровень</span><label>1</label></li>
+                <li class="nav-item beforedot"><span>линия</span><label class="beforedot">22</label></li>
+                <li class="nav-item"><span>стеллаж</span><label>A</label></li>
+                <li class="nav-item beforedot"><span>полка</span><label class="beforedot">3</label></li>
+            </ul>
+            <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
             <!-- </div> -->
 
 
             <!-- Кнопка справа  -->
-            <div style="" class="dr">
+            <div class="">
                 <button class="" id="btnEdit"> Редактировать </button>
             </div>
 
@@ -58,33 +63,33 @@
             <input type="hidden" name="package_id">
             <!-- <div class="item-1"> -->
 
-                <!-- Изображение -->
-                <canvas class="" id="canvas">
-                    success: {
-                    }
-                    error: Browser does not support canvas element.
-                </canvas>
+            <!-- Изображение -->
+            <canvas class="" id="canvas">
+                success: {
+                }
+                error: Browser does not support canvas element.
+            </canvas>
             <!-- </div> -->
             <!-- характеристики -->
             <!-- Right item -->
             <div class="item-2">
 
-            <!-- Выбор Типа -->
-            <div style="display: flex;" class="">
-                <!-- выпадающий список элементов -->
-                <label class="" for="selCode"> Обозначение </label>
-                <select class="select-type" id="selCode" name="package_code">
-                    <!-- Список всех элементов в базе  -->
-                    <option id="0"> Новый </option>
-                </select>
-                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
-           
-            <!-- Растягивающийся блок с input  -->
-            <div class="input-flex">
-                <label class="" for="inpName"> Наименование </label>
-                <input class="mainInput" type="text" id="inpName" name="package_name">
-            </div>
-            </div>
+                <!-- Выбор Типа -->
+                <div style="display: flex;" class="">
+                    <!-- выпадающий список элементов -->
+                    <label class="" for="selCode"> Обозначение </label>
+                    <select class="select-type" id="selCode" name="package_code">
+                        <!-- Список всех элементов в базе  -->
+                        <option id="0"> Новый </option>
+                    </select>
+                    <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
+
+                    <!-- Растягивающийся блок с input  -->
+                    <div class="input-flex">
+                        <label class="" for="inpName"> Наименование </label>
+                        <input class="mainInput" type="text" id="inpName" name="package_name">
+                    </div>
+                </div>
 
 
                 <header class="header__general">
@@ -146,46 +151,46 @@
                         <!-- внутреннее содержимое -->
                         <!-- блок внутренних прямоугольников -->
 
-                            <div class="section-sub__grid--5x2">
-                                <div class="nmbr"><label class="" id="subLabel"> 1. </label></div>
-                                <div class="frst">
-                                    <label class="" for="inpSizeWx_">Ширина</label>
-                                    <input class="disabled" size="5" type="text" id="inpSizeWx_" name="package_wx_">
-                                    <label class="" for="inpSizeWx_">мм</label>
-                                </div>
-
-                                <div class="scnd">
-                                    <label class="" for="inpSizeWy_">Высота</label>
-                                    <input class="disabled" size="5" type="text" id="inpSizeWy_" name="package_wy_">
-                                    <label class="" for="inpSizeWy_">мм</label>
-                                </div>
-
-                                <div class="thrd">
-
-                                    <select class="subInput" id="selCode_" name="package_code_">
-                                        <option value=""> Тип </option>
-                                        <!-- Список всех элементов в базе -->
-                                    </select>
-                                </div>
-                                <!-- Second grid Line -->
-                                <div class="frth">
-                                    <label class="" for="inpNy_"> Количество<br>по вертикали </label>
-                                    <input class="subInput" size="1" type="text" id="inpNy_" name="package_ny_">
-                                    <label class="" for="inpNy_"> шт </label>
-                                </div>
-
-                                <div class="ffth">
-                                    <label class="" for="inpNx_"> Количество<br>по горизонтали </label>
-                                    <input class="subInput" size="1" type="text" id="inpNx_" name="package_nx_">
-                                    <label class="" for="inpNx_"> шт </label>
-                                </div>
-
-                                <div class="sxth">
-                                    <label class="summ" for="inpTotal_"> Всего = </label>
-                                    <label class="summ" type="text" id="inpTotal_" name="package_total_"> 0 </label>
-                                    <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
-                                </div>
+                        <div class="section-sub__grid--5x2">
+                            <div class="nmbr"><label class="" id="subLabel"> 1. </label></div>
+                            <div class="frst">
+                                <label class="" for="inpSizeWx_">Ширина</label>
+                                <input class="disabled" size="5" type="text" id="inpSizeWx_" name="package_wx_">
+                                <label class="" for="inpSizeWx_">мм</label>
                             </div>
+
+                            <div class="scnd">
+                                <label class="" for="inpSizeWy_">Высота</label>
+                                <input class="disabled" size="5" type="text" id="inpSizeWy_" name="package_wy_">
+                                <label class="" for="inpSizeWy_">мм</label>
+                            </div>
+
+                            <div class="thrd">
+
+                                <select class="subInput" id="selCode_" name="package_code_">
+                                    <option value=""> Тип </option>
+                                    <!-- Список всех элементов в базе -->
+                                </select>
+                            </div>
+                            <!-- Second grid Line -->
+                            <div class="frth">
+                                <label class="" for="inpNy_"> Количество<br>по вертикали </label>
+                                <input class="subInput" size="1" type="text" id="inpNy_" name="package_ny_">
+                                <label class="" for="inpNy_"> шт </label>
+                            </div>
+
+                            <div class="ffth">
+                                <label class="" for="inpNx_"> Количество<br>по горизонтали </label>
+                                <input class="subInput" size="1" type="text" id="inpNx_" name="package_nx_">
+                                <label class="" for="inpNx_"> шт </label>
+                            </div>
+
+                            <div class="sxth">
+                                <label class="summ" for="inpTotal_"> Всего = </label>
+                                <label class="summ" type="text" id="inpTotal_" name="package_total_"> 0 </label>
+                                <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
+                            </div>
+                        </div>
 
 
                     </section>
@@ -193,7 +198,7 @@
 
                 </section>
                 <section class="section__subsumm">
-                 <!--Здесь было общее крол-->
+                    <!--Здесь было общее крол-->
                 </section>
             </div>
             <!--right item-->
@@ -244,7 +249,7 @@
         <header class="header-top__modal">
 
             <!-- TOP - Панель с заголовком -->
-            <div id="title" class="">  </div>
+            <div id="title" class=""> </div>
 
         </header>
 

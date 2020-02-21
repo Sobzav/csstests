@@ -1,63 +1,63 @@
 "use strict";
 
-// Глубина логирования
-// 0 - логирование отключено
-// logEnt - только входы и выходы в блоки кода
-// logInf - только информационные сообщения
-// logErr - сообщения об ошибках
-// logDat - вывод данных, значений, контейнеров
-var logLevel = 1;
-
-
-function log() {
-    if (logLevel === 0) {
-        return false;
-    } else {
-        
-        console.log(arguments);
-    }
-}
 
 
 // -------------------------------------------------------
-// Функция | Генерирует уникальный ID
+// Функция | Запрос серверу в формате ajax
+//           type = "POST" / "GET"
+//           url = "fileName.php"
+//           dataType = "json"
+//           возвращает данные в формате json в случае успеха
+//           либо false в случае ошибки
 //
-function generateId(len) {
-    // console.groupCollapsed("global.generateId { ");
-    // console.groupEnd();
-    var arr = new Uint8Array((len || 7) / 2)
-    window.crypto.getRandomValues(arr)
-    return Array.from(arr, dec => ('0' + dec.toString(16)).substr(-2)).join('')
-  }
+// function requestToServer(item, type, url, dataType, data, successFunction, errorFunction) {
+//     console.group("main.requestToServer { url = %o ", url);
 
+//     console.time();
 
-// -------------------------------------------------------
-// Функция | осветляет или затемняет цвет в парамеетре color,
-//           переданный в формате #rrggbb
-//           на велдечину percent, переданную в процентах 
-function shadeColor (color = "#000000", percent = 0) {
-    var num = parseInt (color.slice(1), 16); 
-    var amt = Math.round(2.55 * percent);
-    var R = (num >> 16) + amt;
-    var G = (num >> 8 & 0x00FF) + amt;
-    var B = (num & 0x0000FF) + amt;
-    var new_color = ("#" + (0x1000000 + 
-       (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 + 
-       (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 + 
-       (B < 255 ? B < 1 ? 0 : B : 255)).toString (16).slice (1));
-    return new_color;
- }
+//     // отправляем запрос серверу
+//     $.ajax({
+//         type: type,
+//         url: url,
+//         dataType: dataType,
+//         data,
+
+//         // получаем ответ в случае успеха
+//         success: function(jsonResponce, textStatus, jqXHR) {
+
+//             console.log('data: %o', jsonResponce);
+//             console.log('textStatus: ' + textStatus);
+//             console.timeEnd();
+//             // console.log('jqXHR: %o', jqXHR);
+
+//             // возвращаем ответ сервера
+//             successFunction(item, jsonResponce);
+//         },
+
+//         // получаем ответ в случае ошибок
+//         error: function(XMLHttpRequest, textStatus, jqXHR) {
+
+//             console.warn('textStatus: ' + textStatus);
+//             console.timeEnd();
+//             console.warn('jqXHR: %o', jqXHR);
+            
+//             // возвращаем ошибку
+//             errorFunction(XMLHttpRequest);
+//         }
+//     });
+//     console.groupEnd();
+// }
 
 
 
 
 
 // =======================================================
-// Класс | PackageSimple
-//         место хранения, простого типа, 
-//         состоящее из одного элементарного элемента 
+// Класс | PackageList
+//         элемент хранит в себе указатель на родительский элемент ul, 
+//         и отображает внем массив своих элементов
 //
-class PackageSimple {
+class PackageList {
 
     
     // -------------------------------------------------------
@@ -65,6 +65,8 @@ class PackageSimple {
     constructor(id = 0, canvas) {
         console.group("class PackageSimple.constructor { id: %i", id);
         
+        this._ul;               // родительский ul где отображены все элементы данного списка
+
         this.hashCode = generateId(7);
         // технологические свойства элемента
         //
@@ -566,7 +568,7 @@ class PackageSimple {
 //         количество рядов хранится в свойстве rowCount
 //         количество элементов в i-том ряде в свойстве colCount(i)
 //
-class PackageContainerItem extends PackageSimple {
+class PackageContainerItemq extends PackageSimple {
 
     // -------------------------------------------------------
     // Метод | Создаем элемент
@@ -833,57 +835,10 @@ class PackageContainerItem extends PackageSimple {
     }
 
 
-// -------------------------------------------------------
-// Метод | Запрос серверу в формате ajax
-//           type = "POST" / "GET"
-//           url = "fileName.php"
-//           dataType = "json"
-//           возвращает данные в формате json в случае успеха
-//           либо false в случае ошибки
-//
-requestToServer(item, type, url, dataType, data, successFunction, errorFunction) {
-    console.group("pack.requestToServer { url = %o ", url);
-
-    console.time();
-
-    // отправляем запрос серверу
-    $.ajax({
-        type: type,
-        url: url,
-        dataType: dataType,
-        data,
-
-        // получаем ответ в случае успеха
-        success: function(jsonResponce, textStatus, jqXHR) {
-
-            // console.log('data: %o', jsonResponce);
-            // console.log('textStatus: ' + textStatus);
-            console.timeEnd();
-            // console.log('jqXHR: %o', jqXHR);
-
-            // возвращаем ответ сервера
-            successFunction(item, jsonResponce);
-        },
-
-        // получаем ответ в случае ошибок
-        error: function(XMLHttpRequest, textStatus, jqXHR) {
-
-            console.warn('textStatus: ' + textStatus);
-            console.timeEnd();
-            console.warn('jqXHR: %o', jqXHR);
-            
-            // возвращаем ошибку
-            errorFunction(XMLHttpRequest);
-        }
-    });
-    console.groupEnd();
-}
-
-
-// -------------------------------------------------------
+    // -------------------------------------------------------
     // Функция | Загрузка элемента pack из базы данных в selectedPack по заданному id
     //
-    load(item, id, settings, successFunction, errorFunction) {
+    load(id, settings, successFunction, errorFunction) {
         console.group("class PackageContainerItem.load { pack: %o from id: %o", this, id);
 
         // формируем данные для отправки на сервер
@@ -893,7 +848,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         };
 
         // отправляем запрос серверу
-        this.requestToServer(this, 'POST', 'getPackage.php', 'json', data,
+        requestToServer(this, 'POST', 'getPackage.php', 'json', data,
 
             // если успешно и сервер вернул данные
             function(self, jsonResponce) {
@@ -905,7 +860,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
                 // Заполняем все свойства элемента из ответа сервера
                 self.setData(row, settings);
 
-                successFunction(item, self);
+                successFunction(self);
             },
             
             // если запрос серверу вернул ошибку
@@ -914,7 +869,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
                 errorFunction(XMLHttpRequest, textStatus);
             }
         );   
-        console.groupEnd();
+        console.group();
     }
 
 
@@ -922,7 +877,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     // Метод | Заполняем все свойства элемента из структуры data
     //
     setData(data, settings) {
-        console.group("class PackageContainerItem.setData { this: %o", this);
+        console.group("class PackageContainerItem.setData { pack: %o", this);
         
         // this.setData(data, settings);
         this.code        = data.code        ? data.code         : "";
@@ -957,7 +912,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     // Метод | Удаляет все внутренние элементы
     //
     createItems(data, settings) {
-        console.group("class PackageContainerItem.createItems { this: %o", this);
+        console.group("class PackageContainerItem.createItems { pack: %o", this);
 
         // if (!this._hidden) {this.clear();}
 
@@ -1024,8 +979,9 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     // Метод | Коннтейнер рисует себя и внутренние прямоугольники
     //
     draw() {
+        // console.groupCollapsed("class PackageContainerItem.draw { item: %o", this);
+
         if (!this._hidden) {
-            console.groupCollapsed("class PackageContainerItem.draw { item: %o", this);
 
             // рисуем элемент
             super.draw();
@@ -1034,8 +990,8 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
             this.item.forEach( subItem => {
                 subItem.draw();
             });
-            console.groupEnd();
         }
+        // console.groupEnd();
     }
 
 
@@ -1043,13 +999,13 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     // Метод | Перерисуем элемент
     //
     reDraw() {
+        // console.groupCollapsed("class PackageContainerItem.reDraw {");
         if (!this._hidden) {
-            console.groupCollapsed("class PackageContainerItem.reDraw {");
 
             this.clear();
             this.draw();
-            console.groupEnd();
         }
+        // console.groupEnd();
     }
 
 

@@ -1,5 +1,7 @@
 // настройки элементов и внутренних элементов
 const settings = {
+    canvasWx: 500,
+    canvasWy: 500,
     disposition: {
         x: 'x',
         y: 'y',

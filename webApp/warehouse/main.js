@@ -539,26 +539,6 @@ window.addEventListener("load", () => {
             canvas                  // canvas где будет отображен элемент
         );
 
-        // заполняем все свойства элемента из структуры data
-        pack.code = data.code;
-        pack.name = data.name;
-        pack.payload = parseInt(data.payload);   // грузоподъемность в граммах
-        pack.color = "#" + data.color;           // цвет элемента из базы
-        pack.padding = settings.padding;
-        pack.border = settings.border;
-        pack.showText = settings.showText;
-        pack.textColor = settings.textColor;
-        pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height},
-        pack.x = data.x ? parseFloat(data.x) : 0;           // если в data есть координата, то беерем ее, иначе берем 0 
-        pack.y = data.y ? parseFloat(data.y) : 0;           // если в data есть координата, то беерем ее, иначе берем 0
-        pack.setSize(
-            parseInt(data.wx),   // размеры элемента из базы
-            parseInt(data.wy),   // размеры элемента из базы
-            parseInt(data.wz)     // размеры элемента из базы
-        );               
-        pack.autoFit = settings.autoFit;
-        pack.active = settings.active;
-
         console.groupEnd();
         return pack;
     }
@@ -673,44 +653,6 @@ window.addEventListener("load", () => {
         });
 
         console.groupEnd("main.requestToServer }");
-    }
-
-
-    // -------------------------------------------------------
-    // Функция | Загрузка элемента pack из базы данных в selectedPack по заданному id
-    //
-    function packLoad(id, settings, successFunction, errorFunction) {
-        console.group("main.packLoad { id: %i", id);
-
-        // формируем данные для отправки на сервер
-        var data = {"package_id": id};
-
-        // отправляем запрос серверу
-        requestToServer('POST', 'getPackage.php', 'json', data,
-
-            // если успешно и сервер вернул данные
-            function(jsonResponce) {
-                    
-                // в ответе сервера одна запись, 
-                // содержит всю информацию одного элемента 
-                var row = jsonResponce[0];
-
-                // берем запись и создаем из нее элемент pack
-                console.log('loaded package id: %i; data: %o', row);
-
-                // Создаем новый элемент
-                var pack = packsCreate(row, settings);
-
-                successFunction(pack);
-            },
-            
-            // если запрос серверу вернул ошибку
-            function(XMLHttpRequest) {
-                
-                errorFunction(XMLHttpRequest, textStatus);
-            }
-        );   
-        console.group();
     }
 
 
@@ -860,9 +802,9 @@ window.addEventListener("load", () => {
     // Слот | Масштабирование элемента на canvas
     //
     canvas.addEventListener('wheel', function(evt) {
+        return false;
         console.group('canvas.addEventListener wheel {');
 
-        return false;
         evt.preventDefault();
 
         var mousePos = getMousePos(canvas, evt);
@@ -981,6 +923,65 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
+    // Функция | Загружает один элемент со всем содержимым
+    //
+    function packLoad(pack, settings) {
+        console.group('main.packLoad {');
+
+        // если выделенный элемент есть
+        if (pack) {
+            
+            canvas.style.width = settings.canvasWx + 'px';
+            canvas.style.height = settings.canvasWy + 'px';
+            canvas.width = settings.canvasWx * 2;
+            canvas.height = settings.canvasWy * 2;
+            
+            // загружаем элемент по id и все его внутренние элементы
+            pack.load(pack.id, settings, 
+
+                // если элемент успешно загрузился
+                function(loadedPack) {
+
+                    // запоминаем текущий элемент как ранее выбранный
+                    prevousPack = selectedPack;
+    
+                    // Скрываем ранее выбранный элемент на <canvas>
+                    if (selectedPack) {
+                        selectedPack.hide();
+                    }
+    
+                    // Запоминаем выбранный элемент как текущий
+                    selectedPack = loadedPack;
+                    
+                    // Показываем текущий элемент на <canvas>
+                    if (selectedPack) {
+                        // добавляем элемент в панель навигации
+                        navAddItem(selectedPack);
+                        settings.id = selectedPack.id;
+
+                        selectedPack.show();
+                    }
+    
+                    // Показываем свойства элемента
+                    // Передаем блокам внутренних элементов какой элемент сейчамс выбран
+                    // что бы они отобразили внутреннее содержимое выбранного элемента
+                    packsShowInfo(selectedPack);
+
+                    setStatus('ok', 5000);
+                },
+
+                // если элемент не загрузился
+                function(XMLHttpRequest, textStatus) {
+
+                    setStatus('ошибка загрузки: ' + textStatus, 5000);
+                }
+            );
+        }
+        console.groupEnd();
+    }
+
+
+    // -------------------------------------------------------
     // Слот | Обрабатываем события двойного клика на элементе
     //
     function eventMouseDblClick(evt) {
@@ -994,13 +995,13 @@ window.addEventListener("load", () => {
             var pos = getMousePos(canvas, evt)
 
             // берем первый выбранный элемент
-            var pack = selectedPack.onDblClick(pos.x, pos.y);
+            var dblClicedPack = selectedPack.onDblClick(pos.x, pos.y);
             
             console.log('rootItems: %o', selectedPack);
-            console.log('selectedItems: %o', pack);
+            console.log('dblClicedPack: %o', dblClicedPack);
 
             // если выделенный элемент есть
-            if (pack) {
+            if (dblClicedPack) {
                 
                 // увеличиваем уровень навигации
                 levelIndex++;
@@ -1010,51 +1011,17 @@ window.addEventListener("load", () => {
                 // console.log('current level: %o', _settings.name);
                 console.log('current level settings: %o', _settings);
 
+                // устанавливаем размеры canvas предусмотренные в settings для данного уровня
                 canvas.style.width = _settings.canvasWx + 'px';
                 canvas.style.height = _settings.canvasWy + 'px';
                 canvas.width = _settings.canvasWx * 2;
                 canvas.height = _settings.canvasWy * 2;
 
-                // загружаем выбранный элемент и все его внутренние элементы
-                packLoad(pack.id, _settings, 
-
-                    // если элемент успешно загрузился
-                    function(pack) {
-
-                        // запоминаем текущий элемент как ранее выбранный
-                        prevousPack = selectedPack;
-        
-                        // Скрываем ранее выбранный элемент на <canvas>
-                        if (selectedPack) {
-                            selectedPack.hide();
-                        }
-        
-                        // Запоминаем выбранный элемент как текущий
-                        selectedPack = pack;
-                        
-                        // Показываем текущий элемент на <canvas>
-                        if (selectedPack) {
-                            // добавляем элемент в панель навигации
-                            navAddItem(pack);
-                            _settings.id = pack.id;
-
-                            selectedPack.show();
-                        }
-        
-                        // Показываем свойства элемента
-                        // Передаем блокам внутренних элементов какой элемент сейчамс выбран
-                        // что бы они отобразили внутреннее содержимое выбранного элемента
-                        packsShowInfo(selectedPack);
-
-                        setStatus('ok', 5000);
-                    },
-
-                    // если элемент не загрузился
-                    function(XMLHttpRequest, textStatus) {
-
-                        setStatus('ошибка загрузки: ' + textStatus, 5000);
-                    }
-                );
+                // Создаем новый пустой элемент
+                var pack = packsCreate({id: dblClicedPack.id}, _settings);
+                
+                // загружаем свойства элемента и все его содержимое
+                packLoad(pack, _settings);
             }
         }
         console.groupEnd();
@@ -1075,43 +1042,13 @@ window.addEventListener("load", () => {
         
         var id = _settings.id;
 
-                // загружаем выбранный элемент и все его внутренние элементы
-                packLoad(id, _settings, 
-
-                    // если элемент успешно загрузился
-                    function(pack) {
-
-                        if (id == 0) (pack = packs[0]);
-                        // запоминаем текущий элемент как ранее выбранный
-                        prevousPack = selectedPack;
+        // Создаем новый пустой элемент
+        var pack = packsCreate({id: id}, _settings);
         
-                        // Скрываем ранее выбранный элемент на <canvas>
-                        if (selectedPack) {
-                            selectedPack.hide();
-                        }
-        
-                        // Запоминаем выбранный элемент как текущий
-                        selectedPack = pack;
-        
-                        // Показываем текущий элемент на <canvas>
-                        if (selectedPack) {
-                            selectedPack.show();
-                        }
-        
-                        // Показываем свойства элемента
-                        // Передаем блокам внутренних элементов какой элемент сейчамс выбран
-                        // что бы они отобразили внутреннее содержимое выбранного элемента
-                        packsShowInfo(selectedPack);
-
-                        setStatus('ok', 5000);
-                    },
-
-                    // если элемент не загрузился
-                    function(XMLHttpRequest, textStatus) {
-
-                        setStatus('ошибка загрузки: ' + textStatus, 5000);
-                    }
-                );        console.groupEnd();
+        // загружаем свойства элемента и все его содержимое
+        packLoad(pack, _settings);
+     
+        console.groupEnd();
     }
 
 

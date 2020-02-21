@@ -8,41 +8,37 @@
 // подключаемся к серверу mysql
 @include '../connection.php';
 
-// получаем id элемента
-$package_id = $_POST["package_id"];
-
 // сохраняем запрос SELECT в строку
 $query = " 
     SELECT
         package.id,
         package.code,
         package.name,
-        package.material_id,
-        package.photo_id,
-        package.payload,
+        # package.material_id,
+        # package.photo_id,
+        # package.payload,
         package.wx,
         package.wy,
-        package.wz,
-        package.color,
-        package.created,
-        package.updated,
-        package.deleted,
-        material.name as material_name
+        package.wz
+        # package.color,
+        # package.created,
+        # package.updated,
+        # package.deleted,
+        # material.name as material_name
     FROM
         package
-    LEFT JOIN
-        material 
-    ON (
-        package.material_id = material.id OR
-        package.material_id = null
-    )
-    LEFT JOIN
-        package_photo
-    ON (
-        package.photo_id = package_photo.id OR
-        package.photo_id = NULL
-    )
-    WHERE package.id = $package_id
+    # LEFT JOIN
+    #     material 
+    # ON (
+    #     package.material_id = material.id OR
+    #     package.material_id = null
+    # )
+    # LEFT JOIN
+    #     package_photo
+    # ON (
+    #     package.photo_id = package_photo.id OR
+    #     package.photo_id = NULL
+    # )
     ORDER BY package.code;
 ";
 
