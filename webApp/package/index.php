@@ -64,13 +64,14 @@
             <!-- Left item -->
             <input type="hidden" name="package_id">
             <div class="item-1">
+                <div class="canvas-wrap">
 
                 <!-- Изображение -->
                 <canvas class="" id="canvas">
                     success: {
                     }
                     error: Browser does not support canvas element.
-                </canvas>
+                </canvas></div>
             </div>
             <!-- характеристики -->
             <!-- Right item -->

@@ -252,7 +252,7 @@ window.addEventListener("load", () => {
     console.log("subBlockTamplate: %o", subBlockTamplate);
 
     // запускаем цикл для всех блоков
-    for(var blockIndex = 0; blockIndex < 4; blockIndex++) {
+    for(var blockIndex = 0; blockIndex < 5; blockIndex++) {
         
         // копированием из темплейта создаем очередной блок внутренних элементов
         var newSubBlock = subBlockTamplate.cloneNode(true);
