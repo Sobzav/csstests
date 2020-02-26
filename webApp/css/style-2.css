@@ -85,9 +85,9 @@ header.header__sub div {
 
 .nav li, .nav li label, .nav li span {
     /* border: 1px solid var(--color-chateauGrey); */
-    width: 44px;
+    /* width: 44px;
     min-width: 44px;
-    max-width: 44px;
+    max-width: 44px; */
     /* margin-right: -.3em; */
 }
 
@@ -113,10 +113,11 @@ header.header__sub div {
 li.nav-item > span, li.nav-first-item > span {
     font-family: 'CoreSansDS27CnLight';
     overflow: hidden;
-    text-overflow: ellipsis; /* ... для неуместившихся символов при переполнении */
-    max-width:  44px;
+    text-overflow: clip; /* ... для неуместившихся символов при переполнении */
+    /* max-width:  44px; */
+    font-size: 1.6em;
+    padding: 0 5px;
 }
-
 
 .nav li:last-child { /* ВРЕМЕННАЯ МЕРА, УБРАТЬ! */
     display: none;
@@ -125,6 +126,7 @@ li.nav-item > span, li.nav-first-item > span {
 .nav li label {
     /* border: 0.5px solid var(--color-chateauGrey); */
 }
+
 li.nav-item, li.nav-first-item {
     display: inline-flex;
     flex-flow: column wrap;
@@ -144,13 +146,13 @@ li.nav-item, li.nav-first-item {
 }*/
 
 .nav-item span::before {
-    position: absolute;
+    /* position: absolute;
     cursor: default;
-    content: " > ";
+    content: " > "; */
     /* display:inline-block; */
     /* padding: 0 0.4em 0 0; */
-    margin-left: -0.5em;  /* стандартное расстояние сдвига разделителя ">" в span */
-    margin-top: 0.07em;
+   /* margin-left: -0.5em;   стандартное расстояние сдвига разделителя ">" в span 
+    margin-top: 0.07em;*/
     /* font-size: 0.7em; */
 }
 
@@ -179,12 +181,12 @@ li.nav-item, li.nav-first-item {
 
 /* Точка между цифрами */
 .nav li.beforedot::before {
-    content: ".";
+    /* content: ".";
     font-family: 'TecnicaStencil1Rg';
     height: 0em;
     font-size: 2.8em;
     font-weight: bold;
-    line-height: 1.85em;
+    line-height: 1.85em; */
 }
 
 
@@ -194,11 +196,14 @@ li.nav-item, li.nav-first-item {
 
 .item > label, .nav-item > label, .nav-first-item > label, .nav-item li.beforedot {
     font-family: 'TecnicaStencil1Rg';
-    /* height: 1.3em; */
-    font-size: 2.8em;
+    line-height: 1em;
+    font-size: 10em;
     font-weight: bold;
-    line-height: 1.0em;
     text-align: center;
+    align-items: start;
+    display: flex;
+    justify-content: center;
+    margin-top: -20px;
     /* margin: 5px 0px 10px 0px; */
     /* background-color: var(--color-chateauGrey);
     border-radius: 3px;

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <!-- <link rel="stylesheet" type="text/css" href="..\css\style.css" /> Черновая версия - > и . шрифтовые, (. before li), (> before span) -->
+    <!-- <link rel="stylesheet" type="text/css" href="..\css\style-2.css" /> Вторая версия - > от края span и точка посередине между li -->
     <link rel="stylesheet" type="text/css" href="..\css\style-2.css" /> 
 
     <title> Склад </title>
@@ -31,15 +32,22 @@
                     Список уровней  -->
             <!-- <li class="nav-first-item" id="1"> Уровень 1 </li>
                 </ul> -->
-
+                <!-- <ul class="nav-pseudo">
+                <li><p><span>склад</span></p></li>
+                <li><p><span>секция</span></p></li>
+                <li><p><span>уровеньdsg</span></p></li>
+                <li><p><span>линия</span></p></li>
+                <li><p><span>стеллаж</span></p></li>
+                <li><p><span>полка</span></p></li>
+                </ul> -->
             <ul class="nav" id="nav">
                 <!-- Список уровней  -->
                 <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
                 <li class="nav-first-item"><span>склад</span><label>5</label></li>
                 <li class="nav-item"><span>секция</span><label>1</label></li>
-                <li class="nav-item"><span>уровень</span><label>1</label></li>
-                <li class="nav-item beforedot"><span>линия</span><label class="beforedot">2</label></li>
-                <li class="nav-item"><span>стеллаж</span><label>A</label></li>
+                <li class="nav-item"><span>уровень</span><label>1.</label></li>
+                <li class="nav-item beforedot"><span>линия</span><label class="beforedot">22</label></li>
+                <li class="nav-item"><span>стеллаж</span><label>A.</label></li>
                 <li class="nav-item beforedot"><span>полка</span><label class="beforedot">3</label></li>
             </ul>
             <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code"> <!-- Последний элемент .nav li:last-child пока скрыт в css -->

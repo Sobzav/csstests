@@ -25,16 +25,16 @@
             <!-- Выбор Типа -->
             <!-- Выпадающий список элементов -->
             <div class="wide-100">
-                <label class="" for="selCode"> Обозначение </label>
-                <select class="wide-100" id="selCode" name="package_code">
-                    <!-- Список всех элементов в базе  -->
+                <label class="" for="selCode"> Тип </label>
+                <!-- <select class="wide-100" id="selCode" name="package_code">
+                     Список всех элементов в базе  
                     <option id="0"> Новый </option>
-                </select>
-                <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
+                </select> -->
+                <input class="wide-100 mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
                 <!-- END Выпадающий список элементов -->
                     <!-- Кнопка справа  -->
                     <div>
-                    <button class="" id="btnEdit"> Редактировать </button>
+                    <button class="" id=""> Назад </button>
                 </div>
             </div>
         </section> <!-- END FIRST VAR  -->

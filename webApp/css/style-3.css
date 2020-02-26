@@ -68,19 +68,63 @@ header.header__sub div {
     padding: 0 0.5rem;
     /* section__main - зазор от краев экрана с помощью padding */
 }
+
+
 /*===========================================*/
 /*========    НАВИГАЦИОННАЯ ПАНЕЛЬ    =======*/
 /*===========================================*/
 
+ul.nav-pseudo {
+    margin-top: -6px;
+}
+/* Display list items side by side */
+ul.nav-pseudo li {
+    display: inline;
+}
+ul.nav-pseudo li p {
+    display: inline-block;
+    font-family: 'CoreSansDS27CnLight';
+    width: 44px;
+    min-width: 44px;
+    max-width: 44px;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;  /* ... для неуместившихся символов при переполнении */
+}
+
+  /* Add a symbol (>) before/behind each list item */
+ul.nav-pseudo li+li:before {
+    content: " > ";
+    cursor: default;
+    vertical-align: top;
+    /* padding-top: 19px; */
+    /* margin-top:  5px; */
+}
+ul.nav-pseudo li, ul.nav-pseudo li span {
+    width: 44px;
+    min-width: 44px;
+    max-width: 44px;
+}
+ul.nav-pseudo li span {
+
+}
+
+/**/
 .section__main .nav {
     display: flex;
     margin-top: -6px;
 }
-.nav li, .nav li label, .nav li span {
+
+.nav li { /* УБРАТЬ ПОСЛЕ */
+    /* border: 0.5px solid var(--color-chateauGrey); */
+}
+
+.nav li, .nav li label, .nav li span { /* НОВОЕ .nav-pseudo li, */
     /* border: 1px solid var(--color-chateauGrey); */
     width: 44px;
     min-width: 44px;
     max-width: 44px;
+
     /* margin-right: -.3em; */
 }
 
@@ -88,13 +132,28 @@ header.header__sub div {
     cursor: pointer;
 }
 
+.nav li::before {
+    /* content: ""; */
+    width:20px;
+    /* display: grid; */
+}
+
 .nav li span {
     /* text-decoration: underline; */
     /* border-bottom: 1px solid #000; */
+    font-stretch: condensed;
 }
 .nav li span, .nav li label {
     text-align: center;
 }
+
+li.nav-item > span, li.nav-first-item > span {
+    font-family: 'CoreSansDS27CnLight';
+    overflow: hidden;
+    text-overflow: ellipsis; /* ... для неуместившихся символов при переполнении */
+    max-width:  44px;
+}
+
 .nav li:last-child { /* ВРЕМЕННАЯ МЕРА, УБРАТЬ! */
     display: none;
 }
@@ -120,32 +179,16 @@ li.nav-item, li.nav-first-item {
     /* line-height: 1.0em; 
 }*/
 
-li.nav-item > span, li.nav-first-item > span {
-    text-align: center;
-    /* font-family: 'TecnicaStencil1Rg'; */
-    /* padding: 0 3px; */
-    /* --minFontSize: 0.1em; */
-    /* --maxFontSize: 0.45em; */
-    /* --scaler: 10vw; */
-    /* font-size: clamp( var(--minFontSize), var(--scaler), var(--maxFontSize) ); */
-    font-size: 0.7em;
-    overflow: hidden;
-    /* white-space: nowrap; */
-    text-overflow: ellipsis; /* ... для неуместившихся символов при переполнении */
-    max-width:  44px;
-}
-
-.nav-item span::before {
+/* .nav-item span::before {
     position: absolute;
     cursor: default;
     content: " > ";
-    /* display:inline-block; */
-    /* padding: 0 0.4em 0 0; */
-    margin-left: -0.55em;  /* стандартное расстояние сдвига разделителя ">" в span */
     margin-top: 0.07em;
-    /* font-size: 0.7em; */
-}
+} */
 
+.nav li.beforedot span::before {
+    margin-left: -0.7em;
+} 
 
 /* Псевдоэл-т before перенес из li в span */
 /*.section__main ul.nav li::before {
@@ -173,8 +216,9 @@ li.nav-item > span, li.nav-first-item > span {
     height: 0em;
     font-size: 2.8em;
     font-weight: bold;
-    line-height: 1.61em;
+    line-height: 1.85em;
 }
+
 
 .nav li.beforedot::before{
     margin-left: -0.25em; /* переопределение - сдвигаем разделитель в виде > между 511 . 1Ф левее */
@@ -349,7 +393,7 @@ button {
     color: var(--color-black);
     background-color: transparent;
     border: 1px solid var(--color-black);
-    font-size: inherit;  /* иначе текст вылезает из кнопки */
+    /* font-size: inherit;  /* иначе текст вылезает из кнопки */
     padding: 0 0.9em;
     margin: 0 0.4rem;
     max-height: 1.7em;
