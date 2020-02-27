@@ -30,27 +30,33 @@
 html,
 body {
     font-family: 'CoreSansDS25Light';
-    background-color: var(--color-raven);
+    background-color: #AAA8A9;
+}
+
+body,
+.gridContainer,
+.gridContainer--whouse {
+    min-height: 100vh;
+    max-height: 100%;
 }
 
 /* GRID-Контейнер для всего содержимого страницы */
-.gridContainer {
+.gridContainer,
+.gridContainer--whouse {
     display: grid;
-    /* background-color: var(--color-raven); */
+    background-color: var(--color-raven);
     /* margin: 0 1.5rem; по левой стороне */
     margin: 0 auto;
     /* по центру */
-    padding: 0 1.5rem;
-    width: max-content;
-    grid-template-columns: repeat(2, min-content);
+    padding: 0 25px;
+    /* width: max-content; */
+    width: 1200px;
+    grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(5, min-content);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 }
 
-.header-top {
-    grid-area: 1 / 1 / 2 / 3;
-}
 
 /* Отступ слева для элемента div Заголовка правой стороны, Отступ слева для элемента div Заголовка секции Sub с чекбоксом */
 header.header__general div,
@@ -68,6 +74,7 @@ header.header__sub div {
     padding: 0 0.5rem;
     /* section__main - зазор от краев экрана с помощью padding */
 }
+
 /*===========================================*/
 /*========    НАВИГАЦИОННАЯ ПАНЕЛЬ    =======*/
 /*===========================================*/
@@ -76,15 +83,20 @@ header.header__sub div {
     display: flex;
     margin-top: -6px;
 }
-.nav li, .nav li label, .nav li span {
+
+.nav li,
+.nav li label,
+.nav li span {
     /* border: 1px solid var(--color-chateauGrey); */
-    width: 44px;
-    min-width: 44px;
-    max-width: 44px;
-    /* margin-right: -.3em; */
+    width: 95px;
+    min-width: 95px;
+    max-width: 95px;
+    margin-right: 0.9em;
 }
 
-.nav li, .nav span, .nav label {
+.nav li,
+.nav span,
+.nav label {
     cursor: pointer;
 }
 
@@ -92,22 +104,29 @@ header.header__sub div {
     /* text-decoration: underline; */
     /* border-bottom: 1px solid #000; */
 }
-.nav li span, .nav li label {
+
+.nav li span,
+.nav li label {
     text-align: center;
 }
-.nav li:last-child { /* ВРЕМЕННАЯ МЕРА, УБРАТЬ! */
+
+.nav li:last-child {
+    /* ВРЕМЕННАЯ МЕРА, УБРАТЬ! */
     display: none;
 }
 
 .nav li label {
     /* border: 0.5px solid var(--color-chateauGrey); */
 }
-li.nav-item, li.nav-first-item {
+
+li.nav-item,
+li.nav-first-item {
     display: inline-flex;
     flex-flow: column wrap;
     align-content: space-between;
     /* justify-content: space-between; */
 }
+
 /* Псевдоэл-т с точкой перенес из label (где он нафиг сдвигает вправо весь текст) в li (где он ничего не сдвигает, потому то нефиг) */
 /*li.nav-item label.beforedot::before {
     content: ".";
@@ -120,7 +139,8 @@ li.nav-item, li.nav-first-item {
     /* line-height: 1.0em; 
 }*/
 
-li.nav-item > span, li.nav-first-item > span {
+li.nav-item>span,
+li.nav-first-item>span {
     text-align: center;
     /* font-family: 'TecnicaStencil1Rg'; */
     /* padding: 0 3px; */
@@ -128,23 +148,24 @@ li.nav-item > span, li.nav-first-item > span {
     /* --maxFontSize: 0.45em; */
     /* --scaler: 10vw; */
     /* font-size: clamp( var(--minFontSize), var(--scaler), var(--maxFontSize) ); */
-    font-size: 0.7em;
+    font-size: 1em;
     overflow: hidden;
     /* white-space: nowrap; */
-    text-overflow: ellipsis; /* ... для неуместившихся символов при переполнении */
-    max-width:  44px;
+    text-overflow: ellipsis;     /* ... для неуместившихся символов при переполнении */
+    max-width: 38px;
 }
 
-.nav-item span::before {
+/*.nav-item span::before {
     position: absolute;
     cursor: default;
     content: " > ";
     /* display:inline-block; */
-    /* padding: 0 0.4em 0 0; */
-    margin-left: -0.55em;  /* стандартное расстояние сдвига разделителя ">" в span */
+    /* padding: 0 0.4em 0 0;
+    margin-left: -0.55em;
+    /* стандартное расстояние сдвига разделителя ">" в span 
     margin-top: 0.07em;
-    /* font-size: 0.7em; */
-}
+    /* font-size: 0.7em; 
+}*/
 
 
 /* Псевдоэл-т before перенес из li в span */
@@ -163,30 +184,39 @@ li.nav-item > span, li.nav-first-item > span {
 
 
 .nav li.beforedot {
-    margin-left:0.5em;  /* сдвигаем весь блок li правее для того чтобы уместилась точка */
+    margin-left: 2.4em;
+    /* сдвигаем весь блок li правее для того чтобы уместилась точка */
 }
 
 /* Точка между цифрами */
 .nav li.beforedot::before {
     content: ".";
-    font-family: 'TecnicaStencil1Rg';
+    /* font-family: 'TecnicaStencil1Rg'; */
+    font-family: 'CoreSansDS27CnLightItalic';
     height: 0em;
-    font-size: 2.8em;
-    font-weight: bold;
-    line-height: 1.61em;
+    font-size: 10em;
+    /* font-weight: bold; */
+    line-height: 1em;
 }
 
-.nav li.beforedot::before{
-    margin-left: -0.25em; /* переопределение - сдвигаем разделитель в виде > между 511 . 1Ф левее */
+.nav li.beforedot::before {
+    margin-left: -0.22em;
+    /* переопределение - сдвигаем разделитель в виде > между 511 . 1Ф левее */
 }
 
-.item > label, .nav-item > label, .nav-first-item > label, .nav-item li.beforedot {
-    font-family: 'TecnicaStencil1Rg';
+.item>label,
+.nav-item>label,
+.nav-first-item>label,
+.nav-item li.beforedot {
+    /* font-family: 'TecnicaStencil1Rg'; */
+    font-family: 'CoreSansDS27CnLightItalic';
     /* height: 1.3em; */
     font-size: 2.8em;
-    font-weight: bold;
-    line-height: 1.0em;
+    font-size: 9em;
+    /* font-weight: bold; */
+    line-height: 0.95em;
     text-align: center;
+    border: 0.5px solid var(--color-chateauGrey);
     /* margin: 5px 0px 10px 0px; */
     /* background-color: var(--color-chateauGrey);
     border-radius: 3px;
@@ -200,10 +230,12 @@ li.nav-item > span, li.nav-first-item > span {
 li.beforedot {
     max-width: fit-content !important;
 }
+
 .nav-item:nth-child(3n)::after {
     content: '';
     width: 100%;
 }
+
 .section__main ul.nav li:first-child::before {
     content: none;
 }
@@ -213,10 +245,10 @@ li.beforedot {
 
 /* MAIN: If убрать "display: flex;"=> оно станет "block" => отображение для мобильных - в один столбец */
 main {
-    display: flex;
+    display: grid;
     flex-direction: row;
-    padding: 0 0.25rem 0.75rem 0.25rem;
-    /* padding: 0.75rem 0.25rem 0.25rem; */
+    /* padding: 0 0.25rem 0.75rem 0.25rem; убрал paddings слева и справа */
+    padding: 0 0 0.75rem 0;
 }
 
 
@@ -241,17 +273,33 @@ main {
     flex: 1 0 auto;
 }
 
+.header-top {
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+/* Левая панель с канвасом */
 .item-1 {
     display: grid;
     grid-area: 3 / 1 / 4 / 2;
 }
 
-.item-2 {
-    display: grid;
+/* Правая панель с размерами прямоугольников */
+.item-2,
+.item-2--whouse {
     grid-area: 3 / 2 / 4 / 3;
 }
 
-.bottom-block__buttons {
+.item-2--whouse {
+    padding: 4px 4px 4px 4px;
+    min-width: 600px;
+}
+
+.item-2--whouse .right-form {
+    display: flex;
+    padding-top: 10px;
+}
+
+.right-block__buttons {
     display: flex;
     grid-area: 4 / 1 / 5 / 3;
     width: 100%;
@@ -262,36 +310,44 @@ main {
     grid-area: 5 / 1 / 6 / 3;
 }
 
-
-
 /* Левая панель с канвасом */
 .item-1 {
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    /* display: grid; */
+    /* flex-direction: column; */
 }
 
 .canvas-wrap {
-    margin: auto;
+    /* margin: auto; (это было для центрирования по вертикали) */
+    background-color: var(--color-chateauGrey);
+    padding: 25px;
+    margin-right: 25px;
 }
 
 .item-1 canvas {
-    width: 500px;
-    height: 500px;
-    object-fit: contain;
+    /* width: 600px; */
+    /* height: 100%; */
+    /* object-fit: contain; */
     border-width: 0px;
-    border-style: dotted;
+    /* border-style: dotted; */
     border-color: var(--color-chiffon);
     margin: auto;
     background-color: var(--color-chateauGrey);
-    padding: 1.5rem; 
-    margin: 0.5rem 0.85rem 0.5rem 0
+    padding: 0;
+    margin: 0 1.3 0.5rem 0;
+}
+
+.item-1 {
+    padding: 0.25rem 0;
 }
 
 /* Правая панель с размерами */
 .item-2 {
-    padding: 0.25rem;
+    padding: 4px 4px 4px 4px;
+    /* убрал для чистоты. Иначе кнопки, которые тоже внутри этого контейнера, некрасиво отступают от правого края */
     flex-direction: column;
     display: flex;
+    /* min-width: 530px; */
     min-width: 459px;
 }
 
@@ -303,7 +359,8 @@ main {
 }
 
 /* TOP - Панель с заголовком */
-.gridContainer header.header-top {
+.gridContainer header.header-top,
+.gridContainer--whouse header.header-top {
     height: 2rem;
     padding: 0 0.5rem;
     justify-content: center;
@@ -325,7 +382,8 @@ label {
 }
 
 .label-heading,
-.gridContainer header.header-top {
+.gridContainer header.header-top,
+.gridContainer--whouse header.header-top {
     font-family: 'CoreSansDS35Regular';
     font-size: 1.125rem;
     display: flex;
@@ -334,6 +392,7 @@ label {
 
 .header__sub label.label-heading {
     padding-left: 0.1em;
+    /* color:  red; */
 }
 
 /* Здесь был input  */
@@ -349,7 +408,8 @@ button {
     color: var(--color-black);
     background-color: transparent;
     border: 1px solid var(--color-black);
-    font-size: inherit;  /* иначе текст вылезает из кнопки */
+    font-size: inherit;
+    /* иначе текст вылезает из кнопки */
     padding: 0 0.9em;
     margin: 0 0.4rem;
     max-height: 1.7em;
@@ -465,18 +525,18 @@ section.section__main div:nth-child(2) {
 }
 
 /* Кнопки внизу страницы - по правой стороне */
-.bottom-block__buttons {
+.right-block__buttons {
     justify-content: flex-end;
-    /*     justify-content: space-between; */
-    /* padding: 0 0.5rem; */
-    margin-top: 0.25em;
+    /* justify-content: space-between; */
+    padding: 0 0.25rem;
+    /* margin-top: 0.25em; */
 }
 
-.bottom-block__buttons button.button-right:first-child {
+.right-block__buttons button.button-right:first-child {
     margin: 0;
 }
 
-.bottom-block__buttons button.button-right {
+.right-block__buttons button.button-right {
     margin: 0 0 0 0.75em;
     word-break: break-all;
 }

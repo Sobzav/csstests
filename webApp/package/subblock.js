@@ -15,7 +15,6 @@ var logLevel = 1;
 // =======================================================
 // Класс | SubBlock
 //          Один блок это набор из нескольких строк однотипных элементов
-//         блок имеет начало firstRowIndex
 //         имеет количество горизонтальных рядов rowCount       (вводит пользователь - inpNy)
 //         и количество вертикальных столбцов colCount          (вводит пользователь - inpNx)
 //         а так же тип всех его элементов packId               (вводит пользователь - selCode)
@@ -53,7 +52,6 @@ class SubBlock {
         //
         this._pack = null;
         this._index = index;                // индекс данного блока в контейнере
-        // this._firstRowIndex = 0;
         this._rowCount = 0;
         this._colCount = 0;
         this._subPack = null;
@@ -65,9 +63,8 @@ class SubBlock {
         this._inpSizeWy = inpSizeWy;
         this._inpTotal = inpTotal;
 
-        this.selCode.addEventListener('change', event => this.slotSubPackChanged(event));
-        this.inpNx.addEventListener('change', event => this.slotSizeChanged(event));
-        this.inpNy.addEventListener('change', event => this.slotSizeChanged(event));
+        // подключаем слоты к сигналам внутренних визуальных элементов
+        this.connectSignals();
 
 
         // -------------------------------------------------------
@@ -86,6 +83,37 @@ class SubBlock {
     }
     
 
+
+    // -------------------------------------------------------
+    // Метод | Подключение слотов к сигналам внутренних визуальных элементов
+    //
+    connectSignals() {
+        console.group("class SubBlock.connectSignals { this: %o", this);
+
+        this.selCode.addEventListener('input', event => this.slotSubPackChanged(event));
+        this.inpNx.addEventListener('input', event => this.slotSizeChanged(event));
+        this.inpNy.addEventListener('input', event => this.slotSizeChanged(event));
+
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Подключение слотов к сигналам внутренних визуальных элементов
+    //
+    disconnectSignals() {
+        console.group("class SubBlock.disconnectSignals { this: %o", this);
+
+        this.selCode.removeEventListener('input', event => this.slotSubPackChanged(event));
+        this.inpNx.removeEventListener('input', event => this.slotSizeChanged(event));
+        this.inpNy.removeEventListener('input', event => this.slotSizeChanged(event));
+
+        console.groupEnd();
+    }
+
+
+
     // -------------------------------------------------------
     // Метод | Задаем новые размеры блоку
     //
@@ -97,14 +125,14 @@ class SubBlock {
             this._rowCount = rowCount;
             this._colCount = colCount;
 
-            this._inpTotal.innerText = this._rowCount * this._colCount;
+            this._inpTotal.innerText = this._subPack ? (this._rowCount * this._colCount) : 0;
 
             // сообщаем контейнеру об изменениях
             this.sizeChanged(this);
         }
-
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -114,14 +142,14 @@ class SubBlock {
         console.group("class SubBlock.showInfo { block: %o", this);
 
         // получаем элемент соответствующий типу внутреннего содержимого данного блока
-        var subPack = this._subPack.id;
+        var subPack = this._subPack;
 
         // выводим информацию об элементах блока
         if (subPack) {
 
-            this._selCode.selectedIndex = this._selCode.querySelector("[value=\'" + this._subPack.id + "\']").index;
-            this._inpSizeWx.value = this._subPack.wx;
-            this._inpSizeWy.value = this._subPack.wy;
+            this._selCode.selectedIndex = this._selCode.querySelector("[value=\'" + subPack.id + "\']").index;
+            this._inpSizeWx.value = subPack.wx;
+            this._inpSizeWy.value = subPack.wy;
             this._inpNy.value = this._rowCount;
             this._inpNx.value = this._colCount;
             this._inpTotal.innerText = this._rowCount * this._colCount;
@@ -131,10 +159,12 @@ class SubBlock {
             this._selCode.selectedIndex = 0;
             this._inpSizeWx.value = '';
             this._inpSizeWy.value = '';
+            this._inpTotal.innerText = 0;
         }
 
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -144,13 +174,13 @@ class SubBlock {
         console.group("class SubBlock.clearData { block: %i", this._index);
 
         this._pack = null;
-        // this._firstRowIndex = 0;
         this._rowCount = 0;
         this._colCount = 0;
         this._subPack = null;
 
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -170,19 +200,21 @@ class SubBlock {
     }
             
 
+
     // -------------------------------------------------------
     // Слот | Если изменились размеры
     //
     slotSizeChanged(event) {
         console.group("class SubBlock.slotSizeChanged { block: %i", this._index);
 
-        var rowCount = parseInt(this._inpNy.value);
-        var colCount = parseInt(this._inpNx.value);
+        var rowCount = this._inpNy.value ? parseInt(this._inpNy.value) : 0;
+        var colCount = this._inpNx.value ? parseInt(this._inpNx.value) : 0;
 
         this.setSize(rowCount, colCount);
 
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -194,40 +226,57 @@ class SubBlock {
         // берем id элементы который соответствует выбранному <option>
         var id = event.target.selectedOptions[0].value;
         
-        if (id !== this._subPack.id) {
+        // если в данном блоке выбран элемент имеющий id
+        if (parseInt(id) > 0) {
+
+            // id элемента, выбранного в данном блоке
+            var subPackId = this._subPack ? this._subPack.id : -1;
             
-            // Создаем новый пустой элемент
-            var pack = new PackageContainerItem(
-                {id: id},               // данные элемента, получен из базы
-                settings,               // настройки элементов и внутренних элементов
-                this._pack.canvas       // canvas где будет отображен элемент
-            );
-    
-            // загружаем свойства элемента и все его содержимое из базы
-            pack.load(this, pack.id, settings, 
+            if (id !== subPackId) {
+                
+                // Создаем новый пустой элемент
+                var pack = new PackageContainerItem(
+                    this._pack,     // родительский контейнер
+                    {id: id},       // данные элемента, получен из базы
+                    settings,       // настройки элементов и внутренних элементов
+                    canvas          // canvas где будет отображен элемент
+                );
+        
+                // загружаем свойства элемента и все его содержимое из базы
+                pack.load(settings, 
 
-                // если элемент успешно загрузился
-                function(self, loadedPack) {
+                    // если элемент успешно загрузился
+                    function(loadedPack, self) {
 
-                    self._subPack = loadedPack;
+                        self._subPack = loadedPack;
 
-                    self.showInfo();
+                        self.showInfo();
 
-                    // сообщаем контейнеру об изменениях
-                    self.contentChanged(self);
-            
-                    // setStatus('ok', 5000);
-                },
+                        // сообщаем контейнеру об изменениях
+                        self.contentChanged();
+                    },
 
-                // если элемент не загрузился
-                function(XMLHttpRequest, textStatus) {
+                    // если элемент не загрузился
+                    function(XMLHttpRequest, textStatus) {
 
-                    // setStatus('ошибка загрузки: ' + textStatus, 5000);
-                }
-            );
+                        // setStatus('ошибка загрузки: ' + textStatus, 5000);
+                    },
+                    this    // передаем себя что бы в calback знать кто вызвал метод
+                );
+            }
+        } else {
+            this._subPack = null;
+            this.showInfo();
+
+            // сообщаем контейнеру об изменениях
+            this.contentChanged();
         }
+
+        this._selCode.blur();
+
         console.groupEnd();
     }
+
 
 
     /**
@@ -245,6 +294,7 @@ class SubBlock {
     }
 
 
+
     /**
      * @param {number} selCode
      */
@@ -255,6 +305,7 @@ class SubBlock {
     get selCode() {
         return this._selCode;
     }
+
 
 
     /**
@@ -269,6 +320,7 @@ class SubBlock {
     }
 
 
+
     /**
      * @param {number} inpNy
      */
@@ -280,17 +332,6 @@ class SubBlock {
         return this._inpNy;
     }
 
-
-    // /**
-    //  * @param {number} firstRowIndex
-    //  */
-    // set firstRowIndex(value) {
-    //     this._firstRowIndex = value;
-    // } 
-
-    // get firstRowIndex() {
-    //     return this._firstRowIndex;
-    // }
 
 
     /**
@@ -314,6 +355,7 @@ class SubBlock {
     }
 
 
+
     /**
      * @param {number} colCount
      */
@@ -333,6 +375,7 @@ class SubBlock {
     get colCount() {
         return this._colCount;
     }
+
 
 
     set subPack(value) {
@@ -370,6 +413,37 @@ class SubBlockContainer {
 
         console.groupEnd();
     }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Очищаем все данные блоков
+    //
+    connectSignals() {
+        console.group("class SubBlockContainer.connectSignals { ");
+
+        this.item.forEach ( item => {
+
+            item.connectSignals();
+        });
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Очищаем все данные блоков
+    //
+    disconnectSignals() {
+        console.group("class SubBlockContainer.disconnectSignals { ");
+
+        this.item.forEach ( item => {
+
+            item.disconnectSignals();
+        });
+        console.groupEnd();
+    }
+
 
 
     // -------------------------------------------------------
@@ -430,14 +504,8 @@ class SubBlockContainer {
                         // сообщаем блоку указатель на текущий элемент pack
                         this.item[index].pack = this._pack;
     
-                        // запоминаем первый ряд данного блока
-                        this.item[index].firstRowIndex = this.item[index].rowCount - 1;
-
                         // определяем тип внутренних элементов
                         this.item[index].subPack = subPack;
-
-                        // считаем сколько рядов в текущем блоке
-                        // this.item[index].rowCount = this.item[index].rowCount + 1;
                     }
 
                     // если координата y элемента отличается от предыдущего
@@ -456,7 +524,7 @@ class SubBlockContainer {
                     this.item[index].colCount = this.item[index].colCount + 1;
                 });
 
-                this.updateTotal();
+                this._inpTotal.innerText = this._pack.item.length;
 
             // если елемент пуст
             } else {
@@ -467,6 +535,7 @@ class SubBlockContainer {
         }
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -502,8 +571,8 @@ class SubBlockContainer {
             );
 
             // подписываемся на сигналы блока
-            item.sizeChanged = (item) => this.onItemSizeChanged(item);
-            item.contentChanged = (item) => this.onItemContentChanged(item);
+            item.sizeChanged = () => this.onItemSizeChanged();
+            item.contentChanged = () => this.onItemContentChanged();
 
             this.item.push(item);
 
@@ -513,41 +582,6 @@ class SubBlockContainer {
         console.groupEnd();
     }
 
-
-    // -------------------------------------------------------
-    // Метод | Вывод всех значений в инпуты всех блоков
-    //
-    updateInputs() {
-
-    }
-
-
-    // -------------------------------------------------------
-    // Метод | Подсчет и вывод общего количества элементов внутри всех блоков
-    //
-    updateTotal() {
-        console.group("class SubBlockContainer.updateTotal { ");
-
-        // подсчет обхего количества элементов внутри всех блоков
-        var subTotal;
-        var total = 0;
-        for (var index = 0; index < this._count; index++) {
-
-            // если тип элементов очередного блока определен
-            if (this.item[index].subPack) {
-
-                // подсчитываем общее количество элементов очередного блока
-                subTotal = this.item[index].rowCount * this.item[index].colCount;
-                
-                // добавляем в общую сумму очередной блок
-                total += subTotal;
-            }
-        }
-
-        this._inpTotal.innerText = total;
-
-        console.groupEnd();
-    }
 
 
     // -------------------------------------------------------
@@ -565,35 +599,44 @@ class SubBlockContainer {
             pack.clearItems();
             pack.hide();
 
-            // Проходим по всем блокам и создаем внутренние элеементы pack
+            pack.iBorder = 0;
+            pack.iBorderColor = "#ff0000";
+
             var x = 0;
             var y = 0;
-            var dy = 0;
             var dx = 0;
-            var subBlock, rowCount = 0, colCount, subPack, subPackTotalWy = 0;
-            for (var index = 0; index < this._count; index++) {
+            var iBorder = 100;
+            var rowCount = 0, colCount, subPack;
+            
+            // ВЫчисляем суммарную высоту всех рядов
+            var subPackTotalWy = this.item.reduce( function(totalWy, subBlock) {
                 
-                // текущий блок внутренних элементов
-                subBlock = this.item[index];
-
                 // элемент выбранный в списке блока
                 subPack = subBlock.subPack;
-
-                // общее количество рядов всех блоков
-                rowCount += subBlock.rowCount;
-
-                // суммарная высота всех рядов
-                subPackTotalWy += subPack ? subPack.wy * subBlock.rowCount : 0;
-            }
-            // расстояние между рядами
-            dy = (pack.wy - subPackTotalWy) / (rowCount + 1);
-            
-            for (var index = 0; index < this._count; index++) {
                 
-                // текущий блок внутренних элементов
-                subBlock = this.item[index];
+                if ((subBlock.rowCount > 0) && (subBlock.colCount > 0) && (subPack)) {
 
-                // элемент выбранный в списке блока
+                    // общее количество рядов всех блоков
+                    rowCount += subBlock.rowCount;
+                    
+                    return totalWy + (subPack ? subPack[subPack.disposition.wy] * subBlock.rowCount : 0);
+                } else {
+                    return totalWy;
+                }
+            }, 0);
+
+            // расстояние между рядами
+            var dy = (pack[pack.disposition.wy] - subPackTotalWy) / (rowCount + 1);
+
+            // если вертикальный зазор стал нулевым
+            if (dy <= 0) {
+                pack.iBorder = iBorder;
+            }
+            
+            // Проходим по всем блокам и создаем внутренние элеементы pack
+            this.item.forEach( subBlock => {
+                
+                // элемент выбранный в данном блоке
                 subPack = subBlock.subPack;
                 
                 rowCount = subBlock.rowCount;
@@ -603,7 +646,10 @@ class SubBlockContainer {
                     console.log("добаляем в блок: %o элементы типа %o", subBlock, subPack);
                     
                     dx = (pack.wx - colCount * subPack.wx) / (colCount + 1);
-
+                    if (dx <= 0) {
+                        pack.iBorder = iBorder;
+                    }
+        
                     for (var rowIndex = 0; rowIndex < rowCount; rowIndex++) {
 
                         // расчитываем координату y конца текущего элемента
@@ -619,7 +665,7 @@ class SubBlockContainer {
                                         id: subPack.id,
                                         code: subPack.code,
                                         name: subPack.name,
-                                        color: subPack.color,
+                                        color: subPack.color, //.replace("#", ""),
                                         x: x,
                                         y: y,
                                         wx: subPack.wx,
@@ -635,56 +681,50 @@ class SubBlockContainer {
                         // обнуляем координату x
                         x = 0;
                         // расчитываем координату y следующего элемента
-                        y += subPack.wy;
+                        y += subPack[subPack.disposition.wy];
                     } 
                 }
-            }            
+            }); 
+            // показываем элемент со всем содержимым         
             pack.show();
         }
-
-        // обнеовляем изображение текущего элемента pack
-        // pack.reDraw();
-        
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
     // Метод | При изменении какого либо блока
     //
-    onItemSizeChanged(item) {
-        console.group("class SubBlockContainer.onItemSizeChanged { item: %i", item);
-
-        // обновим общее количество элементов внутри всех блоков
-        this.updateTotal();
+    onItemSizeChanged() {
+        console.group("class SubBlockContainer.onItemSizeChanged { item: %i", this);
 
         // обновляем содержимое элемента pack
         this.updatePack();
-
-        // обновляем изображение элемента pack
-        this._pack.draw();
+        
+        // обновим общее количество элементов внутри всех блоков
+        this._inpTotal.innerText = this._pack.item.length;
 
         console.groupEnd();
     }
+
 
     
     // -------------------------------------------------------
     // Метод | При изменении какого либо блока
     //
-    onItemContentChanged(item) {
-        console.group("class SubBlockContainer.onItemContentChanged { item: %i", item);
-
-        // обновим общее количество элементов внутри всех блоков
-        this.updateTotal();
+    onItemContentChanged() {
+        console.group("class SubBlockContainer.onItemContentChanged { item: %i", this);
 
         // обновляем содержимое элемента pack
         this.updatePack();
-
-        // обновляем изображение элемента pack
-        this._pack.reDraw();
+        
+        // обновим общее количество элементов внутри всех блоков
+        this._inpTotal.innerText = this._pack.item.length;
 
         console.groupEnd();
     }
+
 
         
     // -------------------------------------------------------
@@ -697,9 +737,9 @@ class SubBlockContainer {
 
             this.item[index].clearData();
         }
-        
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -714,10 +754,11 @@ class SubBlockContainer {
         }
         
         // обновим общее количество элементов внутри всех блоков
-        this.updateTotal();
+        this._inpTotal.innerText = this._pack.item.length;
 
         console.groupEnd();
     }
+
 
 
     /**
@@ -730,6 +771,7 @@ class SubBlockContainer {
     get pack() {
         return this._pack;
     }
+
 
 
     /**

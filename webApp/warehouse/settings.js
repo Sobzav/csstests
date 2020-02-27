@@ -12,6 +12,7 @@ var settings = {
             id: 0,
             canvasWx: 550,
             canvasWy: 1770,
+            depth: 2,
             disposition: {
                 x: 'x',
                 y: 'y',
@@ -66,6 +67,7 @@ var settings = {
             id: 0,
             canvasWx: 550,
             canvasWy: 700,
+            depth: 2,
             disposition: {
                 x: 'x',
                 y: 'y',
@@ -105,6 +107,7 @@ var settings = {
             id: 0,
             canvasWx: 550,
             canvasWy: 700,
+            depth: 2,
             disposition: {
                 x: 'x',
                 y: 'y',
@@ -123,8 +126,8 @@ var settings = {
                     x: 'x',
                     y: 'y',
                     wx: 'wx',
-                    wy: 'wz',
-                    wz: 'wy'
+                    wy: 'wy',
+                    wz: 'wz'
                 },
                 padding: 20,
                 border: 0,
@@ -144,12 +147,13 @@ var settings = {
             id: 0,
             canvasWx: 550,
             canvasWy: 700,
+            depth: 2,
             disposition: {
                 x: 'x',
                 y: 'y',
                 wx: 'wx',
-                wy: 'wy',
-                wz: 'wz'
+                wy: 'wz',
+                wz: 'wy'
             },
             padding: 0,
             border: 0,
@@ -162,8 +166,8 @@ var settings = {
                     x: 'x',
                     y: 'y',
                     wx: 'wx',
-                    wy: 'wy',
-                    wz: 'wz'
+                    wy: 'wz',
+                    wz: 'wy'
                 },
                 padding: 20,
                 border: 0,
@@ -183,6 +187,7 @@ var settings = {
             id: 0,
             canvasWx: 550,
             canvasWy: 700,
+            depth: 2,
             disposition: {
                 x: 'x',
                 y: 'y',

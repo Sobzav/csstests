@@ -5,7 +5,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
     <title> Упаковка </title>
 </head>
@@ -22,24 +21,25 @@
         </header>
 
         <!--  Sub-TOP - панель выбора элемента - FIRST VAR -->
-        <section class="section__main" id="selectPanel">
+        <section class="section__main " id="selectPanel">
             <!-- Выбор Типа -->
             <!-- Выпадающий список элементов -->
             <div class="wide-100">
                 <label class="" for="selCode"> Тип </label>
                 <select class="wide-100" id="selCode" name="package_code">
-                    <!-- Список всех элементов в базе  -->
-                    <option value="0"> Новый </option>
+                     Список всех элементов в базе  
+                    <option id="0"> Новый </option>
                 </select>
+                <!-- <input class="wide-100 mainInput" size="4" type="text" id="inpCodeEdit" name="package_code"> -->
                 <!-- END Выпадающий список элементов -->
                     <!-- Кнопка справа  -->
-                <div>
-                    <button class="" id="btnEdit"> Редактировать </button>
+                    <div>
+                    <button class="" id=""> Назад </button>
                 </div>
             </div>
         </section> <!-- END FIRST VAR  -->
 
-         <!-- Sub-TOP - панель редактирования элемента - SECOND VAR -->
+         <!-- Sub-TOP - панель выбора элемента - SECOND VAR -->
         <section class="section__main hidden" id="editPanel">
             <div>
                 <label class="" for="selCode"> Обозначение </label>
@@ -50,8 +50,8 @@
                 <input class="mainInput" type="text" id="inpName" name="package_name">
             </div>
                 <!-- Кнопка справа  -->
-            <div>
-            <button class="" id="btnBack"> Назад </button>
+        <div>
+        <button class="" id="btnBack"> Назад </button>
         </div>
         </section> <!-- END SECOND VAR -->
 
@@ -60,28 +60,28 @@
         <!-- Изображение и характеристики -->
         <main role="main">
             <!-- Центральная главная область с двумя блоками: Left и Right -->
-
             <!-- Left item -->
             <input type="hidden" name="package_id">
             <div class="item-1">
                 <div class="canvas-wrap">
+
                 <!-- Изображение -->
                 <canvas class="" id="canvas">
                     success: {
                     }
                     error: Browser does not support canvas element.
                 </canvas></div>
-            </div>            <!-- характеристики -->
+            </div>
+
             <!-- Right item -->
             <div class="item-2">
                 <!-- кнопки -->
                 <section class="right-block__buttons">
-                    <button class="button-right" id="btnTurn"> Повернуть отображение </button>
+                    <button class="button-right" id="btnTurn"> Восстановить отображение </button>
                     <button class="button-right" id="btnCopy"> Копировать </button>
                     <!-- <button class="" id="btnDelete"> Удалить </button> -->
                     <!-- <button class="" id="btnAdd"> Добавить </button> -->
                     <button class="button-right" id="btnApply"> Сохранить </button>
-
                 </section>
                 <!-- <header class="header__general">
                     <div class="label-heading"> Размеры прямоугольника </div>
@@ -114,21 +114,21 @@
 
                     <div class="section-general__flex">
                         <div class="">
-                            <label class="" for="inpInternalSizeWx"> Ширина </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWx" name="package_iwx" pattern=“[0-9]+” required>
+                            <label class="" for="inpSizeWx"> Ширина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWx" name="package_wx" pattern=“[0-9]+” required>
                             <label class="" for="sizeWx"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="" for="inpInternalSizeWy"> Высота </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWy" name="package_iwy" pattern=“[0-9]+” required>
+                            <label class="" for="inpSizeWy"> Высота </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWy" name="package_wy" pattern=“[0-9]+” required>
                             <label class="" for="sizeWy"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="" for="inpInternalSizeWz"> Глубина </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWz" name="package_iwz" pattern=“[0-9]+” required>
-                            <label class="" for="inpInternalSizeWz"> мм </label>
+                            <label class="" for="inpSizeWz"> Глубина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWz" name="package_wz" pattern=“[0-9]+” required>
+                            <label class="" for="inpSizeWz"> мм </label>
                         </div>
                     </div>
 
@@ -147,7 +147,7 @@
                         <div class="">
                             <label class="" for="inpVolume"> Объем = </label>
                             <label class="" type="text" id="inpVolume" name="package_value"> 0 </label>
-                            <label class="" for="inpVolume" id="inpVolumeUnit">  </label>
+                            <label class="" for="inpVolume" id="inpVolumeUnit"> мм&sup2 </label>
                         </div>
                     </div>
 
@@ -247,7 +247,6 @@
     <script src="settings.js?n=1"></script>
     <script src="package.js?n=1"></script>
     <script src="subblock.js?n=1"></script>
-    <script src="packageList.js?n=1"></script>
     <script src="main.js?n=1"></script>
 </body>
 

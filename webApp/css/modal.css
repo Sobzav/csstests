@@ -89,16 +89,16 @@ header.header-top__modal div {
     display: flex;
 }
 
-.bottom-block__buttons--modal {
+.right-block__buttons--modal {
     display: flex;
 }
 
-.bottom-block__buttons--modal {
+.right-block__buttons--modal {
     justify-content: flex-end;
 }
 
 /* Правая кнопка в блоке - убран правый margin */
-.bottom-block__buttons--modal button.button-right {
+.right-block__buttons--modal button.button-right {
     margin: 0 0 0 1.5rem;
 }
 

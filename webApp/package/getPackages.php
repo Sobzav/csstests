@@ -19,7 +19,10 @@ $query = "
         # package.payload,
         package.wx,
         package.wy,
-        package.wz
+        package.wz,
+        package.iwx,
+        package.iwy,
+        package.iwz
         # package.color,
         # package.created,
         # package.updated,
@@ -76,6 +79,9 @@ if ($result = $mySqli->query($query)) {
                 package.wx,
                 package.wy,
                 package.wz,
+                package.iwx,
+                package.iwy,
+                package.iwz,
                 package.color,
                 package.created,
                 package.updated,
@@ -97,8 +103,8 @@ if ($result = $mySqli->query($query)) {
             )
             WHERE place_prototype.package_id = $id
             ORDER BY
-                place_prototype.y,
-                place_prototype.x;
+                place_prototype.y * 1,
+                place_prototype.x * 1;
         ";
 
         // если внутренние элементы есть

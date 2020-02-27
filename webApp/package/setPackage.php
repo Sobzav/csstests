@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 // подключаем логгер
 @require_once '../plog.php';
 
+plog("");
 plog("|----------------------------------------------------------------|");
 plog("|                     setPackage.php                             |");
 
@@ -25,6 +26,9 @@ $package_payload = $_POST["package_payload"];
 $package_wx = $_POST["package_wx"];
 $package_wy = $_POST["package_wy"];
 $package_wz = $_POST["package_wz"];
+$package_iwx = $_POST["package_iwx"];
+$package_iwy = $_POST["package_iwy"];
+$package_iwz = $_POST["package_iwz"];
 $package_color = $_POST["package_color"];
 
 // сохраняем запрос UPDATE в строку
@@ -38,6 +42,9 @@ $query = "
         package.wx = $package_wx,
         package.wy = $package_wy,
         package.wz = $package_wz,
+        package.iwx = $package_iwx,
+        package.iwy = $package_iwy,
+        package.iwz = $package_iwz,
         package.color = '$package_color'
     WHERE
         package.id = $package_id;
@@ -48,7 +55,7 @@ $query = "
 
 // обнуляем счетчик и конитейнер ошибок
 $errCount = 0;
-$errDump = "\n";
+$errDump = " | ";
 
 // делаем запрос в БД
 // и запрос выполнен если успешно
@@ -59,17 +66,23 @@ if ($mySqli->query($query)) {
     require_once 'updatePlacePrototype.php';
 } else {
     $errCount ++;
-    $errDump .= $mySqli->error ."\n";
+    $errDump .= preg_replace("/[\r\n\']/m", "", $mySqli->error) . " | ";
     //echo "Error updating record: " . $mysqli->error;
 }    
 
 // количество и массив ошибок передаем вызвавшей форме
 
-$jsonText = "{\"errCount\": $errCount}";
+$jsonText = "{
+    \"errCount\": $errCount,
+    \"errDump\": \"$errDump\"
+}";
 
 echo json_encode($jsonText);
 
 // закрываем подключение
 $mySqli->close();
+
+plog("|                     setPackage.php                             |");
+plog("|----------------------------------------------------------------|");
 
 ?>

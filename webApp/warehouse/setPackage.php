@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 // подключаем логгер
 @require_once '../plog.php';
 
+plog("");
 plog("|----------------------------------------------------------------|");
 plog("|                     setPackage.php                             |");
 
@@ -71,5 +72,8 @@ echo json_encode($jsonText);
 
 // закрываем подключение
 $mySqli->close();
+
+plog("|                     setPackage.php                             |");
+plog("|----------------------------------------------------------------|");
 
 ?>

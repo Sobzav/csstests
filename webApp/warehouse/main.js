@@ -534,9 +534,10 @@ window.addEventListener("load", () => {
         
         // Создаем новый элемент
         var pack = new PackageContainerItem(
-            data,                   // данные элемента, получен из базы
-            settings,               // настройки элементов и внутренних элементов
-            canvas                  // canvas где будет отображен элемент
+            null,           // родительский контейнер
+            data,           // данные элемента, получен из базы
+            settings,       // настройки элементов и внутренних элементов
+            canvas          // canvas где будет отображен элемент
         );
 
         console.groupEnd();
@@ -937,18 +938,13 @@ window.addEventListener("load", () => {
             canvas.height = settings.canvasWy * 2;
             
             // загружаем элемент по id и все его внутренние элементы
-            pack.load(pack.id, settings, 
+            pack.load(settings,
 
                 // если элемент успешно загрузился
                 function(loadedPack) {
 
                     // запоминаем текущий элемент как ранее выбранный
                     prevousPack = selectedPack;
-    
-                    // Скрываем ранее выбранный элемент на <canvas>
-                    if (selectedPack) {
-                        selectedPack.hide();
-                    }
     
                     // Запоминаем выбранный элемент как текущий
                     selectedPack = loadedPack;

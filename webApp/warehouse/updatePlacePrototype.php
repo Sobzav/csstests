@@ -1,5 +1,6 @@
 <?php
 
+plog("");
 plog("|----------------------------------------------------------------|");
 plog("|                     updatePlacePrototype.php                   |");
 
@@ -223,4 +224,8 @@ function findItem(&$itemSet, $item) {
     // если ничего не найдено возвращаем false
     return false;
 }
+
+plog("|                     updatePlacePrototype.php                   |");
+plog("|----------------------------------------------------------------|");
+
 ?>

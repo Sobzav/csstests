@@ -41,7 +41,7 @@
                 </section>
 
                 <!-- Блок кнопок -->
-                <section class="bottom-block__buttons--modal">
+                <section class="right-block__buttons--modal">
 
                     <button class="button-right" id="btnOk_modal"> OK </button>
                     <button class="button-right" disabled="disabled" id="btnCancel_modal"> Cancel </button>

@@ -19,6 +19,7 @@ function log() {
 }
 
 
+
 // -------------------------------------------------------
 // Функция | Генерирует уникальный ID
 //
@@ -28,7 +29,8 @@ function generateId(len) {
     var arr = new Uint8Array((len || 7) / 2)
     window.crypto.getRandomValues(arr)
     return Array.from(arr, dec => ('0' + dec.toString(16)).substr(-2)).join('')
-  }
+}
+
 
 
 // -------------------------------------------------------
@@ -62,10 +64,12 @@ class PackageSimple {
     
     // -------------------------------------------------------
     // Метод | Создаем элемент
-    constructor(id = 0, canvas) {
+    constructor(parent, id = 0, canvas) {
         console.group("class PackageSimple.constructor { id: %i", id);
         
-        this.hashCode = generateId(7);
+        this._parent = parent;      // родительский контейнер
+
+        // this.hashCode = generateId(7);
         // технологические свойства элемента
         //
         this._id = id;
@@ -86,6 +90,8 @@ class PackageSimple {
         this._border = 0;           // толщина рамки в % от меньшего габарита viewBox
         this._mouseOverBorder = 20; // толщина рамки в % от меньшего габарита viewBox когда указатель мыши над элементом
         this._borderColor = "#000000";
+        this._iborder = 0;          // толщина рамки внутренних размеров в % от меньшего габарита viewBox
+        this._iBorderColor = "#000000"; // цвет рамки внутренних размеров
 
         this._showText = false;     // если true, то элемент показывает текст
         this._textColor = "#ffffff";    // цвет текста, белый по умолчанию
@@ -104,8 +110,12 @@ class PackageSimple {
         this._x = 0;                // координаты верхнего левого угла прямоугольника элемента
         this._y = 0;                // координаты верхнего левого угла прямоугольника элемента
 
-        this._wx = 0;               // размер вправо от левого верхнего угла с фронта
-        this._wy = 0;               // размер вниз от левого верхнего угла с фронта
+        this._wx = 0;               // наружний размер вправо от левого верхнего угла с фронта в положении эксплуатации
+        this._wy = 0;               // наружний размер вниз от левого верхнего угла с фронта в положении эксплуатации
+        this._wz = 0;               // наружний размер в глубину от левого верхнего угла с фронта в положении эксплуатации
+        this._iwx = 0;              // внутренний размер вправо от левого верхнего угла с фронта в положении эксплуатации
+        this._iwy = 0;              // внутренний размер вниз от левого верхнего угла с фронта в положении эксплуатации
+        this._iwy = 0;              // внутренний размер в глубину от левого верхнего угла с фронта в положении эксплуатации
 
         this._viewBox = {           // размер прямоугольника в который должен вписаться элемент при autoFit != 'none
             x: 0,
@@ -116,7 +126,7 @@ class PackageSimple {
         
         // расположение элемента в контейнере
         //  это соответствие пространственных осей элемента осям его контейнера
-        this.disposition = {
+        this._disposition = {
             x: 'x',
             y: 'y',
             wx: 'wx',
@@ -131,54 +141,60 @@ class PackageSimple {
         this._mouseOver = false;    // когда указатель мыши над элементом true
         this._selected = false;     // статуса ВЫБРАН / НЕ ВЫБРАН 
         this._changed = false;      // если true, то элемент был изменен
-        this._new = false;          // если true, то элемент новый и его нет в базе данных
+        this._new = true;           // если true, то элемент новый и его нет в базе данных
 
         console.groupEnd();
     }
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | id элемента в базе данных
     //
     set id(value) {this._id = value;}
 
     get id() {return this._id;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Обозначение элемента
     //
     set code(value) {this._code = value;}
 
     get code() {return this._code;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Нименование элемента
     //
     set name(value) {this._name = value;}
 
     get name() {return this._name;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Материал элемента
     //
     set material(value) {this._material = value;}
 
     get material() {return this._material;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Вес который может выдержать элемент, в граммах
     //
     set payload(value) {this._payload = value;}
 
     get payload() {return this._payload;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Элемент canvas на котором элемент себя рисует
     //
     set canvas(value) {
         this._canvas = value;
@@ -190,8 +206,9 @@ class PackageSimple {
     get canvas() {return this._canvas;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Цвет прямоугольника элемента в нормальном состоянии
     //
     set color(value) {
         this._color = value;
@@ -201,36 +218,59 @@ class PackageSimple {
     get color() {return this._color;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Рамка элемента когда указатель мыши на ним
     //
     set border(value) {this._border = value;}
 
     get border() {return this._border;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Цвет рамки
     //
     set borderColor(value) {this._borderColor = value;}
 
     get borderColor() {return this._borderColor;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Рамка внутренних размеров элемента
+    //
+    set iBorder(value) {this._iBorder = value;}
+
+    get iBorder() {return this._iBorder;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Цвет рамки внутренних размеров
+    //
+    set iBorderColor(value) {this._iBorderColor = value;}
+
+    get iBorderColor() {return this._iBorderColor;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Если true, элемент выводит текст
     //
     set showText(value) {this._showText = value;}
 
     get showText() {return this._showText;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Цвет текста
     //
     set textColor(value) {this._textColor = value;}
 
     get textColor() {return this._textColor;}
+
 
 
     // -------------------------------------------------------
@@ -241,101 +281,156 @@ class PackageSimple {
     get scale() {return this._scale;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Если true, то элемент впишет себя во viewBox
     //
     set autoFit(value) {
         this._autoFit = value;
-        this.setSize(this._wx, this._wy, this._wz, true);
+        this.autoScale();
     }
 
     get autoFit() {return this._autoFit;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Отступ цветного прямоугольбник от краев элемента
     //
     set padding(value) {this._padding = value;}
 
     get padding() {return this._padding;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Координата на canvas
     //
     set x(value) {
         this._x = value;
-        this.setSize(this._wx, this._wy, this._wz, true);
+        // this.setSize(this._wx, this._wy, this._wz, true);
     }
 
     get x() {return this._x;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Координата на canvas
     //
     set y(value) {
         this._y = value;
-        this.setSize(this._wx, this._wy, this._wz, true);
+        // this.setSize(this._wx, this._wy, this._wz, true);
     }
 
     get y() {return this._y;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Внутренний размер
     //
     set wx(value) {
-        this.setSize(value, this._wy, this._wz, true);
+        this.setSize(value, this._wy, this._wz);
     }
         
     get wx() {return this._wx;}
-        
+       
+    
         
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Внутренний размер
     //
     set wy(value) {
-        this.setSize(this._wx, value, this._wz, true);
+        this.setSize(this._wx, value, this._wz);
     }
     
     get wy() {return this._wy;}
     
+
     
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Внутренний размер
     //
     set wz(value) {
-        this.setSize(this._wx, this._wy, value, true);
+        this.setSize(this._wx, this._wy, value);
     }
 
     get wz() {return this._wz;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | Наружний размер
+    //
+    set iwx(value) {
+        this.setInternalSize(value, this._iwy, this._iwz);
+    }
+        
+    get iwx() {return this._iwx;}
+        
+
+        
+    // -------------------------------------------------------
+    // Свойство | Наружний размер
+    //
+    set iwy(value) {
+        this.setInternalSize(this._iwx, value, this._iwz);
+    }
+    
+    get iwy() {return this._iwy;}
+    
+
+    
+    // -------------------------------------------------------
+    // Свойство | Наружний размер
+    //
+    set iwz(value) {
+        this.setInternalSize(this._iwx, this._iwy, value);
+    }
+
+    get iwz() {return this._iwz;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Прямоугольник в котором элемент рисует себя
     //
     set viewBox(value) {
         this._viewBox = value;
-        this.setSize(this._wx, this._wy, this._wz, true);
+        if (this._autoFit == 'contain') {this.autoScale();}
     }
 
     get viewBox() {return this._viewBox;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Соответствие координат и размеров элемента 
+    //            координатам и размерам отображения
+    //
+    set disposition(value) {
+        this._disposition = value;
+        if (this._autoFit == 'contain') {this.autoScale();}
+    }
+
+    get disposition() {return this._disposition;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Определяет реагирует ли элемент на указатель мыши
     //
     set active(value) {
         this._active = value;
-        // this.draw();
     }
 
     get active() {return this._active;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Определяет выбран ли элемент пользователем
     //
     set selected(value) {
         this._selected = value;
@@ -345,34 +440,56 @@ class PackageSimple {
     get selected() {return this._selected;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Если true, то элемент был изменен и не сохранен
     //
     set changed(value) {this._changed = value;}
 
     get changed() {return this._changed;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | 
+    // Свойство | Если true, то элемента еще нет в базе данных
     //
     set new(value) {this._new = value;}
 
     get new() {return this._new;}
 
 
-    // -------------------------------------------------------
-    // Метод | Изменение размеров элемента
-    //
-    setSize(
-        wx = 0, // размер элемента по горизонтали по оси y
-        wy = 0, // размер элемента по горизонтали по оси x
-        wz = 0,   // высота элемента
-        force = false) {
 
-        // console.groupCollapsed("class PackageContainerItem.setSize { id=%o; wx=%o; wy=%o; wh=%o; force=%o", this._id, wx, wy, wz, force);
-        
-        // если размеры элемента изменились
+    // -------------------------------------------------------
+    // Метод | Расчет масштаба отображения элемента
+    //
+    autoScale() {
+        // console.groupCollapsed("class PackageContainerItem.updateScale { );
+
+        if (this._autoFit == 'contain') {
+            
+            var wx = parseFloat(this['_' + this._disposition.wx]);
+            var wy = parseFloat(this['_' + this._disposition.wy]);
+
+            this._xScale = wx / this._viewBox.wx;
+            this._yScale = wy / this._viewBox.wy;
+    
+            this._scale = Math.max(this._xScale, this._yScale);
+    
+            this._x = (this._viewBox.wx * this._scale - wx) / 2;
+            this._y = (this._viewBox.wy * this._scale - wy) / 2;
+        }
+
+        // console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Изменение внешних размеров элемента
+    //
+    setSize(wx = 0, wy = 0, wz = 0, force = false) {
+
+        // если размеры элемента изменились или forse = true
         if ((this._wx != wx) || (this._wy != wy) || (this._wz != wz) || force) {
 
             // сохраняем новые значения размеров
@@ -380,70 +497,66 @@ class PackageSimple {
             this._wy = wy;
             this._wz = wz;
          
-            // Определяем поведение autoFit 
-            switch (this._autoFit) {
-
-                // если autoFit = 'contain' то подгоняем масштаб что бы вписать элемент в контейнер не изменяя пропорции
-                case 'contain':
-                    // console.log("autoFit : contain");
-
-                    this._xScale = this._wx / this._viewBox.wx;
-                    this._yScale = this._wy / this._viewBox.wy;
-
-                    this._scale = Math.max(this._xScale, this._yScale);
-
-                    this._x = (this._viewBox.wx * this._scale - this._wx) / 2;
-                    this._y = (this._viewBox.wy * this._scale - this._wy) / 2;
-
-                    // console.log("viewBox: %o", this._viewBox);
-                    // console.log("_xScale=" + this._xScale + " _yScale=" + this._yScale);
-                    
-                    // console.log("_scale=" + this._scale);
-                    // console.log("_x=" + this._x  + " _y=" + this._y);
-                    break;
-
-                // если autoFit = 'none' то не меняем масштаб вписывае
-                case 'none':
-
-                    // console.log("autoFit : none");
-                    break;
-            }
+            // если autoFit = 'contain' то подгоняем масштаб что бы вписать элемент в контейнер не изменяя пропорции
+            if (this._autoFit == 'contain') {this.autoScale();}
         }
-        // console.groupEnd();
     }
 
+
     
-    // Стираем ячейку на <canvas>
+    // -------------------------------------------------------
+    // Метод | Изменение внутренних размеров элемента
+    //
+    setInternalSize(wx = 0, wy = 0, wz = 0, force = false) {
+
+        // если размеры элемента изменились или forse = true
+        if ((this._iwx != wx) || (this._iwy != wy) || (this._iwz != wz) || force) {
+
+            // сохраняем новые значения размеров
+            this._iwx = wx;
+            this._iwy = wy;
+            this._iwz = wz;
+        }
+    }
+
+
+    
+    // -------------------------------------------------------
+    // Метод | Стирает элемент на <canvas>
+    //         Если clearCanvas = true, то элемент очистит весь canvas
+    //
     clear(clearCanvas) {
+
+        var x, y, wx, wy;
 
         // если надо очистить всю область canvas
         if (clearCanvas) {
 
-            this._ctx.clearRect(0, 0, canvas.width, canvas.height);
+            x = 0;
+            y = 0;
+            wx = this._canvas.width;
+            wy = this._canvas.height;
         } else {
-            var _x = this.disposition.x;
-            var _y = this.disposition.y;
-            var _wx = this.disposition.wx;
-            var _wy = this.disposition.wy;
-            var _wz = this.disposition.wz;
 
-            var x = this[_x];
-            var y = this[_y];
-            var wx = this[_wx];
-            var wy = this[_wy];
-            var wz = this[_wz];
-    
-            this._ctx.save();
-            this._ctx.scale(1/this._scale, 1/this._scale);
-    
-            this._ctx.clearRect(this._viewBox.x + x, this._viewBox.y + y, wx, wy);
-    
-            this._ctx.restore();
+            x = this._viewBox.x + this['_' + this._disposition.x];
+            y = this._viewBox.y + this['_' + this._disposition.y];
+            wx = this['_' + this._disposition.wx];
+            wy = this['_' + this._disposition.wy];
         }
+
+        this._ctx.save();
+        this._ctx.scale(1/this._scale, 1/this._scale);
+
+        this._ctx.clearRect(x, y, wx, wy);
+
+        this._ctx.restore();
     }
 
 
-    // делаем элемент не видимым
+
+    // -------------------------------------------------------
+    // Метод | Делает элемент невидимым
+    //
     hide() {
         if (!this._hidden) {
 
@@ -455,7 +568,10 @@ class PackageSimple {
     }
 
 
-    // делаем элемент видимым
+
+    // -------------------------------------------------------
+    // Метод | Делает элемент видимым
+    //
     show() {
         this._hidden = false;
         
@@ -463,23 +579,32 @@ class PackageSimple {
         this.draw();
     }
     
+
     
+    // -------------------------------------------------------
     // Метод | Рисуем рамку если есть ._border > 0
     //         Закрашиваем прямоугольник на 
     //         Графику выводлим на ._canvas.context
     //         Пишем текст если эелемент активный ._active = true
     //         
-    drawCube(x, y, wx, wy, wz, selected, ctx, scale, text) {
+    drawCube(x, y, wx, wy, iwx, iwy, selected, ctx, scale, text) {
 
         var color = selected ? this._selectedColor : this._color;
         var borderColor = this._mouseOver ? this._mouseOverColor : this._borderColor;
         var border = this._mouseOver ? scale * this._mouseOverBorder / 10 : scale * this._border / 10;
+        var iBorderColor = this._iBorderColor;
+        var iBorder = scale * this._iBorder / 10;
         var padding = scale * this._padding / 10;
 
         var _x = this._viewBox.x + x + padding;
         var _y = this._viewBox.y + y + padding;
         var _wx = wx - padding * 2;
         var _wy = wy - padding * 2;
+
+        var _ix = this._viewBox.x + x + (wx - iwx) / 2;
+        var _iy = this._viewBox.y + y + (wy - iwy) / 2;
+        var _iwx = iwx;
+        var _iwy = iwy;
 
         ctx.save();
         ctx.scale(1/scale, 1/scale);
@@ -506,6 +631,19 @@ class PackageSimple {
             );
         }
 
+        // рисуем рамку внутренних размеров
+        if (iBorder > 0) {
+            ctx.lineWidth = iBorder;
+            ctx.strokeStyle = iBorderColor;
+
+            ctx.strokeRect(
+                _ix + iBorder,
+                _iy + iBorder,
+                _iwx - iBorder * 2,
+                _iwy - iBorder * 2
+            );
+        }
+
         // показываем текст
         if (this._showText) {
 
@@ -518,31 +656,36 @@ class PackageSimple {
     }
 
 
-    // Рисуем ячйку на <canvas>
+
+    // -------------------------------------------------------
+    // Метод | Вызывает метод рисования прямоугольника с нужными параметрами
+    //
     draw() {
-
         if (!this._hidden) {
-
             // console.log("class PackageSimple.draw{ id=" + this._id);
 
-            // this.ctx.fillRect(this.x, this.y, this.width, this.height);
-            window.requestAnimationFrame(() => this.drawCube(
-                this[this.disposition.x],
-                this[this.disposition.y],
-                this[this.disposition.wx],
-                this[this.disposition.wy],
-                this[this.disposition.wz],
+            this.drawCube(
+            // window.requestAnimationFrame(() => this.drawCube(
+                this['_' + this._disposition.x],
+                this['_' + this._disposition.y],
+                this['_' + this._disposition.wx],
+                this['_' + this._disposition.wy],
+                this['_i' + this._disposition.wx],
+                this['_i' + this._disposition.wy],
                 this.selected,
                 this._ctx,
                 this._scale,
                 this._code
-            ));
+            );
             // console.log("class PackageSimple.draw }");
         }
     }
 
 
-    // перерисуем ячейку на <canvas>
+
+    // -------------------------------------------------------
+    // Метод | Перерисовывает ячейку на <canvas>
+    //
     reDraw() {
         if (!this._hidden) {
 
@@ -594,11 +737,11 @@ class PackageContainerItem extends PackageSimple {
     //                  deleted: null
     //              }
     //
-    constructor(data, settings, canvas) {
+    constructor(parent, data, settings, canvas) {
         console.groupCollapsed("class PackageContainerItem.constructor { data: %i", data.id);
 
         // вызов конструктора родителя
-        super(data.id, canvas);
+        super(parent, data.id, canvas);
 
         // массив внутренних элементов
         this.item = [];
@@ -615,18 +758,20 @@ class PackageContainerItem extends PackageSimple {
     }
 
 
+
     // -------------------------------------------------------
     // Свойство | 
     //
     set color(value) {
         if (this._color != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear();}
             super.color = value;
-            if (!this._hidden) {this.draw();}
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get color() {return this._color;}
+
 
 
     // -------------------------------------------------------
@@ -634,13 +779,14 @@ class PackageContainerItem extends PackageSimple {
     //
     set border(value) {
         if (this._border != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear();}
             super.border = value;
-            if (!this._hidden) {this.draw();}
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get border() {return this._border;}
+
 
 
     // -------------------------------------------------------
@@ -648,13 +794,44 @@ class PackageContainerItem extends PackageSimple {
     //
     set borderColor(value) {
         if (this._borderColor != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear();}
             super.borderColor = value;
-            if (!this._hidden) {this.draw();}
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get borderColor() {return this._borderColor;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | 
+    //
+    set iBorder(value) {
+        if (this._iBorder != value) {
+            if (!this._hidden && !this._parent) {this.clear();}
+            super.iBorder = value;
+            if (!this._hidden && !this._parent) {this.draw();}
+        }
+    }
+
+    get iBorder() {return this._iBorder;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | 
+    //
+    set iBorderColor(value) {
+        if (this._iBorderColor != value) {
+            if (!this._hidden && !this._parent) {this.clear();}
+            super.iBorderColor = value;
+            if (!this._hidden && !this._parent) {this.draw();}
+        }
+    }
+
+    get iBorderColor() {return this._iBorderColor;}
+
 
 
     // -------------------------------------------------------
@@ -664,7 +841,7 @@ class PackageContainerItem extends PackageSimple {
 
         if (this._scale != value) {
 
-            if (!this._hidden) {this.clear(true);}
+            if (!this._hidden && !this._parent) {this.clear(true);}
 
             // обновляем масштаб элемента
             super.scale = value;
@@ -674,11 +851,12 @@ class PackageContainerItem extends PackageSimple {
                 subItem.scale = this._scale;
             });
 
-            if (!this._hidden) {this.draw();}
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get scale() {return this._scale;}
+
 
 
     // -------------------------------------------------------
@@ -688,24 +866,25 @@ class PackageContainerItem extends PackageSimple {
 
         if (this._autoFit != value) {
 
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear();}
 
             // обновляем autoFit элемента
             super.autoFit = value;
     
             // обновляем viewBox внутренних элементов
-            this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+            this.setItemsViewBox();
     
             // обновляем масштаб внутренних элементов
             this.item.forEach( subItem => {
                 subItem.scale = this._scale;
             });
 
-            if (!this._hidden) {this.draw();}
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get autoFit() {return this._autoFit;}
+
 
     
     // -------------------------------------------------------
@@ -713,13 +892,14 @@ class PackageContainerItem extends PackageSimple {
     //
     set padding(value) {
         if (this._padding != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear();}
             super.padding = value;
-            if (!this._hidden) {this.draw();}
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get padding() {return this._padding;}
+
 
 
     // -------------------------------------------------------
@@ -727,14 +907,15 @@ class PackageContainerItem extends PackageSimple {
     //
     set x(value) {
         if (this._x != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear(true);}
             super.x = value;
-            this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
-            if (!this._hidden) {this.draw();}
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get x() {return this._x;}
+
 
 
     // -------------------------------------------------------
@@ -742,14 +923,15 @@ class PackageContainerItem extends PackageSimple {
     //
     set y(value) {
         if (this._y != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear(true);}
             super.y = value;
-            this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
-            if (!this._hidden) {this.draw();}
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get y() {return this._y;}
+
 
 
     // -------------------------------------------------------
@@ -757,138 +939,295 @@ class PackageContainerItem extends PackageSimple {
     //
     set wx(value) {
         if (this._wx != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear(true);}
             super.wx = value;
-            this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
-            if (!this._hidden) {this.draw();}
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
         
     get wx() {return this._wx;}
         
         
+
     // -------------------------------------------------------
     // Свойство | 
     //
     set wy(value) {
         if (this._wy != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear(true);}
             super.wy = value;
-            this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
-            if (!this._hidden) {this.draw();}
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
     
     get wy() {return this._wy;}
     
+
     
     // -------------------------------------------------------
     // Свойство | 
     //
     set wz(value) {
         if (this._wz != value) {
-            if (!this._hidden) {this.clear();}
+            if (!this._hidden && !this._parent) {this.clear(true);}
             super.wz = value;
-            this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
-            if (!this._hidden) {this.draw();}
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
         }
     }
 
     get wz() {return this._wz;}
 
 
+
     // -------------------------------------------------------
-    // Свойство | масштаб отображения MAX(wx/dispW, wy/dispH) мм/px
+    // Свойство | 
+    //
+    set iwx(value) {
+        if (this._iwx != value) {
+            if (!this._hidden && !this._parent) {this.clear(true);}
+            super.iwx = value;
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
+        }
+    }
+        
+    get iwx() {return this._iwx;}
+        
+
+        
+    // -------------------------------------------------------
+    // Свойство | 
+    //
+    set iwy(value) {
+        if (this._iwy != value) {
+            if (!this._hidden && !this._parent) {this.clear(true);}
+            super.iwy = value;
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
+        }
+    }
+    
+    get iwy() {return this._iwy;}
+    
+    
+
+    // -------------------------------------------------------
+    // Свойство | 
+    //
+    set iwz(value) {
+        if (this._iwz != value) {
+            if (!this._hidden && !this._parent) {this.clear(true);}
+            super.iwz = value;
+            this.setItemsViewBox();
+            if (!this._hidden && !this._parent) {this.draw();}
+        }
+    }
+
+    get iwz() {return this._iwz;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Прямоугольник в котором элемент будет отображен
     //
     set viewBox(value) {
 
-        if (!this._hidden) {this.clear();}
+        if (!this._hidden && !this._parent) {this.clear();}
 
         // обновляем viewBox элемента
         super.viewBox = value;
 
         // обновляем viewBox внутренних элементов
-        this.setItemsViewBox(this._viewBox.x + this._x, this._viewBox.y + this._y, this._wx, this._wy);
+        this.setItemsViewBox();
 
-        if (!this._hidden) {this.draw();}
+        if (!this._hidden && !this._parent) {this.draw();}
     }
 
     get viewBox() {return this._viewBox;}
 
 
+
+    // -------------------------------------------------------
+    // Свойство | Расположение элемента в контейнере
+    //
+    set disposition(value) {
+
+        if (!this._hidden && !this._parent) {this.clear(true);}
+
+        // обновляем viewBox элемента
+        super.disposition = value;
+        
+        var scale = this._scale;
+
+        // обновляем viewBox внутренних элементов
+        this.setItemsViewBox();
+
+        // обновляем disposition внутренних элементов
+        this.item.forEach( subItem => {
+            subItem.disposition = value;
+            subItem.scale = scale;
+        });        
+        
+        if (!this._hidden && !this._parent) {this.draw();}
+    }
+
+    get disposition() {return this._disposition;}
+
+
+
     // -------------------------------------------------------
     // Метод | Обновляет viewBox внутренних элементов
     //
-    setItemsViewBox(x, y, wx, wy) {
-        if (!this._hidden) {this.clear();}
+    setItemsViewBox() {
+        // if (!this._hidden) {this.clear();}
         this.item.forEach( subItem => {
-            var viewBox = {x, y, wx, wy};
-            viewBox.x = x;
-            viewBox.y = y;
-            viewBox.wx = wx;
-            viewBox.wy = wy;
-            subItem.viewBox = viewBox;
+            subItem.viewBox = {
+                x: this._viewBox.x + this._x,
+                y: this._viewBox.y + this._y,
+                wx: this['_' + this.disposition.wx],
+                wy: this['_' + this.disposition.wy]
+            }
         });
-        if (!this._hidden) {this.draw();}
+        // if (!this._hidden) {this.draw();}
     }
 
 
-// -------------------------------------------------------
-// Метод | Запрос серверу в формате ajax
-//           type = "POST" / "GET"
-//           url = "fileName.php"
-//           dataType = "json"
-//           возвращает данные в формате json в случае успеха
-//           либо false в случае ошибки
-//
-requestToServer(item, type, url, dataType, data, successFunction, errorFunction) {
-    console.group("pack.requestToServer { url = %o ", url);
 
-    console.time();
+    // -------------------------------------------------------
+    // Метод | Запрос серверу в формате ajax
+    //           type = "POST" / "GET"
+    //           url = "fileName.php"
+    //           dataType = "json"
+    //           возвращает данные в формате json в случае успеха
+    //           либо false в случае ошибки
+    //
+    requestToServer(target, type, url, dataType, data, successFunction, errorFunction, caller) {
+        console.group("pack.requestToServer { url = %o ", url);
 
-    // отправляем запрос серверу
-    $.ajax({
-        type: type,
-        url: url,
-        dataType: dataType,
-        data,
+        console.time();
+        console.log('data: %o', data);
 
-        // получаем ответ в случае успеха
-        success: function(jsonResponce, textStatus, jqXHR) {
+        // отправляем запрос серверу
+        $.ajax({
+            type: type,
+            url: url,
+            dataType: dataType,
+            data,
 
-            // console.log('data: %o', jsonResponce);
-            // console.log('textStatus: ' + textStatus);
-            console.timeEnd();
-            // console.log('jqXHR: %o', jqXHR);
+            // получаем ответ в случае успеха
+            success: function(jsonResponce, textStatus, jqXHR) {
 
-            // возвращаем ответ сервера
-            successFunction(item, jsonResponce);
-        },
+                console.log('jsonResponce: %o', jsonResponce);
+                // console.log('textStatus: ' + textStatus);
+                console.timeEnd();
+                // console.log('jqXHR: %o', jqXHR);
 
-        // получаем ответ в случае ошибок
-        error: function(XMLHttpRequest, textStatus, jqXHR) {
+                // возвращаем ответ сервера
+                successFunction(target, jsonResponce, caller);
+            },
 
-            console.warn('textStatus: ' + textStatus);
-            console.timeEnd();
-            console.warn('jqXHR: %o', jqXHR);
-            
-            // возвращаем ошибку
-            errorFunction(XMLHttpRequest);
-        }
-    });
-    console.groupEnd();
-}
+            // получаем ответ в случае ошибок
+            error: function(XMLHttpRequest, textStatus, jqXHR) {
+
+                console.warn('textStatus: ' + textStatus);
+                console.timeEnd();
+                console.warn('jqXHR: %o', jqXHR);
+                
+                // возвращаем ошибку
+                errorFunction(XMLHttpRequest, textStatus);
+            }
+        });
+        console.groupEnd();
+    }
 
 
-// -------------------------------------------------------
+
+    // -------------------------------------------------------
+    // Метод |  Сохраняет элемент pack в базу данных
+    //         если объект новый то выполняет INSERT
+    //         Затем добавляет новый элемент в массив packs и в список <select>
+    //         иначе оновляет объект в базе запросом UPDATE
+    //
+    save(successFunction, errorFunction) {
+        console.group('class PackageContainerItem.save { pack: %o', this);
+
+            // Формируем данные для отправки на сервер
+            var url = "setPackage.php";
+            var subItems = [];
+            this.item.forEach( item => {
+                subItems.push({
+                    'sub_package_id': item.id,
+                    'x': item.x,
+                    'y': item.y
+                });
+            });
+
+            // элемент новый
+            if (this._new) {
+                
+                url = "addPackage.php";
+            }
+
+            // отправляем запрос серверу POST (UPDATE)
+            this.requestToServer(this, 'POST', url, 'json',
+                { 
+                    "package_id": this._id,
+                    "package_code": this._code,
+                    "package_name": this._name,
+                    "package_payload": this._payload,
+                    "package_wx": this._wx,
+                    "package_wy": this._wy,
+                    "package_wz": this._wz,
+                    "package_iwx": this._iwx,
+                    "package_iwy": this._iwy,
+                    "package_iwz": this._iwz,
+                    "package_color": this._color.replace("#", ""),
+                    "item": subItems.length > 0 ? subItems : null
+                },
+
+                // если успешно и сервер вернул данные
+                function(target, jsonResponce) {
+        
+                    // ответ сервера
+                    var result = JSON.parse(jsonResponce);
+
+                    //если элемент новый
+                    if (target._new) {
+
+                        // обновляем id элемента
+                        target._id = result.package_id;
+
+                        // снимаем статус "new"
+                        target._new = false;
+                    }
+                    // помечаем что элемент сохранен
+                    target._changed = false;
+
+                    successFunction(target, result);
+                },
+                // если запрос серверу вернул ошибку
+                function(XMLHttpRequest, textStatus) {
+                    
+                    errorFunction(XMLHttpRequest, textStatus);
+                }
+            );   
+        console.groupEnd();
+    }
+    
+    
+    
+    // -------------------------------------------------------
     // Функция | Загрузка элемента pack из базы данных в selectedPack по заданному id
     //
-    load(item, id, settings, successFunction, errorFunction) {
-        console.group("class PackageContainerItem.load { pack: %o from id: %o", this, id);
+    load(settings, successFunction, errorFunction, caller) {
+        console.group("class PackageContainerItem.load { pack: %o from id: %o", this, this._id);
 
         // формируем данные для отправки на сервер
         var data = {
-            "package_id": id,           // идентификатор загружаемого элемеента
+            "package_id": this._id,     // идентификатор загружаемого элемеента
             "depth": settings.depth     // глубина чтения внутренних элементов (0 - загружается без внутренних элементов)
         };
 
@@ -896,26 +1235,34 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         this.requestToServer(this, 'POST', 'getPackage.php', 'json', data,
 
             // если успешно и сервер вернул данные
-            function(self, jsonResponce) {
+            function(target, jsonResponce) {
                     
                 // в ответе сервера одна запись, 
                 // содержит всю информацию одного элемента 
                 var row = jsonResponce[0];
 
                 // Заполняем все свойства элемента из ответа сервера
-                self.setData(row, settings);
+                target.setData(row, settings);
 
-                successFunction(item, self);
+                // убираем статус "изменен", так как элемент существует в базе данных
+                target._changed = false;
+
+                // убираем статус "новый", так как элемент существует в базе данных
+                target._new = false;
+
+                successFunction(target, caller);
             },
             
             // если запрос серверу вернул ошибку
-            function(XMLHttpRequest) {
+            function(XMLHttpRequest, textStatus) {
                 
                 errorFunction(XMLHttpRequest, textStatus);
-            }
+            },
+            caller      // вызывающий объект
         );   
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -925,32 +1272,40 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         console.group("class PackageContainerItem.setData { this: %o", this);
         
         // this.setData(data, settings);
-        this.code        = data.code        ? data.code         : "";
-        this.name        = data.name        ? data.name         : "";
-        this.payload     = data.payload     ? parseInt(data.payload) : 0;   // грузоподъемность в граммах
-        this.color       = data.color       ? "#" + data.color  : "#000000";   // цвет элемента из базы
-        this.padding     = settings.padding ? settings.padding  : 0;
-        this.border      = settings.border  ? settings.border   : 0;
-        this.borderColor = settings.borderColor ? settings.borderColor  : 0;
-        this.showText    = settings.showText    ? settings.showText     : 0;
-        this.textColor   = settings.textColor   ? settings.textColor    : 0;
-        this.disposition = settings.disposition ? settings.disposition  : {x: 'x', y: 'y', wx: 'wx', wy: 'wy', wz: 'wz'};
-        this.viewBox     = {x: 0, y: 0, wx: this._canvas.width, wy: this._canvas.height},
-        this.active      = settings.active      ? settings.active       : false;
-        this.autoFit     = settings.autoFit     ? settings.autoFit      : 'none';
+        this.code         = data.code        ? data.code         : "";
+        this.name         = data.name        ? data.name         : "";
+        this.payload      = data.payload     ? parseInt(data.payload) : 0;   // грузоподъемность в граммах
+        this.color        = data.color       ? (data.color[0] == "#" ? "" : "#") + data.color  : "#000000";   // цвет элемента из базы
+        this.padding      = settings.padding ? settings.padding  : 0;
+        this.border       = settings.border  ? settings.border   : 0;
+        this.borderColor  = settings.borderColor  ? settings.borderColor  : 0;
+        this.iBorder      = settings.iBorder      ? settings.iBorder      : 0;
+        this.iBorderColor = settings.iBorderColor ? settings.iBorderColor : "#000000";
+        this.showText     = settings.showText     ? settings.showText     : 0;
+        this.textColor    = settings.textColor    ? settings.textColor    : 0;
+        this.disposition  = settings.disposition  ? settings.disposition  : {x: 'x', y: 'y', wx: 'wx', wy: 'wy', wz: 'wz'};
+        this.viewBox      = {x: 0, y: 0, wx: this._canvas.width, wy: this._canvas.height},
+        this.active       = settings.active       ? settings.active       : false;
+        this.x            = data.x ? parseFloat(data.x) : 0;     // если в data есть координата, то беерем ее, иначе берем 0 
+        this.y            = data.y ? parseFloat(data.y) : 0;     // если в data есть координата, то беерем ее, иначе берем 0
         this.setSize(
-            parseInt(data.wx),      // размеры элемента из базы
-            parseInt(data.wy),      // размеры элемента из базы
-            parseInt(data.wz)       // размеры элемента из базы
+            parseInt(data.wx ? data.wx : 0),      // размеры элемента из базы
+            parseInt(data.wy ? data.wy : 0),      // размеры элемента из базы
+            parseInt(data.wz ? data.wz : 0)       // размеры элемента из базы
         );               
-        this.x           = data.x ? parseFloat(data.x) : 0;     // если в data есть координата, то беерем ее, иначе берем 0 
-        this.y           = data.y ? parseFloat(data.y) : 0;     // если в data есть координата, то беерем ее, иначе берем 0
+        this.setInternalSize(
+            parseInt(data.iwx ? data.iwx : 0),      // размеры элемента из базы
+            parseInt(data.iwy ? data.iwy : 0),      // размеры элемента из базы
+            parseInt(data.iwz ? data.iwz : 0)       // размеры элемента из базы
+        );               
+        this.autoFit     = settings.autoFit     ? settings.autoFit      : 'none';
 
         // создаем внутренние элементы
         this.createItems(data.item, settings.item);
 
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -969,7 +1324,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
                 console.log("sub item: %o }", sub);
 
                 // создаем новый внутренний элемент
-                var item = new PackageContainerItem(sub, settings, canvas);
+                var item = new PackageContainerItem(this, sub, settings, canvas);
                 console.log("settings: %o }", settings);
 
                 // сообщаем новому элементу область, где он будет размещен
@@ -988,6 +1343,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     }
 
 
+
     // -------------------------------------------------------
     // Метод | Удаляет все внутренние элементы
     //
@@ -1002,6 +1358,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
 
         console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -1019,13 +1376,14 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         // console.groupEnd();
     }
 
+
     
     // -------------------------------------------------------
     // Метод | Коннтейнер рисует себя и внутренние прямоугольники
     //
     draw() {
         if (!this._hidden) {
-            console.groupCollapsed("class PackageContainerItem.draw { item: %o", this);
+            // console.groupCollapsed("class PackageContainerItem.draw { item: %o", this);
 
             // рисуем элемент
             super.draw();
@@ -1034,9 +1392,10 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
             this.item.forEach( subItem => {
                 subItem.draw();
             });
-            console.groupEnd();
+            // console.groupEnd();
         }
     }
+
 
 
     // -------------------------------------------------------
@@ -1053,6 +1412,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     }
 
 
+
     // -------------------------------------------------------
     // Метод | Перерисуем все внутренние элементы
     //
@@ -1067,6 +1427,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         }
         // console.groupEnd();
     }
+
 
 
     // -------------------------------------------------------
@@ -1088,6 +1449,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     }
 
 
+
     // -------------------------------------------------------
     // Метод | Делаем элемент видимым
     //
@@ -1095,6 +1457,11 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         // console.groupCollapsed("class PackageContainerItem.show {");
         if (this._hidden) {
             
+            if (!this._parent) {
+                
+                this.clear(true);
+            }
+
             // рисуем элемент
             super.show();
 
@@ -1107,6 +1474,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
     }
     
 
+
     // -------------------------------------------------------
     // Слот | Обрабатываем перемещение указателя мыши
     //
@@ -1115,14 +1483,10 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         // console.group("class PackageContainerItem.mouseInRect { id: %i; code: %s", this._id, this._code);    
 
         // приводим координаты к плоскости настроенной в .disposition
-        // var x0 = this._viewBox.x;
-        // var y0 = this._viewBox.y;
-        var x = this['_' + this.disposition.x];
-        var y = this['_' + this.disposition.y];
-        var z = this['_' + this.disposition.z];
-        var wx = this['_' + this.disposition.wx];
-        var wy = this['_' + this.disposition.wy];
-        var wz = this['_' + this.disposition.wz];
+        var x = this['_' + this._disposition.x];
+        var y = this['_' + this._disposition.y];
+        var wx = this['_' + this._disposition.wx];
+        var wy = this['_' + this._disposition.wy];
 
         var dpi = this._canvas.width / parseInt(this._canvas.style.width);
         // приводим координаты мыши в клиентской области <canvas>
@@ -1138,15 +1502,11 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         
         // проверяем попадание курсора в ячейку
         var mouseInRect = xClickInside && yClickInside;
-        if (mouseInRect) {
-            // console.log("mouse inside");    
-            // console.log("mouse: [%.2f; %.2f]  [x0: %.2f y0: %.2f]  [x: %.2f y: %.2f z: %.2f]  [wx: %.2f wy: %.2f wz: %.2f]", _mouseX, _mouseY, x0, y0, x, y, z, wx, wy, wz);    
-            // console.log("canvas: [%.2f; %.2f]  canvas.style[%i; %i]", this._canvas.width, this._canvas.height);
-        } else {
-            // console.log("click outside");    
-        }
+
         return mouseInRect
     }
+
+
 
     // -------------------------------------------------------
     // Слот | Обрабатываем перемещение указателя мыши
@@ -1190,6 +1550,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         // console.groupEnd();    
     }
     
+
     
     // -------------------------------------------------------
     // Слот | Обрабатываем клик мышью
@@ -1237,6 +1598,7 @@ requestToServer(item, type, url, dataType, data, successFunction, errorFunction)
         }
         // console.groupEnd();    
     }
+
 
 
     // -------------------------------------------------------

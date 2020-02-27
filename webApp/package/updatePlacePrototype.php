@@ -1,5 +1,6 @@
 <?php
 
+plog("");
 plog("|----------------------------------------------------------------|");
 plog("|                     updatePlacePrototype.php                   |");
 
@@ -38,8 +39,8 @@ if (array_key_exists('item', $_POST)) {
                 place_prototype
             WHERE package_id = $package_id
             ORDER BY
-                place_prototype.y,
-                place_prototype.x;
+                place_prototype.y * 1,
+                place_prototype.x * 1;
         ";
     
         // делаем запрос SELECT в БД
@@ -92,8 +93,8 @@ if (array_key_exists('item', $_POST)) {
                                 place_prototype.sub_package_id = $item_sub_package_id
                             WHERE
                                 place_prototype.package_id = $package_id AND
-                                place_prototype.y = $item_y AND
-                                place_prototype.x = $item_x
+                                place_prototype.y LIKE $item_y AND
+                                place_prototype.x LIKE $item_x
                             ;
                         ";
                         plog("query: $query");
@@ -158,8 +159,8 @@ if (array_key_exists('item', $_POST)) {
                                 WHERE
                                     place_prototype.package_id = $package_id AND
                                     place_prototype.sub_package_id = $item_sub_package_id AND
-                                    place_prototype.y = $item_y AND
-                                    place_prototype.x = $item_x
+                                    place_prototype.y LIKE $item_y AND
+                                    place_prototype.x LIKE $item_x
                                 ;
                             ";
                             plog("query: $query");
@@ -185,7 +186,28 @@ if (array_key_exists('item', $_POST)) {
             $errDump .= $mySqli->error ."\n";    
             plog("Server reply error: $errDump");
         }
-    }    
+    } else {
+        $query = " 
+            DELETE FROM
+                place_prototype 
+            WHERE
+                place_prototype.package_id = $package_id
+            ;
+        ";
+        plog("query: $query");
+
+        // делаем запрос в БД
+        if ($mySqli->query($query)) {
+            // echo "Record updated successfully";
+            // $package_id = $mySqli->insert_id;
+        } else {
+            $errCount ++;
+            $errDump .= $mySqli->error ."\n";
+            plog("Server reply error: $errDump");
+            //echo "Error updating record: " . $mysqli->error;
+        }    
+
+    }
 }
 
 
@@ -223,4 +245,8 @@ function findItem(&$itemSet, $item) {
     // если ничего не найдено возвращаем false
     return false;
 }
+
+plog("|                     updatePlacePrototype.php                   |");
+plog("|----------------------------------------------------------------|");
+
 ?>
