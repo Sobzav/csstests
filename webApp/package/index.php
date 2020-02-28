@@ -7,7 +7,31 @@
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
+    <script>
+        /* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+        }
+
+        function filterFunction() {
+            var input, filter, ul, li, a, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+                txtValue = a[i].textContent || a[i].innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    a[i].style.display = "";
+                } else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+    </script>
     <title> Упаковка </title>
+
 </head>
 
 <body class="">
@@ -27,19 +51,36 @@
             <!-- Выпадающий список элементов -->
             <div class="wide-100">
                 <label class="" for="selCode"> Тип </label>
-                <select class="wide-100" id="selCode" name="package_code">
-                    <!-- Список всех элементов в базе  -->
+                <!-- <select class="wide-100" id="selCode" name="package_code">
+                     Список всех элементов в базе  
                     <option value="0"> Новый </option>
-                </select>
+                </select> -->
+
+
+                <div class="dropdown wide-100">
+                    <input class="wide-100" type="text" placeholder="Поиск.." id="myInput" onkeyup="filterFunction()"><button onclick="myFunction()" class="dropbtn">▼</button>
+                    <ul id="myDropdown" class="dropdown-content">
+                        <li><a href="#">Какое-то обозначение</a></li>
+                        <li><a href="#">Какое-то обозначение</a></li>
+                        <li><a href="#">Какое-то обозначение</a></li>
+                        <li><a href="#">Какое-то обозначение</a></li>
+                        <li><a href="#">Какое-то обозначение</a></li>
+                        <li><a href="#">Какое-то обозначение</a></li>
+                        <li><a href="#">Какое-то обозначение</a></li>
+                    </ul>
+
+                </div>
+
+
                 <!-- END Выпадающий список элементов -->
-                    <!-- Кнопка справа  -->
+                <!-- Кнопка справа  -->
                 <div>
                     <button class="" id="btnEdit"> Редактировать </button>
                 </div>
             </div>
         </section> <!-- END FIRST VAR  -->
 
-         <!-- Sub-TOP - панель редактирования элемента - SECOND VAR -->
+        <!-- Sub-TOP - панель редактирования элемента - SECOND VAR -->
         <section class="section__main hidden" id="editPanel">
             <div>
                 <label class="" for="selCode"> Обозначение </label>
@@ -49,10 +90,10 @@
                 <label class="" for="inpName"> Наименование </label>
                 <input class="mainInput" type="text" id="inpName" name="package_name">
             </div>
-                <!-- Кнопка справа  -->
+            <!-- Кнопка справа  -->
             <div>
-            <button class="" id="btnBack"> Назад </button>
-        </div>
+                <button class="" id="btnBack"> Назад </button>
+            </div>
         </section> <!-- END SECOND VAR -->
 
 
@@ -65,13 +106,13 @@
             <input type="hidden" name="package_id">
             <div class="item-1">
                 <div class="canvas-wrap">
-                <!-- Изображение -->
-                <canvas class="" id="canvas">
-                    success: {
-                    }
-                    error: Browser does not support canvas element.
-                </canvas></div>
-            </div>            <!-- характеристики -->
+                    <!-- Изображение -->
+                    <canvas class="" id="canvas">
+                        success: {
+                        }
+                        error: Browser does not support canvas element.
+                    </canvas></div>
+            </div> <!-- характеристики -->
             <!-- Right item -->
             <div class="item-2">
                 <!-- кнопки -->
@@ -139,7 +180,7 @@
                         </div>
 
                         <div class="">
-                            
+
                             <label class="hidden" for="inpPayload"> Грузоподьемность, гр </label>
                             <input class="hidden mainInput" size="6" type="text" id="inpPayload" name="package_payload">
                         </div>
@@ -147,7 +188,7 @@
                         <div class="">
                             <label class="" for="inpVolume"> Объем = </label>
                             <label class="" type="text" id="inpVolume" name="package_value"> 0 </label>
-                            <label class="" for="inpVolume" id="inpVolumeUnit">  </label>
+                            <label class="" for="inpVolume" id="inpVolumeUnit"> </label>
                         </div>
                     </div>
 

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <!-- <link rel="stylesheet" type="text/css" href="..\css\style.css" /> Черновая версия - > и . шрифтовые, (. before li), (> before span) -->
-    <link rel="stylesheet" type="text/css" href="..\css\style.css" /> 
+    <link rel="stylesheet" type="text/css" href="..\css\style.css" />
 
     <title> Склад </title>
 </head>
@@ -35,21 +35,19 @@
             <ul class="nav" id="nav">
                 <!-- Список уровней  -->
                 <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
-                <li class="nav-first-item"><span>склад</span><label>5</label></li>
-                <li class="nav-item"><span>секция</span><label>1</label></li>
-                <li class="nav-item"><span>уровень</span><label>1</label></li>
-                <li class="nav-item beforedot"><span>линия</span><label class="beforedot">2</label></li>
-                <li class="nav-item"><span>стеллаж</span><label>A</label></li>
-                <li class="nav-item beforedot"><span>полка</span><label class="beforedot">3</label></li>
+                <li><span>склад</span><label>5</label></li>
+                <li><span>секция</span><label>1</label></li>
+                <li><span>уровень</span><label>2</label></li>
+                <li class="beforedot"><span>линия</span><label>3</label></li> <!-- beforedot: Перед этим li будет точка и li сдвинется влево чтобы эту точку уместить -->
+                <li><span>стеллаж</span><label>A</label></li>
+                <li class="beforedot"><span>полка</span><label>6</label></li>
+                <li><span>лоток</span><label>54</label></li>
+                <li class="beforedot"><span>контейнер</span><label>А</label></li>
+                <li><span>ячейка</span><label>87</label></li>
             </ul>
             <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code"> <!-- Последний элемент .nav li:last-child пока скрыт в css -->
             <!-- </div> -->
 
-
-            <!-- Кнопка справа  -->
-            <div class="">
-                <button class="" id="btnEdit"> Редактировать </button>
-            </div>
 
         </section>
 
@@ -65,22 +63,25 @@
             <input type="hidden" name="package_id">
             <div class="item-1">
 
-            <!-- Изображение -->
-            <canvas class="" id="canvas">
-                success: {
-                }
-                error: Browser does not support canvas element.
-            </canvas>
+                <!-- Изображение -->
+                <canvas class="" id="canvas">
+                    success: {
+                    }
+                    error: Browser does not support canvas element.
+                </canvas>
             </div>
             <!-- характеристики -->
             <!-- Right item -->
             <div class="item-2--whouse">
-        <!-- кнопки -->
-        <!-- <section class="right-block__buttons">
+
+
+
+                <!-- кнопки -->
+                <!-- <section class="right-block__buttons">
 
             <button class="button-right" id="btnCopy"> Копировать </button>
             <button class="" id="btnDelete"> Удалить </button> -->
-            <!-- <button class="" id="btnAdd"> Добавить </button> 
+                <!-- <button class="" id="btnAdd"> Добавить </button> 
             <button class="button-right" id="btnApply"> Сохранить </button>
 
         </section> -->
@@ -93,9 +94,17 @@
                         <!-- Список всех элементов в базе  -->
                         <option id="0"> Новый </option>
                     </select>
+                    <!-- Кнопка справа  -->
+                    <div class="right-block__buttons">
+                        <button class="" id="btnEdit"> Редактировать </button>
+                    </div>
                     <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
 
-                    <!-- Растягивающийся блок с input  -->
+
+                </div>
+                <div class="right-form">
+
+                    <!-- Растягивающийся блок с input - ВО ВТОРУЮ СТРОКУ -->
                     <div class="input-flex">
                         <label class="" for="inpName"> Наименование </label>
                         <input class="mainInput" type="text" id="inpName" name="package_name">
@@ -103,12 +112,27 @@
                 </div>
 
 
-                <header class="header__general">
-                    <div class="label-heading"> Размеры </div>
-                </header>
+                <!-- <header class="header__general">                </header> -->
+
+
+                <div class="section-general__flex">
+                    <div class="left">
+                        <label class="label-heading bold" for="inpInternalSizeWx"> X </label>
+                        <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWx" name="package_iwx" pattern="[0-9]+" required>
+
+                    </div>
+                    <div class="left">
+                        <label class="label-heading bold" for="inpInternalSizeWy"> Y </label>
+                        <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWy" name="package_iwy" pattern="[0-9]+" required>
+
+                    </div>
+                </div>
+
                 <section class="section-general">
+
                     <div class="section-general__grid">
                         <!-- Grid таблица 3х2 для отображения inputs для ввода Размеров прямоугольника -->
+                        <div class="label-heading"> Внешние Размеры </div>
                         <div class="section-general__grid--3x2">
 
                             <div class="frst">
@@ -129,8 +153,8 @@
                                 <label class="" for="sizeWz"> мм </label>
                             </div>
                             <div class="frth">
-                                <label class="" for="color"> Цвет: </label>
-                                <input class="mainInput" type="color" id="inpColor" name="package_color">
+                                <!-- <label class="" for="color"> Цвет: </label>
+                                <input class="mainInput" type="color" id="inpColor" name="package_color"> -->
                             </div>
 
                             <div class="ffth">
@@ -146,6 +170,26 @@
 
                         </div>
                     </div>
+                    <div class="label-heading"> Внутренние Размеры </div>
+                    <div class="section-general__flex">
+                        <div class="">
+                            <label class="" for="inpInternalSizeWx"> Ширина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWx" name="package_iwx" pattern="[0-9]+" required>
+                            <label class="" for="sizeWx"> мм </label>
+                        </div>
+                        <div class="">
+                            <label class="" for="inpInternalSizeWy"> Высота </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWy" name="package_iwy" pattern="[0-9]+" required>
+                            <label class="" for="sizeWy"> мм </label>
+                        </div>
+                        <div class="">
+                            <label class="" for="inpInternalSizeWz"> Глубина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWz" name="package_iwz" pattern="[0-9]+" required>
+                            <label class="" for="inpInternalSizeWz"> мм </label>
+                        </div>
+                    </div>
+
+
                 </section>
                 <section class="section-subs hidden">
                     <!-- элемент имеет внутреннее содержимое -->

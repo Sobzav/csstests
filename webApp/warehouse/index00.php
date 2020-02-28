@@ -55,7 +55,7 @@
 
 
             <!-- Кнопка справа  -->
-            <div class="">
+            <div class="right-block__buttons">
                 <button class="" id="btnEdit"> Редактировать </button>
             </div>
 
