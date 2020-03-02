@@ -230,7 +230,8 @@
 .section-sub__grid--5x2 {
     display: grid;
     /* background-color: green; */
-    grid-template-columns: min-content 1.2fr 1.6fr 0.9fr 0.8fr;
+    grid-template-columns: min-content 1.1fr 1.1fr 0.8fr 0.7fr;
+    /* grid-template-columns: min-content 1.2fr 1.6fr 0.9fr 0.8fr; */
     grid-template-rows: repeat(2, 1fr);
     grid-column-gap: 0;
     grid-row-gap: 0.1rem;
@@ -281,11 +282,16 @@
 /* Третий блок - Select */
 .section-sub__grid--5x2 .thrd {
     grid-area: 1 / 4 / 2 / 5;
-    justify-self: right;
+    justify-self: center;
 }
 
 .section-sub__grid--5x2 select {
     width: 6em;
+}
+/* checkbox "В ряд" */
+.section-sub__grid--5x2 .checkbox {
+    grid-area: 1 / 5 / 2 / 6;
+    justify-self: center;
 }
 
 /* Четвертый блок - Количество по вертикали */

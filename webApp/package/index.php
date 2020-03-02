@@ -13,6 +13,9 @@ toggle between hiding and showing the dropdown content */
         function myFunction() {
             document.getElementById("myDropdown").classList.toggle("show");
         }
+        // function myFunction() {
+        //     document.getElementById("myDropdown").classList.remove("hidden"); // - Заменил "добавить стиль show на убрать стиль hidden"
+        // }
 
         function filterFunction() {
             var input, filter, ul, li, a, i;
@@ -58,18 +61,17 @@ toggle between hiding and showing the dropdown content */
 
 
                 <div class="dropdown wide-100">
-                    <input class="wide-100" type="text" placeholder="Поиск.." id="myInput" onkeyup="filterFunction()"><button onclick="myFunction()" class="dropbtn">▼</button>
+                    <input class="wide-100" type="text" placeholder="Поиск.." id="myInput" onkeyup="filterFunction()">
                     <ul id="myDropdown" class="dropdown-content">
-                        <li><a href="#">Какое-то обозначение</a></li>
-                        <li><a href="#">Какое-то обозначение</a></li>
-                        <li><a href="#">Какое-то обозначение</a></li>
-                        <li><a href="#">Какое-то обозначение</a></li>
-                        <li><a href="#">Какое-то обозначение</a></li>
-                        <li><a href="#">Какое-то обозначение</a></li>
-                        <li><a href="#">Какое-то обозначение</a></li>
-                    </ul>
-
-                </div>
+                        <li><a href="#"> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </a></li>
+                        <li><a href="#"> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </a></li>
+                        <li><a href="#"> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </a></li>
+                        <li><a href="#"> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </a></li>
+                        <li><a href="#"> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </a></li>
+                        <li><a href="#"> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </a></li>
+                        <li><a href="#"> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </a></li>
+                    </ul><button onclick="myFunction()" class="dropbtn">&#x2228</button>
+    </div>
 
 
                 <!-- END Выпадающий список элементов -->
@@ -199,7 +201,7 @@ toggle between hiding and showing the dropdown content */
                     <header class="header__sub">
                         <div class="">
                             <div class="inputBlock mx-1">
-                                <input class="border-1 text-black bg-tr mainInput" type="checkbox" id="checkBoxHasContent" name="checkBoxHasContent">
+                                <input class="mainInput" type="checkbox" id="checkBoxHasContent" name="checkBoxHasContent">
                                 <label class="label-heading" for="checkBoxHasContent"> Внутренние прямоугольники:&nbsp;</label>
                                 <label class="label-heading" type="text" id="inpTotal" name="package_total"> 0 </label>
                                 <label class="label-heading" for="inpTotal"> шт </label>
@@ -231,6 +233,10 @@ toggle between hiding and showing the dropdown content */
                                     <option value=""> Тип </option>
                                     <!-- Список всех элементов в базе -->
                                 </select>
+                            </div>
+                            <div class="checkbox">                           
+                                <label class="" for="checkBoxHasContent"> В ряд:&nbsp;</label> 
+                                <input class="mainInput" type="checkbox" id="checkBoxHasContent" name="checkBoxHasContent">
                             </div>
                             <!-- Second grid Line -->
                             <div class="frth">
