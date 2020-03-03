@@ -1,29 +1,12 @@
 <?php
-// header("Access-Control-Allow-Origin: *");
-// -------------------------------------------------------
-// Логгер | Подключаем и настраиваем логгироавние
-// 
 
-// Инициализируем переменные для хранения ошибок
-$errCount = 0;
-$errDump = "";
+// error_reporting(E_ALL);
+// ini_set("display_errors", 1);
+// include("file_with_errors.php");
 
-// Добавлять в отчет все ошибки PHP
-error_reporting(E_ALL);
-
-@require_once '../plog.php';
-
-plog("");
-plog("|----------------------------------------------------------------|");
-plog("|                     getPackage.php                             |");
-
-
-
-// -------------------------------------------------------
-// Подключение | Загружаем настройки и
-//               подключаемся к серверу mysql
-//
-@require_once '../connection.php';
+// загружаем настройки и
+// подключаемся к серверу mysql
+@include '../connection.php';
 
 // сохраняем запрос SELECT в строку
 $query = " 
@@ -31,34 +14,31 @@ $query = "
         package.id,
         package.code,
         package.name,
-        # package.material_id,
-        # package.photo_id,
-        # package.payload,
+        package.material_id,
+        package.photo_id,
+        package.payload,
         package.wx,
         package.wy,
         package.wz,
-        package.iwx,
-        package.iwy,
-        package.iwz
-        # package.color,
-        # package.created,
-        # package.updated,
-        # package.deleted,
-        # material.name as material_name
+        package.color,
+        package.created,
+        package.updated,
+        package.deleted,
+        material.name as material_name
     FROM
         package
-    # LEFT JOIN
-    #     material 
-    # ON (
-    #     package.material_id = material.id OR
-    #     package.material_id = null
-    # )
-    # LEFT JOIN
-    #     package_photo
-    # ON (
-    #     package.photo_id = package_photo.id OR
-    #     package.photo_id = NULL
-    # )
+    LEFT JOIN
+        material 
+    ON (
+        package.material_id = material.id OR
+        package.material_id = null
+    )
+    LEFT JOIN
+        package_photo
+    ON (
+        package.photo_id = package_photo.id OR
+        package.photo_id = NULL
+    )
     ORDER BY package.code;
 ";
 
@@ -96,9 +76,6 @@ if ($result = $mySqli->query($query)) {
                 package.wx,
                 package.wy,
                 package.wz,
-                package.iwx,
-                package.iwy,
-                package.iwz,
                 package.color,
                 package.created,
                 package.updated,
@@ -120,8 +97,8 @@ if ($result = $mySqli->query($query)) {
             )
             WHERE place_prototype.package_id = $id
             ORDER BY
-                place_prototype.y * 1,
-                place_prototype.x * 1;
+                place_prototype.y,
+                place_prototype.x;
         ";
 
         // если внутренние элементы есть

@@ -23,12 +23,7 @@ $package_payload = $_POST["package_payload"];
 $package_wx = $_POST["package_wx"];
 $package_wy = $_POST["package_wy"];
 $package_wz = $_POST["package_wz"];
-$package_iwx = $_POST["package_iwx"];
-$package_iwy = $_POST["package_iwy"];
-$package_iwz = $_POST["package_iwz"];
 $package_color = $_POST["package_color"];
-$package_depth = $_POST["package_depth"];
-$package_turned = $_POST["package_turned"];
 
 // сохраняем запрос UPDATE в строку
 $query = " 
@@ -40,12 +35,7 @@ INSERT INTO
         package.wx,
         package.wy,
         package.wz,
-        package.iwx,
-        package.iwy,
-        package.iwz,
-        package.color,
-        package.depth,
-        package.turned
+        package.color
     )
     VALUES (
         '$package_code',
@@ -54,15 +44,12 @@ INSERT INTO
         $package_wx,
         $package_wy,
         $package_wz,
-        $package_iwx,
-        $package_iwy,
-        $package_iwz,
-        '$package_color',
-        $package_depth,
-        $package_turned
+        '$package_color'
     );
 ";
 
+// print_r ($query);
+// print_r ('<br/>');
 
 // обнуляем счетчик и конитейнер ошибок
 $errCount = 0;

@@ -7,32 +7,6 @@
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
-    <script>
-        /* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-        function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
-        }
-        // function myFunction() {
-        //     document.getElementById("myDropdown").classList.remove("hidden"); // - Заменил "добавить стиль show на убрать стиль hidden"
-        // }
-
-        function filterFunction() {
-            var input, filter, ul, li, a, i;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            div = document.getElementById("myDropdown");
-            a = div.getElementsByTagName("a");
-            for (i = 0; i < a.length; i++) {
-                txtValue = a[i].textContent || a[i].innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    a[i].style.display = "";
-                } else {
-                    a[i].style.display = "none";
-                }
-            }
-        }
-    </script>
     <title> Упаковка </title>
 
 </head>
@@ -59,19 +33,20 @@ toggle between hiding and showing the dropdown content */
                     <option value="0"> Новый </option>
                 </select> -->
 
-
-                <div class="dropdown wide-100">
-                    <input class="wide-100" type="text" placeholder="Поиск.." id="myInput" onkeyup="filterFunction()">
-                    <ul id="myDropdown" class="dropdown-content">
-                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
-                        <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li>
-                        <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li>
-                        <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li>
-                        <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li>
-                        <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li>
-                        <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li>
-                    </ul><button onclick="myFunction()" class="dropbtn">⌵</button>
-    </div>
+                <!-- Поисковая строка с выпадающим списком -->
+                <div class="dropdown wide-100" tabindex="0">
+                    <input class="wide-100" type="text" placeholder="Поиск.." id="myInput">
+                    <ul id="packList" class="dropdown-content hidden" tabindex="0">
+                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
+                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
+                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
+                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
+                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
+                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
+                    </ul>
+                    <button class="dropbtn">&#9013</button>
+                </div>
 
 
                 <!-- END Выпадающий список элементов -->
@@ -227,17 +202,29 @@ toggle between hiding and showing the dropdown content */
                                 <label class="" for="inpSizewY_">мм</label>
                             </div>
 
-                            <div class="thrd">
+                            <div class="thrd dropdown wide-100" tabindex="0">
+                                <!-- <div class="dropdown wide-100" tabindex="0"> -->
+                                    <input size="6" class="dropdown-input" type="text" placeholder="Тип" id="selCode_">
+                                    <ul id="packList" class="dropdown-content hidden" tabindex="0">
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                        <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                    </ul>
+                                    <button class="dropbtn">&#9013</button>
+                                <!-- </div> -->
 
-                                <select class="subInput" id="selCode_" name="package_code_">
+                                <!-- <select class="subInput" id="selCode_" name="package_code_">
                                     <option value=""> Тип </option>
-                                    <!-- Список всех элементов в базе -->
-                                </select>
+                                </select> -->
                             </div>
                             <div class="checkbox">
-                            <input class="mainInput" type="checkbox" id="checkBoxHasContent" name="checkBoxHasContent">
-                                <label class="" for="checkBoxHasContent">&nbsp;В ряд</label> 
-
+                                <label class="" for="checkBoxHasContent"> В ряд:&nbsp;</label>
+                                <input class="mainInput" type="checkbox" id="checkBoxHasContent" name="checkBoxHasContent">
                             </div>
                             <!-- Second grid Line -->
                             <div class="frth">
@@ -252,7 +239,7 @@ toggle between hiding and showing the dropdown content */
                                 <label class="" for="inpNx_"> шт </label>
                             </div>
 
-                            <div class="sxth">
+                            <div class="ffth1">
                                 <label class="summ" for="inpTotal_"> Всего = </label>
                                 <label class="summ" type="text" id="inpTotal_" name="package_total_"> 0 </label>
                                 <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
@@ -295,7 +282,7 @@ toggle between hiding and showing the dropdown content */
     <script src="settings.js?n=1"></script>
     <script src="package.js?n=1"></script>
     <script src="subblock.js?n=1"></script>
-    <script src="packageList.js?n=1"></script>
+    <script src="../searchList/searchList.js?n=1"></script>
     <script src="main.js?n=1"></script>
 </body>
 

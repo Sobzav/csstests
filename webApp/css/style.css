@@ -185,34 +185,45 @@ header.header__sub div {
 /***********************************************************/
 
 .dropbtn {
-    background-color: transparent;
+    background-color: var(--color-crBrown);
     color: white;
-    padding: 0 8px!important;
+    padding: 0 8px;
     border: none;
     cursor: pointer;
-    margin:0;
+    margin: 0;
+    line-height: 1em;
+    /* vertical-align: top; */
 }
 
 /* Dropdown button on hover & focus */
 .dropbtn:hover,
 .dropbtn:focus {
-    background-color: transparent;
+    background-color: var(--color-crBrown);
+}
+
+.dropdown-input {
+    margin: 0!important;
 }
 .dropdown {
     position: relative;
     display: inline-block;
-    background-color: var(--color-crBrown);
 }
 .dropdown input:focus {
-    padding-right: 0;
-    border: none;
+    /* padding-right: 0; */
+    border: 1px solid var(--color-crBrown);
 }
 
 /* The search field */
-#myInput {
+#myInput, #selCode_ {
     box-sizing: border-box;
     padding-right: 0;
 }
+/* #myInput i {
+    padding: 0 7px;
+    font-style: normal;
+} */
+
+
 
 /* The search field when it gets focus/clicked on */
 /* #myInput:focus {
@@ -244,7 +255,6 @@ header.header__sub div {
 
 /* Dropdown Content (Hidden by Default) */
 .dropdown-content {
-    display: none;
     position: absolute;
     background-color: #C3C7C8;
     min-width: 100%;
@@ -451,7 +461,7 @@ header.header-top div {
 
 label {
     font-family: 'CoreSansDS25Light';
-    font-size: 0.85rem;
+    font-size: 14px;
     white-space: nowrap;
     cursor: default;
 }
@@ -462,7 +472,7 @@ label {
     font-family: 'CoreSansDS35Regular';
     font-size: 1.125rem;
     display: flex;
-    padding-bottom: 10px;
+    /* padding-bottom: 10px; Убрал для того чтобы checkbox выровнять */
 }
 
 
@@ -597,7 +607,7 @@ section.section__main div:nth-child(2) {
 /* класс для увеличенной разрядки букв для текста ВСЕГО */
 .summ {
     letter-spacing: .03rem;
-    font-size: 0.95rem;
+    font-size: 15px;
 }
 
 /* Кнопки внизу страницы - по правой стороне */

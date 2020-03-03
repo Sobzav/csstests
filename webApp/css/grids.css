@@ -230,7 +230,7 @@
 .section-sub__grid--5x2 {
     display: grid;
     /* background-color: green; */
-    grid-template-columns: min-content 1.1fr 1.1fr 0.8fr 0.7fr;
+    grid-template-columns: min-content 1.1fr 1.1fr 0.5fr 0.7fr;
     /* grid-template-columns: min-content 1.2fr 1.6fr 0.9fr 0.8fr; */
     grid-template-rows: repeat(2, 1fr);
     grid-column-gap: 0;
@@ -279,15 +279,17 @@
     justify-self: center;
 }
 
-/* Третий блок - Select */
+/* Третий блок - Select с выпадающим списком */
 .section-sub__grid--5x2 .thrd {
+    /* display: grid; */
     grid-area: 1 / 4 / 2 / 5;
     justify-self: center;
+    padding: 0 5px;
 }
 
-.section-sub__grid--5x2 select {
+/* .section-sub__grid--5x2 select {
     width: 6em;
-}
+} */
 /* checkbox "В ряд" */
 .section-sub__grid--5x2 .checkbox {
     grid-area: 1 / 5 / 2 / 6;
@@ -302,9 +304,15 @@
 /* Пятый блок - Количество по горизонтали - занимает 2 ячейки */
 .section-sub__grid--5x2 .ffth {
     grid-area: 2 / 3 / 3 / 5;
-    /* justify-self: center; Убираем потому что большой пробел слева - некрасиво*/
     justify-self: left;
-    padding-left: 1rem;
+    padding-left: 2rem;
+}
+
+/* Пятый А блок - Количество по горизонтали - занимает 2 ячейки */
+.section-sub__grid--5x2 .ffth1 {
+    grid-area: 2 / 4 / 3 / 5;
+    justify-self: right;
+    padding-left: 0;
 }
 
 /* Шестой блок - Всего */
@@ -327,9 +335,11 @@
 }
 
 /* Ориентация по правой стороне (вторая и последняя ячейка во сторой строке) */
-.section-sub__grid--5x2 .frth,
-.section-sub__grid--5x2 .sxth {
+.section-sub__grid--5x2 .frth {
     justify-self: end;
 }
 
+.section-sub__grid--5x2 .sxth {
+
+}
 .section-sub__grid--5x2 .sxth label {}

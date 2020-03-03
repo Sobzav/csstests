@@ -29,27 +29,26 @@ select:-webkit-autofill:focus {
 
 input,
 input:valid,
+input:focus,
 select,
 option {
     /* vertical-align: middle; */
     font-family: 'CoreSansDS25Light';
-    font-size: 0.8rem;
+    font-size: 13px;
     white-space: nowrap;
     color: var(--color-white);
     background-color: var(--color-crBrown);
     box-sizing: border-box;
-    padding: 0 0.25rem;
+    padding: 0 4px;
     text-align: start;
     margin: 0 0.2rem;
-    border: 1px solid var(--color-crBrown);
-    /* Добавил border ко всем эл-там ввода чтобы не скакала верстка при изменении статуса input на required*/
+    border: 1px solid var(--color-crBrown);  /* Добавил border ко всем эл-там ввода чтобы не скакала верстка при изменении статуса input на required*/
+    /* border:  none; */
 }
 
 input[type=number] {
-    width: 3.46em;
-    /* Ограничение ширины для цифрового типа */
-    padding-right: 0;
-    /* Чтобы кнопки набора цифр были вплотную к правому краю */
+    width: 3.46em;  /* Ограничение ширины для цифрового типа */
+    padding-right: 0; /* Чтобы кнопки набора цифр были вплотную к правому краю */
 }
 
 select {
@@ -57,45 +56,24 @@ select {
     border-style: none;
     text-align: center;
     font-size: 0.8rem;
-    -webkit-appearance: none; /* Убрал стандартные стрелки */
-    -moz-appearance: none;/* Убрал стандартные стрелки */
-    -ms-appearance: none;/* Убрал стандартные стрелки */
-    appearance: none;/* Убрал стандартные стрелки */
 }
-select:before {
-    content: '\2335';
-    display: inline-block;
-    background-color:  red;
-    /* right: -5px; */
-    /* top: 2px; */
-    /* width: 30px; */
-    /* height: 26px; */
-    /* text-align: center; */
-    /* line-height: 26px; */
-    cursor: pointer;
-    z-index: 2;
-    position: absolute;
-}
+
 input:required {
     /* border: 1px solid var(--color-chateauGrey);  border более светлый - маркер обязательного поля
     /* position: absolute; */
 }
-
-input:required:valid {
-    /* При вводе числа цвет границы становится незаметным как был */
+input:required:valid {  /* При вводе числа цвет границы становится незаметным как был */
     /* border: 1px solid var(--color-crBrown); */
 }
 
-input:focus,
-input:required:focus {
-    /* При фокусе граница становится яркой (белой) */
+input:focus, input:required:focus {  /* При фокусе граница становится яркой (белой) */
     border: 1px solid var(--color-chateauGrey);
     outline: none;
 }
 
 /* НЕИСПОЛЬЗУЕМЫЙ Элемент - not working yet */
 input:required:focus::before {
-    content: '';
+    content:'';
     padding-right: 10px;
     color: var(--color-white);
 }
@@ -110,14 +88,13 @@ input:required:focus::before {
 }
 
 /* НЕИСПОЛЬЗУЕМЫЙ Элемент - change required - Применение яркого цвета к иконке в случае атрибутов focus и invalid к input. ~ - селектор следующего эл-та */
-input:required:focus~span.icospan,
-input:required:invalid~span.icospan {
+input:required:focus ~ span.icospan, input:required:invalid ~ span.icospan {
     display: inline-block;
     color: var(--color-white);
 }
 
 /* НЕИСПОЛЬЗУЕМЫЙ Элемент - change required - невидимость span с иконкой в обычном состоянии */
-input:required~span.icospan {
+input:required ~ span.icospan {
     display: none;
 }
 

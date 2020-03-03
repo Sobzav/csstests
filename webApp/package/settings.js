@@ -3,8 +3,8 @@ const normalView = {
 
     // для корневого элемента - контейнера
     canvasWx: 500,
-    canvasWy: 850,
-    depth: 2,
+    canvasWy: 800,
+    depth: 3,
     disposition: {
         x: 'x',
         y: 'y',
@@ -12,6 +12,7 @@ const normalView = {
         wy: 'wy',
         wz: 'wz'
     },
+    active: false,
     padding: 0,
     border: 0,
     borderColor: '#000000',
@@ -19,6 +20,7 @@ const normalView = {
     item: {
 
         // для внутренних элементов
+        depth: 2,
         disposition: {
             x: 'x',
             y: 'y',
@@ -26,22 +28,42 @@ const normalView = {
             wy: 'wy',
             wz: 'wz'
         },
-        active: true,
+        active: false,
         padding: 0,
         border: 0,
         borderColor: '#000000',
         // showText: true,
         autoFit: 'none',
+        item: {
+
+            // для внутренних элементов
+            depth: 1,
+            disposition: {
+                x: 'x',
+                y: 'y',
+                wx: 'wx',
+                wy: 'wy',
+                wz: 'wz'
+            },
+            active: false,
+            padding: 0,
+            border: 0,
+            borderColor: '#000000',
+            showText: false,
+            autoFit: 'none',
+        },
     },
 };
+
+
 
 // если элемент повернут, меняем wy <> wz
 const turnedView = {
 
     // для корневого элемента - контейнера
     canvasWx: 500,
-    canvasWy: 850,
-    depth: 2,
+    canvasWy: 800,
+    depth: 3,
     disposition: {
         x: 'x',
         y: 'y',
@@ -49,6 +71,7 @@ const turnedView = {
         wy: 'wz',
         wz: 'wy'
     },
+    active: false,
     padding: 0,
     border: 0,
     borderColor: '#000000',
@@ -56,6 +79,7 @@ const turnedView = {
     item: {
 
         // для внутренних элементов
+        depth: 2,
         disposition: {
             x: 'x',
             y: 'y',
@@ -63,12 +87,30 @@ const turnedView = {
             wy: 'wz',
             wz: 'wy'
         },
-        active: true,
+        active: false,
         padding: 0,
         border: 0,
         borderColor: '#000000',
         // showText: true,
         autoFit: 'none',
+        item: {
+
+            // для внутренних элементов
+            depth: 1,
+            disposition: {
+                x: 'x',
+                y: 'y',
+                wx: 'wx',
+                wy: 'wy',
+                wz: 'wz'
+            },
+            active: false,
+            padding: 0,
+            border: 0,
+            borderColor: '#000000',
+            showText: false,
+            autoFit: 'none',
+        },
     }
 };
 

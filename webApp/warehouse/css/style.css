@@ -1,4 +1,4 @@
-@import '../../css/MyFontsWebfontsKit.css';
+@import '../../css/myFontsWebfontsKit.css';
 @import '../../css/atomic.css';
 
 * {
@@ -30,8 +30,7 @@ body {
 .gridContainer {
     display: grid;
     /* background-color: var(--color-raven); */
-    /* margin: 0 1.5rem; по левой стороне */ 
-    margin: 0 auto; /* по центру */
+    margin: 0 1.5rem;
     width: max-content;
     grid-template-columns: repeat(2, min-content);
     grid-template-rows: repeat(6, min-content);
@@ -625,11 +624,6 @@ section.section__main div:nth-child(2) {
 .bottom-block__buttons {
     justify-content: flex-end;
     padding: 0 0.5rem;
-}
-
-.item-2 section.bottom-block__buttons {
-    justify-content: flex-end;
-    padding: 0 0 1em 0 !important;
 }
 
 .bottom-block__buttons button.button-right {

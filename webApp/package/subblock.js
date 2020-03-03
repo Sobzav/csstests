@@ -37,7 +37,8 @@ class SubBlock {
         inpSizeWy,
         inpTotal) {
 
-        console.group("class SubBlock.constructor { index: %o; selCode: %o; inpNx: %o; inpNy: %o; inpSizeWx: %o; inpSizeWy: %o", 
+            console.group("class SubBlock.constructor {"); 
+            console.log("index: %o; selCode: %o; inpNx: %o; inpNy: %o; inpSizeWx: %o; inpSizeWy: %o", 
             index,
             selCode,
             inpNx,
@@ -88,13 +89,14 @@ class SubBlock {
     // Метод | Подключение слотов к сигналам внутренних визуальных элементов
     //
     connectSignals() {
-        console.group("class SubBlock.connectSignals { this: %o", this);
+        // console.group("class SubBlock.connectSignals {");
+        // console.log("this: %o", this);
 
         this.selCode.addEventListener('input', event => this.slotSubPackChanged(event));
         this.inpNx.addEventListener('input', event => this.slotSizeChanged(event));
         this.inpNy.addEventListener('input', event => this.slotSizeChanged(event));
 
-        console.groupEnd();
+        // console.groupEnd();
     }
 
 
@@ -103,13 +105,14 @@ class SubBlock {
     // Метод | Подключение слотов к сигналам внутренних визуальных элементов
     //
     disconnectSignals() {
-        console.group("class SubBlock.disconnectSignals { this: %o", this);
+        // console.group("class SubBlock.disconnectSignals {");
+        // console.log("this: %o", this);
 
         this.selCode.removeEventListener('input', event => this.slotSubPackChanged(event));
         this.inpNx.removeEventListener('input', event => this.slotSizeChanged(event));
         this.inpNy.removeEventListener('input', event => this.slotSizeChanged(event));
 
-        console.groupEnd();
+        // console.groupEnd();
     }
 
 
@@ -118,7 +121,8 @@ class SubBlock {
     // Метод | Задаем новые размеры блоку
     //
     setSize(rowCount, colCount) {
-        console.group("class SubBlock.setSize { block: %o, rowCount: %o, colCount: %o", this, rowCount, colCount);
+        console.group("class SubBlock.setSize {");
+        console.log("block: %o, rowCount: %o, colCount: %o", this, rowCount, colCount);
 
         if ((rowCount !== this._rowCount) || (colCount !== this._colCount)) {
             
@@ -139,7 +143,8 @@ class SubBlock {
     // Метод | Выводим информацию об элементах блока
     //
     showInfo() {
-        console.group("class SubBlock.showInfo { block: %o", this);
+        console.group("class SubBlock.showInfo {");
+        console.log("block: %o", this);
 
         // получаем элемент соответствующий типу внутреннего содержимого данного блока
         var subPack = this._subPack;
@@ -171,14 +176,14 @@ class SubBlock {
     // Метод | Очищаем данные блока
     //
     clearData() {
-        console.group("class SubBlock.clearData { block: %i", this._index);
+        // console.group("class SubBlock.clearData { block: %i", this._index);
 
         this._pack = null;
         this._rowCount = 0;
         this._colCount = 0;
         this._subPack = null;
 
-        console.groupEnd();
+        // console.groupEnd();
     }
 
 
@@ -187,7 +192,7 @@ class SubBlock {
     // Метод | Очищаем визуальные элементы блока
     //
     clear() {
-        console.group("class SubBlock.clear { block: %i", this._index);
+        // console.group("class SubBlock.clear { block: %i", this._index);
 
         this._selCode.selectedIndex = 0;
         this._inpNx.value = '';
@@ -196,7 +201,7 @@ class SubBlock {
         this._inpSizeWy.value = '';
         this._inpTotal.innerText = 0;
 
-        console.groupEnd();
+        // console.groupEnd();
     }
             
 
@@ -238,12 +243,12 @@ class SubBlock {
                 var pack = new PackageContainerItem(
                     this._pack,     // родительский контейнер
                     {id: id},       // данные элемента, получен из базы
-                    settings,       // настройки элементов и внутренних элементов
+                    settings,       // настройки отображения элемента
                     canvas          // canvas где будет отображен элемент
                 );
         
                 // загружаем свойства элемента и все его содержимое из базы
-                pack.load(settings, 
+                pack.load( 
 
                     // если элемент успешно загрузился
                     function(loadedPack, self) {
@@ -452,7 +457,8 @@ class SubBlockContainer {
     //         И далее с этим элементом будут работать
     //
     showInfo(pack) {
-        console.group("class SubBlockContainer.showInfo { pack: %o", pack);
+        console.group("class SubBlockContainer.showInfo {");
+        console.log("pack: %o", pack);
 
         if (pack !== this._pack) {
 

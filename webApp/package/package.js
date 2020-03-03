@@ -65,7 +65,8 @@ class PackageSimple {
     // -------------------------------------------------------
     // Метод | Создаем элемент
     constructor(parent, id = 0, canvas) {
-        console.group("class PackageSimple.constructor { id: %i", id);
+        console.group("class PackageSimple.constructor {");
+        console.log("id: %i", id);
         
         this._parent = parent;      // родительский контейнер
 
@@ -136,11 +137,13 @@ class PackageSimple {
 
         // поведенческие свойства элемента
         //
+        this._depth = 0;
+        this._turned = 0;
         this._hidden = true;        // если true, то элемент невидимый
         this._active = false;       // если true, то элемент будет реагировать на указатель мыши
         this._mouseOver = false;    // когда указатель мыши над элементом true
         this._selected = false;     // статуса ВЫБРАН / НЕ ВЫБРАН 
-        this._changed = false;      // если true, то элемент был изменен
+        this._changed = true;       // если true, то элемент был изменен
         this._new = true;           // если true, то элемент новый и его нет в базе данных
 
         console.groupEnd();
@@ -415,6 +418,30 @@ class PackageSimple {
     }
 
     get disposition() {return this._disposition;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Определяет глубину загрузки и отображения
+    //            внутренних элементов
+    //
+    set depth(value) {
+        this._depth = value;
+    }
+
+    get depth() {return this._depth;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Определяет повернут ли элемент
+    //
+    set turned(value) {
+        this._turned = value;
+        if (this._autoFit == 'contain') {this.autoScale();}
+    }
+
+    get turned() {return this._turned;}
 
 
 
@@ -738,7 +765,8 @@ class PackageContainerItem extends PackageSimple {
     //              }
     //
     constructor(parent, data, settings, canvas) {
-        console.groupCollapsed("class PackageContainerItem.constructor { data: %i", data.id);
+        console.groupCollapsed("class PackageContainerItem.constructor {");
+        console.log("data: %o", data);
 
         // вызов конструктора родителя
         super(parent, data.id, canvas);
@@ -752,7 +780,6 @@ class PackageContainerItem extends PackageSimple {
         // заполняем все свойства элемента
         // и создаем внутренние элементы из структуры data
         this.setData(data, settings);
-        // this.createItems(data.item, settings.item);
 
         console.groupEnd();
     }
@@ -1067,7 +1094,7 @@ class PackageContainerItem extends PackageSimple {
 
         // обновляем disposition внутренних элементов
         this.item.forEach( subItem => {
-            subItem.disposition = value;
+            // subItem.disposition = value;
             subItem.scale = scale;
         });        
         
@@ -1075,6 +1102,68 @@ class PackageContainerItem extends PackageSimple {
     }
 
     get disposition() {return this._disposition;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Определяет глубину загрузки и отображения
+    //            внутренних элементов
+    //
+    set depth(value) {
+        super.depth = value;
+
+        if (!this._parent) {
+            if (!this._hidden) {
+                this.hide();
+                this.show();
+            }
+        }
+    }
+
+    get depth() {return this._depth;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Определяет повернут ли элемент
+    //
+    set turned(value) {
+        super.turned = value;
+        console.log("this: ", this);
+        console.log("settings: ", settings);
+        if (normalView && turnedView) {
+            if (this._turned == 1) {
+                settings = turnedView;
+            } else {
+                settings = normalView;
+            }
+        }
+
+        this.turn(settings)
+    }
+
+    get turned() {return this._turned;}
+
+
+
+    // -------------------------------------------------------
+    // Метод | Поворачивает элемент
+    //
+    turn(settings) {
+
+        this.disposition = settings.disposition;
+        
+        this.item.forEach( subItem => {
+            subItem.turn(settings.item);
+        });
+
+        if (!this._parent) {
+            if (!this._hidden) {
+                this.clear(true);
+                this.draw();
+            }
+        }
+    }
 
 
 
@@ -1185,7 +1274,9 @@ class PackageContainerItem extends PackageSimple {
                     "package_iwy": this._iwy,
                     "package_iwz": this._iwz,
                     "package_color": this._color.replace("#", ""),
-                    "item": subItems.length > 0 ? subItems : null
+                    "item": subItems.length > 0 ? subItems : null,
+                    "package_depth": this._depth,
+                    "package_turned": this._turned
                 },
 
                 // если успешно и сервер вернул данные
@@ -1222,17 +1313,18 @@ class PackageContainerItem extends PackageSimple {
     // -------------------------------------------------------
     // Функция | Загрузка элемента pack из базы данных в selectedPack по заданному id
     //
-    load(settings, successFunction, errorFunction, caller) {
-        console.group("class PackageContainerItem.load { pack: %o from id: %o", this, this._id);
+    load(successFunction, errorFunction, caller, depth) {
+        console.group("class PackageContainerItem.load {");
+        console.log("this: %o", this);
 
         // формируем данные для отправки на сервер
         var data = {
-            "package_id": this._id,     // идентификатор загружаемого элемеента
-            "depth": settings.depth     // глубина чтения внутренних элементов (0 - загружается без внутренних элементов)
+            "package_id": this._id,         // идентификатор загружаемого элемеента
+            "package_depth": depth ? depth : null
         };
 
         // отправляем запрос серверу
-        this.requestToServer(this, 'POST', 'getPackage.php', 'json', data,
+        this.requestToServer(this, 'POST', '../package/getPackage.php', 'json', data,
 
             // если успешно и сервер вернул данные
             function(target, jsonResponce) {
@@ -1266,26 +1358,49 @@ class PackageContainerItem extends PackageSimple {
 
 
     // -------------------------------------------------------
-    // Метод | Заполняем все свойства элемента из структуры data
+    // Свойство | Инициализирует все свойства элемента
     //
-    setData(data, settings) {
-        console.group("class PackageContainerItem.setData { this: %o", this);
-        
-        // this.setData(data, settings);
-        this.code         = data.code        ? data.code         : "";
-        this.name         = data.name        ? data.name         : "";
-        this.payload      = data.payload     ? parseInt(data.payload) : 0;   // грузоподъемность в граммах
-        this.color        = data.color       ? (data.color[0] == "#" ? "" : "#") + data.color  : "#000000";   // цвет элемента из базы
-        this.padding      = settings.padding ? settings.padding  : 0;
-        this.border       = settings.border  ? settings.border   : 0;
+    setSettings(settings) {
+        this.padding      = settings.padding      ? settings.padding      : 0;
+        this.border       = settings.border       ? settings.border       : 0;
         this.borderColor  = settings.borderColor  ? settings.borderColor  : 0;
         this.iBorder      = settings.iBorder      ? settings.iBorder      : 0;
         this.iBorderColor = settings.iBorderColor ? settings.iBorderColor : "#000000";
         this.showText     = settings.showText     ? settings.showText     : 0;
         this.textColor    = settings.textColor    ? settings.textColor    : 0;
         this.disposition  = settings.disposition  ? settings.disposition  : {x: 'x', y: 'y', wx: 'wx', wy: 'wy', wz: 'wz'};
-        this.viewBox      = {x: 0, y: 0, wx: this._canvas.width, wy: this._canvas.height},
         this.active       = settings.active       ? settings.active       : false;
+        this.autoFit      = settings.autoFit      ? settings.autoFit      : 'none';
+    }
+
+    // get settings() {return this._turned;}
+
+
+
+    // -------------------------------------------------------
+    // Метод | Заполняем все свойства элемента из структуры data
+    //
+    setData(data, settings) {
+        console.group("class PackageContainerItem.setData {");
+        console.log("this: %o", this);
+        console.log("data: %o", data);
+        console.log("settings: %o", settings);
+        
+        var show = false;
+        if (!this._hidden) {
+
+            this.hide();
+            show = true;
+        }
+
+        this.setSettings(settings);
+        
+        this.art          = data.art              ? data.art  : "0";
+        this.code         = data.code             ? data.code : "";
+        this.name         = data.name             ? data.name : "";
+        this.payload      = data.payload          ? parseInt(data.payload) : 0;
+        this.color        = data.color            ? (data.color[0] == "#" ? "" : "#") + data.color  : "#000000";
+        this.viewBox      = {x: 0, y: 0, wx: this._canvas.width, wy: this._canvas.height},
         this.x            = data.x ? parseFloat(data.x) : 0;     // если в data есть координата, то беерем ее, иначе берем 0 
         this.y            = data.y ? parseFloat(data.y) : 0;     // если в data есть координата, то беерем ее, иначе берем 0
         this.setSize(
@@ -1298,10 +1413,17 @@ class PackageContainerItem extends PackageSimple {
             parseInt(data.iwy ? data.iwy : 0),      // размеры элемента из базы
             parseInt(data.iwz ? data.iwz : 0)       // размеры элемента из базы
         );               
-        this.autoFit     = settings.autoFit     ? settings.autoFit      : 'none';
 
         // создаем внутренние элементы
         this.createItems(data.item, settings.item);
+        
+        if (!this._parent) {
+            this.depth = data.depth ? parseInt(data.depth) : settings.depth;
+            console.log("this.depth: %o", this.depth);
+            this.turned = data.turned ? parseInt(data.turned) : settings.turned;        
+        }
+
+        if (show) {this.show();}
 
         console.groupEnd();
     }
@@ -1312,7 +1434,8 @@ class PackageContainerItem extends PackageSimple {
     // Метод | Удаляет все внутренние элементы
     //
     createItems(data, settings) {
-        console.group("class PackageContainerItem.createItems { this: %o", this);
+        console.group("class PackageContainerItem.createItems {");
+        console.log("this: %o", this);
 
         // if (!this._hidden) {this.clear();}
 
@@ -1321,11 +1444,11 @@ class PackageContainerItem extends PackageSimple {
 
             // то создаем массив внутренних элементов
             data.forEach(sub => {
-                console.log("sub item: %o }", sub);
+                // console.log("sub item: %o }", sub);
 
                 // создаем новый внутренний элемент
                 var item = new PackageContainerItem(this, sub, settings, canvas);
-                console.log("settings: %o }", settings);
+                // console.log("settings: %o }", _settings);
 
                 // сообщаем новому элементу область, где он будет размещен
                 item.viewBox = {x: this._x, y: this._y, wx: this._wx, wy: this._wy};
@@ -1348,7 +1471,8 @@ class PackageContainerItem extends PackageSimple {
     // Метод | Удаляет все внутренние элементы
     //
     clearItems() {
-        console.group("class PackageContainerItem.clearItems { pack: %o", this);
+        console.group("class PackageContainerItem.clearItems {");
+        console.log("this: %o", this);
 
         if (!this._hidden) {this.clear();}
         
@@ -1365,7 +1489,8 @@ class PackageContainerItem extends PackageSimple {
     // Метод | Стираем ячейку на <canvas>
     //
     clear(clearCanvas) {
-        // console.groupCollapsed("class PackageContainerItem.clear { item: %o", this);
+        // console.groupCollapsed("class PackageContainerItem.clear {");
+        // console.log("this: %o", this);
 
         super.clear(clearCanvas);
 
@@ -1383,12 +1508,13 @@ class PackageContainerItem extends PackageSimple {
     //
     draw() {
         if (!this._hidden) {
-            // console.groupCollapsed("class PackageContainerItem.draw { item: %o", this);
+            // console.groupCollapsed("class PackageContainerItem.draw {");
+            // console.log("this: %o", this);
 
             // рисуем элемент
             super.draw();
 
-            // рисуем блоки
+            // рисуем блоки                
             this.item.forEach( subItem => {
                 subItem.draw();
             });
@@ -1453,7 +1579,7 @@ class PackageContainerItem extends PackageSimple {
     // -------------------------------------------------------
     // Метод | Делаем элемент видимым
     //
-    show() {
+    show(depth) {
         // console.groupCollapsed("class PackageContainerItem.show {");
         if (this._hidden) {
             
@@ -1465,10 +1591,15 @@ class PackageContainerItem extends PackageSimple {
             // рисуем элемент
             super.show();
 
-            // показываем внутренние элементы
-            this.item.forEach( subItem => {
-                subItem.show();
-            });
+            if (!this._parent) {depth = this._depth;}
+
+            // рисуем блоки
+            if (depth > 1) {
+                // показываем внутренние элементы
+                this.item.forEach( subItem => {
+                    subItem.show(depth - 1);
+                });
+            }
         }
         // console.groupEnd();
     }
@@ -1640,7 +1771,7 @@ class PackageContainerItem extends PackageSimple {
             });
     
             // елемент активный, то возвращает себя, иначе возвращает первый выбранный внутренний элемент
-            return this._active ? (this._selected ? this : false) : this.selectedItem[0];
+            return this.selectedItem[0] ? this.selectedItem[0] : (this._active && this._selected) ? this : false;
         } else {
 
             return false;

@@ -54,6 +54,14 @@ const btn = {
 
 
 // -------------------------------------------------------
+// ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ |
+//
+var settings = normalView;
+var canvas;
+
+
+
+// -------------------------------------------------------
 // ГЛОБАЛЬНЫЕ ФУНКЦИИ |
 //
 
@@ -91,6 +99,7 @@ window.addEventListener("load", () => {
     console.group("index.php loaded");
 
 
+
     // -------------------------------------------------------
     // Функция | Выводит статусное сообщение в элемент lblStatus
     //           и убирает его через время timeout в миллисекундах
@@ -118,6 +127,7 @@ window.addEventListener("load", () => {
     }
 
 
+
     // -------------------------------------------------------
     // Функция | Делает элементы доступными для редактирования
     //           если enabled = true, иначе блокирует их
@@ -135,6 +145,7 @@ window.addEventListener("load", () => {
         }
         console.groupEnd("main.setDomElementsEnabled }");    
     }
+
 
 
     // -------------------------------------------------------
@@ -169,6 +180,7 @@ window.addEventListener("load", () => {
     //
     const selectPanel = domElementById("selectPanel");
     const editPanel = domElementById("editPanel");
+    const selCode = domElementById("selCode");
     const inpCodeEdit = domElementById("inpCodeEdit");
     const inpName = domElementById("inpName");
     const inpPayload = domElementById("inpPayload");
@@ -191,7 +203,7 @@ window.addEventListener("load", () => {
     const lblStatusChanged = domElementById("lblStatusChanged");
     const lblStatusInfo = domElementById("lblStatusInfo");
     // получаем и сохраняем указатель на <canvas> где будет вся графика
-    var canvas = domElementById("canvas");
+    canvas = domElementById("canvas");
     
 
 
@@ -199,10 +211,7 @@ window.addEventListener("load", () => {
     // ИНИЦИАЛИЗАЦИЯ |
     //
 
-    // настройки отображения, по умолчанию normalView
-    var settings = normalView;
-
-    // Настраиваем размер и разрешение <canvas>
+    // Настраиваем разрешение <canvas>
     canvas.style.width = settings.canvasWx + 'px';
     canvas.style.height = settings.canvasWy + 'px';
     canvas.width = settings.canvasWx * 2;
@@ -211,20 +220,14 @@ window.addEventListener("load", () => {
     // Делает все инпуты недоступными для редактирования
     setDomElementsEnabled('.disabled, .mainInput, .subInput');
 
-    // выпадающий список для выбора текущего элемента из базы данных
-    var packList = new SearchList(domElementById("packList"), '../searchList/getList.php');
 
-    packList.listFormat = ['code', '|', 'name', '|', 'wx', 'x', 'wy', 'x', 'wz', '|', 'iwx', 'x', 'iwy', 'x', 'iwz', '|', '(Внут item_count шт)'];
-
-    packList.changed = (id) => setSelectedPack(id);
-    // packList.load();
-
-
-    // Блоки редактирования внутренних элементов,
     // структура хранящая количество блоков в count
     // и блоки в item с количеством горизонтальных рядов
     // и количеством элементов в каждом ряде
     var subBlock = new SubBlockContainer();
+
+    // ссылка на ранее выбранный элемент
+    var prevousPackId;
 
     // ссылка на текущий выбранный элемент
     var selectedPack;
@@ -314,6 +317,30 @@ window.addEventListener("load", () => {
 
 
 
+    // -------------------------------------------------------
+    // Функция | Обновляет элемент <option> для списка <select>
+    // 
+    function setListOption(list, pack, 
+        showDetailes = ['code', ' | ', 'name', ' | ', 'wx', 'x', 'wy', 'x', 'wz'],  
+        detailes = ['code', ' | ', 'name', ' | ', 'wx', 'x', 'wy', 'x', 'wz']) {
+        // console.groupCollapsed("main.setListOption { ");
+
+        var item = list.querySelector("[value=\'" + pack.id + "\']");
+
+        item.label = '';
+        item.innerText = '';
+
+        detailes.forEach( detail => {
+            item.innerText += pack[detail] ? pack[detail] : detail;
+        });
+
+        item.label += item.innerText;
+
+        // console.log("option: %o",  item);
+        // console.groupEnd();
+    }
+    
+
 
     // -------------------------------------------------------
     // Функция | Создает элемент <option> для списка <select>
@@ -386,6 +413,34 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
+    // Функция | Удаляет элемент  pack из массива packs
+    //           из всех выпадающих списков:
+    //           selCode, selCode1...selCode[N]
+    //
+    function packsRemove(pack) {
+        console.group("main.packsRemove {");
+        console.log("pack: %o ", pack);
+
+        // удаляем элемент из списков selCode1...selCode[N]
+        subInp.forEach(subInpItem => {
+            if (subInpItem.nodeName === "SELECT") {
+
+                subInpItem.remove(pack.listItem.index)
+            }
+        });
+
+        // удаляем элемент из списка selCode
+        selCode.remove(pack.listItem.index);
+
+        // Удаляем элемент из массива
+        packs.splice(packs.indexOf(pack), 1);
+
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
     // Функция | Запрос серверу в формате ajax
     //           type = "POST" / "GET"
     //           url = "fileName.php"
@@ -431,7 +486,6 @@ window.addEventListener("load", () => {
 
         console.groupEnd("main.requestToServer }");
     }
-
 
 
     // -------------------------------------------------------
@@ -489,30 +543,115 @@ window.addEventListener("load", () => {
 
     
     // -------------------------------------------------------
+    // Функция | Очищает элементы в выпадающих списках
+    //
+    function clearPackLists() {
+        console.group("main.clearPackLists {");
+
+        subBlock.disconnectSignals();
+        
+        while(selCode.options.length > 1) {
+            selCode.options[1].remove();
+            subBlock.item.forEach( item => {
+                item.selCode.options[1].remove();
+            });
+        }
+        subBlock.connectSignals();
+
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
     // Функция | Загрузка элементов pack из базы данных в выпадающие списки
     //
     function LoadPackLists(successFunction, errorFunction) {
         console.group("main.LoadPackLists {");
 
-        // subBlock.disconnectSignals();
+        subBlock.disconnectSignals();
         
         // отправляем запрос серверу
-        packList.load();
+        requestToServer('POST', 'http://localhost/webapp/package/getPackages.php', 'json', {},
         
-        subBlock.item.forEach( item => {
+            // если успешно и сервер вернул данные
+            function(jsonResponce) {
             
-            item.packList.load();
-        });
+                // в ответе сервера массив записей, 
+                // запись это вся информация одного элемента    
+                var rows = jsonResponce;
+
+                // перебираем записи прострочно
+                rows.forEach(row => {
+
+                    // console.log('next data row: %o', row);
+
+                    // Создаем новый элемент в главный спиок
+                    addListOption(selCode, row)
+
+                    // добавляем новый элемент в выпадающие списки внутренних прямоугольников
+                    subBlock.item.forEach( item => {
+                        
+                        // создаем <option> соответствующий очередному pack
+                        addListOption(item.selCode, row, ['code']);
+                    });
+                });
                         
                 // выбираем в списке сохраненный элемент если не пуст
                 if (selectedPack) {
-                    selectPack(selectedPack.id);
+                    setSelectedPack(selectedPack.id);
                 }
 
-                // subBlock.connectSignals();
+                subBlock.connectSignals();
+
+                successFunction();
+            },
+            
+            // если запрос серверу вернул ошибку
+            function(XMLHttpRequest) {
+
+                subBlock.connectSignals();
+                
+                errorFunction();
+            }
+        );   
         console.group();
     }
 
+
+
+    // -------------------------------------------------------
+    // Загружаем данные с сервера 
+    // получаем информацию об элементах pack
+    //
+    setStatus('Загрузка данных с сервера', 0, 3000);
+
+    LoadPackLists( 
+        
+        // в случае успеха:
+        function(){
+
+            // назначаем выбранный элемент
+            // 0 - создать новый 
+            // 1 - первый элемент в базе
+            if (selCode.options.length > 1) {
+                
+                // назначаем выбранный элемент списка
+                selCode.selectedIndex = 1;
+
+                // меняем выбранный элемент
+                setSelectedPack();
+            }
+
+            setStatus('Ok', 1000, 3000);
+        }, 
+    
+        // в случае неудачи
+        function() {
+
+            setStatus('Сервер вернул ошибку ', 1000, 3000);    
+        }
+    );
 
 
     // -------------------------------------------------------
@@ -531,7 +670,7 @@ window.addEventListener("load", () => {
     checkBoxHasContent.addEventListener('change', eventCheckBoxHasContentChanged);
 
     // Привязываем событие клика на список
-    // selCode.addEventListener('click', eventListClicked);
+    selCode.addEventListener('click', eventListClicked);
 
     // Привязываем событие получения фокуса списком
     // selCode.addEventListener('focus', eventListFocus);
@@ -540,7 +679,7 @@ window.addEventListener("load", () => {
     // selCode.addEventListener('blur', eventListBlur);
     
     // Привязываем событие выбор объекта в списке
-    // selCode.addEventListener('change', eventListItemChanged);
+    selCode.addEventListener('change', eventListItemChanged);
 
     // Привязываем событие изменения свойств элемента
     inpCodeEdit.addEventListener('input', eventItemChanged);
@@ -654,6 +793,56 @@ window.addEventListener("load", () => {
             // console.log('item mouse down: %o', pack);
             var pos = getMousePos(canvas, evt)
             var selected = pack.onClick(pos.x, pos.y);
+            
+            console.log('selectedItems: %o', pack.selectedItem);
+
+            // если выделенный элемент есть
+            if (selected && false) {
+                // меняем выбранный элемент
+                pack.item.forEach( function(item, index) {
+                    if (item.hashCode == selectedPack.selectedItem[0].hashCode) {
+                        pack = pack.item[index];
+                    }
+                });
+
+                pack.item.forEach( function(item, index) {
+                    if (item.hashCode == selectedPack.selectedItem[0].selectedItem[0].hashCode) {
+                        pack = pack.item[index];
+                    }
+                });
+                console.log('selectedItems: %o', pack);
+
+                pack.disposition = {
+                    x: 'x',
+                    y: 'y',
+                    wx: 'wx',
+                    wy: 'wy',
+                    wz: 'wz'
+                };
+                pack.viewBox = {x: 0, y: 0, wx: canvas.width, wy: canvas.height};
+                pack.autoFit = 'contain'
+
+                // запоминаем текущий элемент как ранее выбранный
+                prevousPackId = selectedPack;
+
+                // Скрываем ранее выбранный элемент на <canvas>
+                if (selectedPack) {
+                    selectedPack.hide();
+                }
+
+                // Запоминаем выбранный элемент как текущий
+                selectedPack = pack;
+
+                // Показываем текущий элемент на <canvas>
+                if (selectedPack) {
+                    selectedPack.show();
+                }
+
+                // Показываем свойства элемента
+                // Передаем блокам внутренних элементов какой элемент сейчамс выбран
+                // что бы они отобразили внутреннее содержимое выбранного элемента
+                packShowInfo(selectedPack);
+            }
         }
         console.groupEnd();
     }
@@ -763,7 +952,7 @@ window.addEventListener("load", () => {
                         console.log('элемент новый возвращаемся к ранее выбранному!!!', prevousPackId);
                         
                         // возвращаемся к ранее выбранному элементу
-                        selectPack(prevousPackId);
+                        setSelectedPack(prevousPackId);
                     }
                 }
                 
@@ -778,7 +967,7 @@ window.addEventListener("load", () => {
                     selectedPack.hide();
                     
                     // возвращаемся к ранее выбранному элементу
-                    selectPack(prevousPackId);
+                    setSelectedPack(prevousPackId);
                 }
             }
             
@@ -873,7 +1062,19 @@ window.addEventListener("load", () => {
                     clearPackLists();
 
                     // загружаем новый список элементов
-                    LoadPackLists();
+                    LoadPackLists(
+    
+                        // в случае успеха:
+                        function(){
+                
+                        }, 
+                    
+                        // в случае ошибки
+                        function() {
+                
+                            setStatus('Сервер вернул ошибку ', 1000, 5000);    
+                        }
+                    );
                         
                     // помечаем что элемент сохранен
                     lblStatusChanged.innerText = "";
@@ -918,21 +1119,26 @@ window.addEventListener("load", () => {
         // если выделенный элемент существует
         if (pack) {
 
-            var data = {
+                // запоминаем текущий элемент как ранее выбранный
+                prevousPackId = selectedPack.id;
+
+                var data = {
                 id: "0",
                 code: pack.code + ' copy',
                 name: pack.name,
                 color: pack.color.replace("#", ""),
                 disposition: pack.disposition,
+                depth: pack.depth,
+                turned: pack.turned,
                 wx: pack.wx,
                 wy: pack.wy,
                 wz: pack.wz,
+                iwx: pack.iwx,
+                iwy: pack.iwy,
+                iwz: pack.iwz,
                 payload: pack.payload,
                 material_id: pack.material_id,
                 photo_id: pack.photo_id,
-                created: null,
-                updated: null,
-                deleted: null,
                 item: []
             };
 
@@ -945,27 +1151,34 @@ window.addEventListener("load", () => {
                         name: item.name,
                         color: item.color,
                         disposition: item.disposition,
+                        depth: item.depth,
+                        turned: item.turned,
                         x: item.x,
                         y: item.y,
                         wx: item.wx,
                         wy: item.wy,
                         wz: item.wz,
+                        iwx: item.iwx,
+                        iwy: item.iwy,
+                        iwz: item.iwz,
                         payload: item.payload,
                         material_id: item.material_id,
                         photo_id: item.photo_id,
-                        created: null,
-                        updated: null,
-                        deleted: null
                     }
                 )
             });
 
             // Создаем новый элемент копируя выбранный
-            var selectedPack = packCreate(data);
+            var newPack = packCreate(data);
 
-            console.log('Copied Pack: %o', selectedPack);
+            // пометим скопированный элемент как измененный
+            newPack.changed = true;
+            console.log('newPack = %o', newPack);
     
-            // Показываем скопированный элемент на <canvas>
+            // Запоминаем выбранный элемент как текущий
+            selectedPack = newPack;
+    
+            // Показываем текущий элемент на <canvas>
             if (selectedPack) {
                 selectedPack.show();
             }
@@ -1224,6 +1437,7 @@ window.addEventListener("load", () => {
         // если элемент существует
         if (pack) {
             
+            selCode.selectedIndex = selCode.querySelector("[value=\'" + pack.id + "\']").index;
             inpCodeEdit.value = pack.code;
             inpName.value = pack.name;
             inpPayload.value = pack.payload;
@@ -1270,9 +1484,14 @@ window.addEventListener("load", () => {
     //           и переключает в режим редактирования 
     //
     function setSelectedPack(id) {
-        console.group('main.setSelectedPack');
-        console.log('id: %o', id);
+        console.group('setSelectedPack {');
 
+        // если id не прислан в параметре
+        if (!id) {
+            // то берем его из выбранного в списке <option>
+            id = selCode.selectedOptions[0].value;
+        }
+        
         // Создаем новый пустой элемент
         var pack = packCreate({id: id});
 
@@ -1283,12 +1502,12 @@ window.addEventListener("load", () => {
             // если новый элемент создан
             if (pack) {
 
+                // запоминаем текущий элемент как ранее выбранный
+                prevousPackId = selectedPack.id;
+
                 // Запоминаем выбранный элемент как текущий
                 selectedPack = pack;
     
-                // помечаем элемент как новый
-                selectedPack.changed = true;
-
                 // Показываем текущий элемент на <canvas>
                 selectedPack.show();
                 
@@ -1309,4 +1528,20 @@ window.addEventListener("load", () => {
         console.log('pack = %o', pack);
         console.groupEnd();
     }
+
+
+
+    // -------------------------------------------------------
+    // Слот | Выбор объекта в списке
+    //
+    function eventListItemChanged(e) {
+        // e.preventDefault();
+        console.group('eventListItemChanged {');
+        
+        // меняем выбранный элемент
+        setSelectedPack();
+
+        console.groupEnd();
+    }
+
 });
