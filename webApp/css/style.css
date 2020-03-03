@@ -203,16 +203,9 @@ header.header__sub div {
     display: inline-block;
     background-color: var(--color-crBrown);
 }
-.dropdown input {
+.dropdown input:focus {
     padding-right: 0;
-}
-
-#myInput:focus button.dropbtn {
-    border: 1px solid var(--color-chateauGrey);
-
-}
-#myInput:focus {
-    /* border-right: none; */
+    border: none;
 }
 
 /* The search field */
@@ -257,6 +250,8 @@ header.header__sub div {
     min-width: 100%;
     z-index: 1;
     margin: 1.3em 0 0 0em;
+    height: 90vh;  /* для скролла в списке */
+    overflow-y: auto;  /* для скролла в списке */
 }
 
 /* Links inside the dropdown */
@@ -268,7 +263,8 @@ header.header__sub div {
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content li:hover {
+.dropdown-content li:hover, .dropdown-content li .selected {
+    color: #fff;
     background-color: #3A72E0;
     cursor: pointer;
 }
