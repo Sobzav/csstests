@@ -33,6 +33,8 @@ class SearchList {
         this._input = ul.parentNode.getElementsByTagName("input")[0];            // строка ввода поискового запроса
         this._button = ul.parentNode.getElementsByTagName("button")[0];          // кнопка, раскрывающая весь список
 
+        this._item0 = '';       // нулевой пункт списка, если не инициализирован, то не отображается
+
         this._selectedId;       // id выбранного элемента
         this._prevouseId;       // id предыдущего выбранного элемента
         this._selectedIndex;    // номер элемента выбранного в списке
@@ -48,8 +50,11 @@ class SearchList {
         // Сигналы | 
         //
         
+        // когда выбран нулевой элемент в спсиске
+        this.onItem0;
+
         // когда выбран новый элемент в спсиске поисковой выдачи
-        this.changed;
+        this.onChange;
         
         this._input.addEventListener('input', event => this.slotInputChange(event));
         this._button.addEventListener('click', event => this.slotClick(event));
@@ -102,10 +107,22 @@ class SearchList {
 
 
     // -------------------------------------------------------
+    // Свойство | Нулевой элемент
+    //
+    set item0(value) {
+        this._item0 = value;
+    }
+
+    get item0() {return this._item0;}
+
+
+
+    // -------------------------------------------------------
     // Свойство | id выбранного элемента
     //
     set selectedId(value) {
         this._selectedId = value;
+        this.updateInput(value);
     }
 
     get selectedId() {return this._selectedId;}
@@ -153,7 +170,7 @@ class SearchList {
 
 
     // -------------------------------------------------------
-    // Функция | Очищает выпадающий список поисковой выдачи
+    // Метод | Очищает выпадающий список поисковой выдачи
     //
     clearList() {
         // console.group("Class SearchList.clearList");
@@ -168,6 +185,63 @@ class SearchList {
 
 
     // -------------------------------------------------------
+    // Метод | Делает форматированную строку для отображения 
+    //         элементов списка и текстра выбранного элемента
+    //         в элементе <input>
+    //
+    formatedContent(row, format) {
+        // console.groupCollapsed("Class SearchList.formatedContent");
+        // console.log('row: %o', row);
+        // console.log('format: %o', format);
+        
+        var prefix = '';
+        var innerText = "";
+        
+        format.forEach( item => {
+            if (item[0] == '(') {
+                var arr = item.replace(/\(|\)/g, '').split(' ');
+                
+                innerText += (row[arr[1]] && (row[arr[1]] != '0')) ? (prefix + arr[0] + ' ' + row[arr[1]] + ' ' + arr[2]) : '';
+            } else {
+                innerText += (item != '|') ? (row[item] ? (prefix + row[item]) : (prefix + item)) : '';
+            }
+            prefix = (item == '|') ? '<i>|</i>' : '';
+        });
+        // console.groupEnd();
+        return innerText;
+    }
+    
+
+
+    // -------------------------------------------------------
+    // Метод | Раскрывает список поисковой выдачи
+    // 
+    expand() {
+        // console.groupCollapsed("Class SearchList.updateList");
+
+        this._ul.classList.remove("hidden");
+
+        this._expanded = true;
+        // console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Сворачивает список поисковой выдачи
+    // 
+    collapse() {
+        // console.groupCollapsed("Class SearchList.updateList");
+
+        this._ul.classList.add("hidden");
+
+        this._expanded = false;
+        // console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
     // Метод | Обновляет списка поисковой выдачи
     // 
     updateList(rows) {
@@ -175,38 +249,42 @@ class SearchList {
 
         this.clearList();
 
-        console.log('this._listFormat: %o', this._listFormat);
+        if (this._item0) {
+
+            // если есть нулевой элемент
+            var li = document.createElement('li');
+            
+            li.value = 0;
+            
+            // Форматированная строка вывода для элемента списка
+            li.innerHTML = this._item0;
+            
+            if (this.onItem0) {
+
+                li.addEventListener('click', event => this.slotChange(event));
+            }
+            
+            // добавляем нулевой элемент в выпадающий список
+            this._ul.appendChild(li);
+        }
+
         rows.forEach( row => {
 
             var li = document.createElement('li');
             
             li.value = row.id;
             
-            var prefix = '';
-            var innerText = "";
-
-            this._listFormat.forEach( item => {
-                if (item[0] == '(') {
-                    var arr = item.replace(/\(|\)/g, '').split(' ');
-                    
-                    innerText += (row[arr[1]] && (row[arr[1]] != '0')) ? (prefix + arr[0] + ' ' + row[arr[1]] + ' ' + arr[2]) : '';
-                } else {
-                    innerText += (item != '|') ? (row[item] ? (prefix + row[item]) : (prefix + item)) : '';
-                }
-                prefix = (item == '|') ? '<i>|</i>' : '';
-            });
-            
-            li.innerHTML = innerText;
+            // Форматированная строка вывода для элемента списка
+            li.innerHTML = this.formatedContent(row, this._listFormat);
 
             li.addEventListener('click', event => this.slotChange(event));
                         
-            // добавляем новый элемент в выпадающий список список на форме
+            // добавляем новый элемент в выпадающий список
             this._ul.appendChild(li);
         });
 
-        this._ul.classList.remove("hidden");
-
-        this._expanded = true;
+        // Обновляем выбранный элемент в выпадающем списке
+        this.updateSelected(this._selectedId);
 
         // console.log("listItem: %o",  item);
         // console.groupEnd();
@@ -279,7 +357,10 @@ class SearchList {
 
             // если успешно и сервер вернул данные
             function(target, jsonResponce) {
-                    
+                
+                // сохраняем ответ сервера до новой загрузки
+                target._searchResult = jsonResponce;
+
                 // в ответе сервера массив записей 
                 target.updateList(jsonResponce);
 
@@ -307,8 +388,84 @@ class SearchList {
 
         this._searchQuery = this._input.value;
 
-        this.load();
+        this.load(
+            function(target, caller) {
+                caller.expand();
+            },
 
+            function() {
+            },
+
+            this
+        );
+
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Обновляет выбранный элемент и его отображаемое в input
+    //
+    updateInput(id) {
+        console.group("Class SearchList.updateInput");
+        console.log('selected id: %o', id);
+
+        if (id > 0) {
+
+            var row = this._searchResult.find( row => row.id == id);
+            
+            // если выбранный элемент есть
+            if (row) {
+                console.log('selected row: %o', row);
+                // отображаем выбранный элемент в input с учетом формтирования
+                this._input.value = this.formatedContent(row, this._selectedFormat);
+            }
+        } else {
+
+            this._input.value = this._item0;
+        }
+
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Обновляет выбранный элемент и его отображаемое в input
+    //
+    updateSelected(id) {
+        console.group("Class SearchList.updateSelected");
+        console.log('selected id: %o', id);
+
+        // ищем выбранный ранее элемент
+        var item = this._ul.querySelector("[class=\'selected\']");
+        
+        // если выбранный ранее есть
+        if (item) {
+            // то убираем выделение
+            item.classList.remove('selected');
+        }
+            
+        if (id && (id > 0)) {
+
+            var row = this._searchResult.find( row => row.id == id);
+            console.log('selected row: %o', row);
+            
+            // ищем вновь выбранный элемент
+            item = this._ul.querySelector("[value=\'" + id + "\']");
+            
+        } else {
+
+            // ищем нулевой элемент
+            item = this._ul.querySelector("[value=\'0\']");
+        }
+
+        // если выбранный элемент есть
+        if (item) {
+            // то подсвечиваем его
+            item.classList.add('selected');
+        }
         console.groupEnd();
     }
 
@@ -318,9 +475,12 @@ class SearchList {
     // Слот | Если изменился выбранный элемент в списке
     //
     slotChange(event) {
-        console.group("class SearchList.slotChange");
-
+        console.group("Class SearchList.slotChange");
         console.log(event);
+
+        // очищаем поисковый запрос, что бы загрузить весь список
+        this._searchQuery = '';
+
         // id выбранного элемента
         var id = parseInt(event.target.value);
 
@@ -334,13 +494,20 @@ class SearchList {
         // сохраняем id выбранного элемента
         this._selectedId = event.target.value;
 
-        this._input.value = event.target.innerText;
-        this._ul.classList.add("hidden");
-        this._expanded = false;
+        // Обновляем выбранный элемент и его отображаемое в input
+        this.updateInput(id);
 
-        // передаем сигнал, что выбранный элемент изменился
-        this.changed(this._selectedId);
-        // if (this.changed) {}
+        this.collapse();
+
+        if (id > 0) {
+
+            // передаем сигнал, что выбранный элемент изменился
+            if (this.onChange) {this.onChange(this._selectedId);}
+        } else {
+
+            // передаем сигнал, что выбран нулевой элемент
+            if (this.onItem0) {this.onItem0(0);}
+        }
 
         console.groupEnd();
     }
@@ -355,13 +522,20 @@ class SearchList {
 
         if (this._expanded) {
 
-            this._ul.classList.add("hidden");
-            this._expanded = false;
+            this.collapse();
         } else {
 
-            this.load();
-        }
+            this.load(
+                function(target, caller) {
+                    caller.expand();
+                },
 
+                function() {
+                },
+
+                this
+            );
+        }
         console.groupEnd();
     }
 
@@ -371,18 +545,16 @@ class SearchList {
     // Слот | Если input потерял фокус
     //
     slotInputBlur(event) {
-        console.group("class SearchList.slotInputBlur");
+        // console.group("class SearchList.slotInputBlur");
 
         if (this._expanded) {
 
             setTimeout(() => {
 
-                this._ul.classList.add("hidden");
-                this._expanded = false;
+                this.collapse();
             }, 300);
         }
-
-        console.groupEnd();
+        // console.groupEnd();
     }
 
 
@@ -391,18 +563,16 @@ class SearchList {
     // Слот | Если элемент потерял фокус
     //
     slotBlur(event) {
-        console.group("class SearchList.slotBlur");
+        // console.group("class SearchList.slotBlur");
+        // console.log(event);
 
-        console.log(event);
         if (this._expanded) {
 
             setTimeout(() => {
 
-                this._ul.classList.add("hidden");
-                this._expanded = false;
+                this.collapse();
             }, 300);
         }
-
-        console.groupEnd();
+        // console.groupEnd();
     }
 }

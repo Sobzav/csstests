@@ -49,8 +49,11 @@ const btn = {
     NoButton	    : 0x00000000, 	// An invalid button.        
 };
 
+// формат выпадающего списка
+const listFormat = ['code', '|', 'name', '|', 'wx', 'x', 'wy', 'x', 'wz', '|', 'iwx', 'x', 'iwy', 'x', 'iwz', '|', '(Внут item_count шт)']
 
-
+// формат вывода выбранного элемента выпадающего списка
+const selectedFormat = ['code', ' | ', 'name'];
 
 
 // -------------------------------------------------------
@@ -124,7 +127,7 @@ window.addEventListener("load", () => {
     //           элементы выбирает по селектору selector
     //
     function setDomElementsEnabled(selector, enabled) {
-        console.group("main.setDomElementsEnabled { selector: %o; enabled: %b", selector, enabled);
+        console.group("main.setDomElementsEnabled { selector: %o; enabled: %o", selector, enabled);
 
         // получаем htmlCollection - коллекцию элементов с классом disabled
         var disabledItems = document.querySelectorAll(selector);
@@ -154,11 +157,12 @@ window.addEventListener("load", () => {
     // Функция | Создает елемент в DOM по названию тэга
     //
     function domCreateElement(tagName) {
-        console.group("main.domCreateElement { tagName: %o", tagName);
+        console.group("main.domCreateElement");
+        
         var item = document.createElement(tagName);
-        console.log("elment=%o", item);
-
-        console.groupEnd("main.domCreateElement }");    
+        
+        console.log("elment: %o", item);
+        console.groupEnd();    
         return item;
     }
 
@@ -188,6 +192,7 @@ window.addEventListener("load", () => {
     const btnTurn = domElementById("btnTurn");
     const btnApply = domElementById("btnApply");
     const lblStatus = domElementById("lblStatus");
+    const lblStatusEdit = domElementById("lblStatusEdit");
     const lblStatusChanged = domElementById("lblStatusChanged");
     const lblStatusInfo = domElementById("lblStatusInfo");
     // получаем и сохраняем указатель на <canvas> где будет вся графика
@@ -200,7 +205,7 @@ window.addEventListener("load", () => {
     //
 
     // настройки отображения, по умолчанию normalView
-    var settings = normalView;
+    settings = normalView;
 
     // Настраиваем размер и разрешение <canvas>
     canvas.style.width = settings.canvasWx + 'px';
@@ -213,18 +218,22 @@ window.addEventListener("load", () => {
 
     // выпадающий список для выбора текущего элемента из базы данных
     var packList = new SearchList(domElementById("packList"), '../searchList/getList.php');
+    packList.item0 = 'Новый';
+    packList.listFormat = listFormat;
+    packList.selectedFormat = selectedFormat;
 
-    packList.listFormat = ['code', '|', 'name', '|', 'wx', 'x', 'wy', 'x', 'wz', '|', 'iwx', 'x', 'iwy', 'x', 'iwz', '|', '(Внут item_count шт)'];
+    // если в списке выбран нулевой пункт, то создаем новый элемент
+    packList.onItem0 = (event) => packNew(event);
 
-    packList.changed = (id) => setSelectedPack(id);
-    // packList.load();
+    // если в списке выбран не нулевой пункт
+    packList.onChange = (id) => setSelectedPack(id);
 
 
     // Блоки редактирования внутренних элементов,
     // структура хранящая количество блоков в count
     // и блоки в item с количеством горизонтальных рядов
     // и количеством элементов в каждом ряде
-    var subBlock = new SubBlockContainer();
+    var subBlock = new SubBlockContainer('subBlock_');
 
     // ссылка на текущий выбранный элемент
     var selectedPack;
@@ -232,117 +241,6 @@ window.addEventListener("load", () => {
     // флагн режима редактирования
     var editMode = false;
 
-
-
-    // -------------------------------------------------------
-    // Создаем 4 блока для редактирования внутренних элементов
-    // запоминаем указатели на элементы формы для внутренних прямоцгольников в массиве
-    //
-    console.group("main.addSubBlockElements {");
-
-    // массив всех вариантов имен внутренних элементов без индексов
-    var subBlockElementIds = ['inpSizeWx', 'inpSizeWy', 'selCode', 'inpNy', 'inpNx', 'inpTotal'];
-    var subBlockElementNames = ['package_wx', 'package_wy', 'package_code', 'package_Ny', 'package_Nx', 'package_total'];
-    
-    // получаем темплейт блока внутренних элементов 
-    var subBlockTamplate = domElementById('subBlockTamplate');
-    
-    // получаем контейнер темплейта
-    var subBlockContainer = subBlockTamplate.parentNode;
-    
-    // удаляем из DOM темплейт
-    subBlockContainer.removeChild(subBlockTamplate);
-    
-    console.log("subBlockTamplate: %o", subBlockTamplate);
-
-    // запускаем цикл для всех блоков
-    for(var blockIndex = 0; blockIndex < 9; blockIndex++) {
-        
-        // копированием из темплейта создаем очередной блок внутренних элементов
-        var newSubBlock = subBlockTamplate.cloneNode(true);
-
-        // даем id новому блоку
-        newSubBlock.id = 'subBlock' + (blockIndex + 1);
-        console.log("newSubBlock: %o", newSubBlock);
-
-        // даем номер (для отображения на форме) новому блоку
-        var subLabel = newSubBlock.querySelector('#' + 'subLabel');
-        subLabel.id = subLabel.id + blockIndex;
-        subLabel.innerText = (blockIndex + 1);
-                
-        // перебираем все варианты имеен элементов в новом блоке
-        subBlockElementIds.forEach(subBlockElementId => {
-            console.log("subBlockElementId: %o", subBlockElementId);
-            
-            // получаем очередной элемент блока
-            var subBlockElement = newSubBlock.querySelector('#' + subBlockElementId + '_');
-            console.log("subBlockElement: %o", subBlockElement);
-            
-            // даем id и name элементу блока 
-            subBlockElement.id = subBlockElementId + blockIndex;
-            // subBlockElement.name = subBlockElementNames + (blockIndex + 1);
-        });
-
-        // добавляеем созданный блок в конейнер
-        subBlockContainer.appendChild(newSubBlock);
-
-        // показываем блок внутренних элементов
-        newSubBlock.classList.remove('hidden');
-
-        // добавляем блок внутренних элементов
-        subBlock.add(
-            blockIndex, 
-            document.querySelector('#selCode' + blockIndex),
-            document.querySelector('#inpNx' + blockIndex),
-            document.querySelector('#inpNy' + blockIndex),
-            document.querySelector('#inpSizeWx' + blockIndex),
-            document.querySelector('#inpSizeWy' + blockIndex),
-            document.querySelector('#inpTotal' + blockIndex)
-        );
-
-        var subBlockItem = subBlock.item[blockIndex];
-
-        // привязываем событие изменения полей блока 
-        console.log("{ subBlock.item[blockIndex]: %o", subBlockItem);
-        // Привязываем событие получения фокуса списком
-        subBlockItem.selCode.addEventListener('focus', eventListFocus);
-
-        // Привязываем событие потери списком фокуса 
-        subBlockItem.selCode.addEventListener('blur', eventListBlur);
-    }
-    console.groupEnd("main.addSubBlockElements }");
-
-
-
-
-    // -------------------------------------------------------
-    // Функция | Создает элемент <option> для списка <select>
-    // 
-    function addListOption(list, row, 
-        showDetailes = ['code', ' | ', 'name', ' | ', 'wx', 'x', 'wy', 'x', 'wz'],  
-        detailes = ['code', ' | ', 'name', ' | ', 'wx', 'x', 'wy', 'x', 'wz']) {
-        // console.groupCollapsed("main.addListOption { ");
-
-        var item = document.createElement('option');
-
-        item.value = row.id;
-        
-        detailes.forEach( detail => {
-            item.innerText += row[detail] ? row[detail] : detail;
-        });
-
-        item.innerText += row.item ? (' | Внут ' + row.item.length + ' шт') : '';
-
-        item.label = item.innerText;
-
-        // добавляем новый элемент в выпадающий список список на форме
-        list.appendChild(item);
-
-        // console.log("option: %o",  item);
-        // console.groupEnd();
-        return item;
-    }
-    
 
 
     // -------------------------------------------------------
@@ -379,58 +277,12 @@ window.addEventListener("load", () => {
             canvas                  // canvas где будет отображен элемент
         );
 
+        pack.onChange = (pack) => packShowStatusChanged(pack);
+
         console.groupEnd();
         return pack;
     }
 
-
-
-    // -------------------------------------------------------
-    // Функция | Запрос серверу в формате ajax
-    //           type = "POST" / "GET"
-    //           url = "fileName.php"
-    //           dataType = "json"
-    //           возвращает данные в формате json в случае успеха
-    //           либо false в случае ошибки
-    //
-    function requestToServer(type, url, dataType, data, successFunction, errorFunction) {
-        console.group("main.requestToServer { url = %o ", url);
-
-        console.time();
-
-        // отправляем запрос серверу
-        $.ajax({
-            type: type,
-            url: url,
-            dataType: dataType,
-            data,
-
-            // получаем ответ в случае успеха
-            success: function(jsonResponce, textStatus, jqXHR) {
-    
-                console.log('data: %o', jsonResponce);
-                console.log('textStatus: ' + textStatus);
-                console.timeEnd();
-                console.log('jqXHR: %o', jqXHR);
-    
-                // возвращаем ответ сервера
-                successFunction(jsonResponce);
-            },
-
-            // получаем ответ в случае ошибок
-            error: function(XMLHttpRequest, textStatus, jqXHR) {
-    
-                console.warn('textStatus: ' + textStatus);
-                console.timeEnd();
-                console.warn('jqXHR: %o', jqXHR);
-                
-                // возвращаем ошибку
-                errorFunction(XMLHttpRequest);
-            }
-        });
-
-        console.groupEnd("main.requestToServer }");
-    }
 
 
 
@@ -479,6 +331,7 @@ window.addEventListener("load", () => {
 
                     setStatus('ошибка загрузки: ' + textStatus, 1000, 5000);
                 },
+
                 this,
                 depth
             );
@@ -492,23 +345,29 @@ window.addEventListener("load", () => {
     // Функция | Загрузка элементов pack из базы данных в выпадающие списки
     //
     function LoadPackLists(successFunction, errorFunction) {
-        console.group("main.LoadPackLists {");
+        console.group("main.LoadPackLists");
 
         // subBlock.disconnectSignals();
         
         // отправляем запрос серверу
-        packList.load();
-        
-        subBlock.item.forEach( item => {
-            
-            item.packList.load();
-        });
-                        
+        packList.load(
+            function() {
+
+                subBlock.item.forEach( item => {
+                    
+                    // item.packList.load();
+                });
+
                 // выбираем в списке сохраненный элемент если не пуст
                 if (selectedPack) {
-                    selectPack(selectedPack.id);
+                    packList.selectedId = selectedPack.id;
                 }
 
+            },
+            function() {},
+            this
+        );
+        
                 // subBlock.connectSignals();
         console.group();
     }
@@ -529,18 +388,6 @@ window.addEventListener("load", () => {
 
     // Привязываем событие изменение checkbox "объект имеет содержимое"
     checkBoxHasContent.addEventListener('change', eventCheckBoxHasContentChanged);
-
-    // Привязываем событие клика на список
-    // selCode.addEventListener('click', eventListClicked);
-
-    // Привязываем событие получения фокуса списком
-    // selCode.addEventListener('focus', eventListFocus);
-
-    // Привязываем событие потери списком фокуса 
-    // selCode.addEventListener('blur', eventListBlur);
-    
-    // Привязываем событие выбор объекта в списке
-    // selCode.addEventListener('change', eventListItemChanged);
 
     // Привязываем событие изменения свойств элемента
     inpCodeEdit.addEventListener('input', eventItemChanged);
@@ -711,93 +558,82 @@ window.addEventListener("load", () => {
     //           - Сохраняем эелемент если он был изменен
     //
     function setEditMode(mode) {
-        console.group('set EditMode to: %o', mode);
-
-        console.log('selectedPack = %o', selectedPack);
-
-        if (mode) {
+        console.group('main.setEditMode');
         
-            // включаем режим редактирования [ РЕДАКТИРОВАТЬ ]
-            editMode = true;
+        console.log('selectedPack: %o', selectedPack);
+        
+        if (selectedPack) {
+            console.log('set editMode to: %o', mode);
+            
+            if (mode) {
+            
+                // включаем режим редактирования [ РЕДАКТИРОВАТЬ ]
+                editMode = true;
 
-            // сохраняем копию выбранного элемента для отмены изменений
-            // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
+                // сохраняем копию выбранного элемента для отмены изменений
+                // beforChangePack = JSON.parse(JSON.stringify(selectedPack));
 
-            setDomElementsEnabled('#btnCopy', false);
-            if (selectedPack.item.length > 0) {setDomElementsEnabled('.subInput', true);}
+                setDomElementsEnabled('#btnCopy', false);
+                if (selectedPack.item.length > 0) {setDomElementsEnabled('.subInput', true);}
+                    
+                // показываем поле для воода типа
+                editPanel.classList.remove('hidden');
                 
-            // показываем поле для воода типа
-            editPanel.classList.remove('hidden');
-            
-            // прячем список для выбора типа
-            selectPanel.classList.add('hidden');
-            
-            setStatus('Режим редактирования включен', 0, 3000);
-        } else {
-            
-            // отключаем режим редактирования [ НАЗАД ]
-            editMode = false;
-            
-            // если элемент был изменен
-            console.log('selectedPack.changed = %o', selectedPack.changed);
-            if (selectedPack.changed) {
+                // прячем список для выбора типа
+                selectPanel.classList.add('hidden');
                 
-                // Предлагаем пользователю сохранить изменения
-                var reply = messageBox('Тип "' + selectedPack.code + '" был изменен, хотите сохранить?');
+                lblStatusEdit.value = 'Редактирование';
+            } else {
                 
-                // Если пользователь хочет сохранить изменения
-                if (reply == btn.Yes) {
+                // отключаем режим редактирования [ НАЗАД ]
+                editMode = false;
+                
+                // если элемент был изменен
+                console.log('selectedPack.changed: %o', selectedPack.changed);
+                if (selectedPack.changed) {
                     
-                    console.log('выполнить: Сохранение элемента');
+                    // Предлагаем пользователю сохранить изменения
+                    var reply = messageBox('Тип "' + selectedPack.code + '" был изменен, хотите сохранить?');
                     
-                    // сохраняем элемент в БД
-                    packSave(selectedPack);
-                } else {
-                    
-                    // восстанавливаем выбранный элемент из копии до изменений
-                    // selectedPack = JSON.parse(JSON.stringify(beforChangePack));
-                    console.log('selectedPack.id = %o', selectedPack.id);
-                    
-                    // и если выбранный элемнт является новым
-                    if (selectedPack.id == 0) {
-                        console.log('элемент новый возвращаемся к ранее выбранному!!!', prevousPackId);
+                    // Если пользователь хочет сохранить изменения
+                    if (reply == btn.Yes) {
                         
-                        // возвращаемся к ранее выбранному элементу
-                        selectPack(prevousPackId);
+                        console.log('выполнить: Сохранение элемента');
+                        
+                        // сохраняем элемент в БД
+                        packSave(selectedPack);
+                    } else {
+                                            
+                        // и если выбранный элемнт является новым
+                        if (selectedPack.new) {
+                            
+                            // возвращаемся к ранее выбранному элементу
+                            setSelectedPack(packList.prevouseId);
+                        } else {
+
+                            // возвращаемся к ранее выбранному элементу
+                            setSelectedPack(packList.selectedId);
+                        }
                     }
                 }
                 
-                // если элемент не изменен
-            } else {
-                
-                // и он новый то удаляем его
-                if (selectedPack.id == 0) {
-                    console.log('элемент новый, не сохраняем, удаляем его и возвращаемся к ранее выбранному!!!', prevousPackId);
-                    
-                    // убираем его с <canvas>
-                    selectedPack.hide();
-                    
-                    // возвращаемся к ранее выбранному элементу
-                    selectPack(prevousPackId);
-                }
-            }
-            
-            // блокируем инпуты внутренних элементов
-            setDomElementsEnabled('.subInput', false);
-            setDomElementsEnabled('#btnCopy', true);
+                // блокируем инпуты внутренних элементов
+                setDomElementsEnabled('.subInput', false);
+                setDomElementsEnabled('#btnCopy', true);
 
-            // прячем поле для воода типа
-            editPanel.classList.add('hidden');
+                // прячем поле для воода типа
+                editPanel.classList.add('hidden');
+                
+                // показываем список для выбора типа
+                selectPanel.classList.remove('hidden');     
+                
+                lblStatusEdit.value = '';
+            }       
+            // делаем инпуты доступными / блокируем делаем инпуты
+            setDomElementsEnabled('.mainInput', mode);
             
-            // показываем список для выбора типа
-            selectPanel.classList.remove('hidden');     
-            
-            setStatus('Режим редактирования отключен', 1000, 3000);
-        }       
-        
-        // делаем инпуты доступными / блокируем делаем инпуты
-        setDomElementsEnabled('.mainInput', mode);
-        
+        }
+
         console.groupEnd();
     }    
     
@@ -842,7 +678,8 @@ window.addEventListener("load", () => {
     //           иначе оновляет объект в базе
     //
     function packSave(pack) {
-        console.group('packSave { pack = %o', pack);
+        console.group('main.packSave');
+        console.log('pack: %o', pack);
 
         setStatus('Сохранение данных', 0, 3000);
 
@@ -861,28 +698,23 @@ window.addEventListener("load", () => {
                     // если ответ сервера содержит ошибки
                     if (parseInt(result.errCount) > 0) {
                         alert('Ошибка: ' + result.errDump);
-                    }
+                    } else {
 
-                    // запоминаем сохраненный элемент как ранее выбранный
-                    prevousPackId = savedPack.id;
-
-                    // запоминаем сохраненный элемент как выбранный
-                    selectedPack = savedPack;
-        
-                    // очищаем списоки элементов
-                    clearPackLists();
-
-                    // загружаем новый список элементов
-                    LoadPackLists();
+                        // запоминаем сохраненный элемент как ранее выбранный
+                        //  prevousPackId = savedPack.id;
                         
-                    // помечаем что элемент сохранен
-                    lblStatusChanged.innerText = "";
-
+                        // запоминаем сохраненный элемент как выбранный
+                        selectedPack = savedPack;
+                        
+                        // загружаем новый список элементов
+                        LoadPackLists();
+                        
+                        // показываем сообщение в statusbar
+                        setStatus('Сохранено', 1000, 5000);
+                    }
+                        
                     setDomElementsEnabled('#btnApply', true);
                     setDomElementsEnabled('#btnBack', true);
-
-                    // показываем сообщение в statusbar
-                    setStatus('Сохранено', 1000, 5000);
                 },
                 
                 // если сервер вернулошибку
@@ -891,16 +723,9 @@ window.addEventListener("load", () => {
                     setDomElementsEnabled('#btnApply', true);
                     setDomElementsEnabled('#btnBack', true);
 
-                    // вывод сообщения об ошибке на странице
-                    setStatus('Сервер вернул ошибку ' + textStatus, 1000, 5000);
+                    alert('Ошибка: ' + textStatus);
                 }
             );   
-
-        // вероятно ни один элемент не выделен, сообщаем об этом
-        } else {
-
-            setStatus('Сохранение неудачно. Ничего не выбрано', 1000, 3000);
-            console.log('pack пуст или не существует !!!');
         }
         console.groupEnd();
     }
@@ -1073,10 +898,6 @@ window.addEventListener("load", () => {
             }            
             
             inpVolume.innerHTML = packVolume(pack);
-
-            // помечаем что элемент изменен
-            pack.changed = true;
-            lblStatusChanged.innerText = "Не сохранено";
         } 
         console.groupEnd();
     }
@@ -1110,7 +931,7 @@ window.addEventListener("load", () => {
     // Слот | Событие изменение checkbox "объект имеет содержимое"
     //
     function eventCheckBoxHasContentChanged(e) {
-        console.group('main.eventCheckBoxHasContentChanged {');
+        console.group('main.eventCheckBoxHasContentChanged');
 
         // если установлена галка Внутренние элементы
         if (e.target.checked) {
@@ -1125,22 +946,9 @@ window.addEventListener("load", () => {
             // очищаем внутренние элементы блоков
             subBlock.clear();
             subBlock.clearData();
-            subBlock.updateTotal();
             subBlock.updatePack();
         }
-
-        // получаем выделенный элемент
-        var pack = selectedPack;
-
-        // если в списке выбран элемент
-        if (pack) {
-            console.log('item: %o', pack);
-
-            // помечаем что элемент изменен
-            pack.changed = true;
-            lblStatusChanged.innerText = "Не сохранено";
-        }    
-        console.groupEnd('eventCheckBoxHasContentChanged }');
+        console.groupEnd();
     }
 
 
@@ -1205,7 +1013,7 @@ window.addEventListener("load", () => {
     // когда список раскрыт элементы в нем показаны как Обозначение | Наименование
     //
     function eventListBlur(e) {
-        console.groupCollapsed('eventListBlur {');
+        console.groupCollapsed('eventListBlur');
 
         // меняем элементы в выпадающем списке на форме
         setSelectItemsDetiled(e.target, false)
@@ -1216,10 +1024,24 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
+    // Функция |  Обновляет статус элемента "Изменен"
+    //
+    function packShowStatusChanged(pack) {
+        console.group('packShowStatusChanged');
+
+        // выводим статус что элемент изменен
+        lblStatusChanged.innerText = ((pack.changed) ? "Изменен" : "");
+
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
     // Функция | Показываем свойства элемента на форме
     //
     function packShowInfo(pack) {
-        console.group('packsShowInfo {');
+        console.group('packsShowInfo');
 
         // если элемент существует
         if (pack) {
@@ -1235,18 +1057,8 @@ window.addEventListener("load", () => {
             inpInternalSizeWz.value = pack.iwz;
             inpColor.value = pack.color;
             inpVolume.innerHTML = packVolume(pack);
+            checkBoxHasContent.checked = (pack.item.length > 0);
     
-            // если у элемента pack есть внутренние элементы
-            if (pack.item.length > 0) {
-
-                // ставим галочку что есть внутренние элементы 
-                checkBoxHasContent.checked = true;
-            
-                // если внутренних элементов нет
-            } else {
-
-                checkBoxHasContent.checked = false;
-            }
         } else {
 
             checkBoxHasContent.checked = false;
@@ -1254,9 +1066,6 @@ window.addEventListener("load", () => {
         
         // заполняем/очищаем поля внутренних элементов
         subBlock.showInfo(pack);
-
-        // выводим статус что элемент изменен
-        lblStatusChanged.innerText = ((pack.changed) ? "Не сохранен" : "");
 
         console.groupEnd();
     }
@@ -1286,9 +1095,6 @@ window.addEventListener("load", () => {
                 // Запоминаем выбранный элемент как текущий
                 selectedPack = pack;
     
-                // помечаем элемент как новый
-                selectedPack.changed = true;
-
                 // Показываем текущий элемент на <canvas>
                 selectedPack.show();
                 

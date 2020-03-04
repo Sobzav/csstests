@@ -35,9 +35,25 @@ body {
 
 body,
 .gridContainer,
-.gridContainer--whouse {
+.gridContainer--whouse,
+.gridContainer--menu {
     min-height: 100vh;
     max-height: 100%;
+}
+
+.gridContainer--menu {
+    display: grid;
+    width: 1200px;
+    background-color: var(--color-raven);
+    /* margin: 0 1.5rem; по левой стороне */
+    margin: 0 auto;
+    /* по центру */
+    padding: 0 25px;
+    /* width: max-content; */
+    grid-template-columns: 1fr;
+    grid-template-rows: repeat(4, min-content);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
 }
 
 /* GRID-Контейнер для всего содержимого страницы */
@@ -191,7 +207,7 @@ header.header__sub div {
     border: none;
     cursor: pointer;
     margin: 0;
-    line-height: 1em;
+    line-height: 17px;
     /* vertical-align: top; */
 }
 
@@ -202,22 +218,26 @@ header.header__sub div {
 }
 
 .dropdown-input {
-    margin: 0!important;
+    margin: 0 !important;
 }
+
 .dropdown {
     position: relative;
     display: inline-block;
 }
+
 .dropdown input:focus {
     /* padding-right: 0; */
     border: 1px solid var(--color-crBrown);
 }
 
 /* The search field */
-#myInput, #selCode_ {
+#myInput,
+#selCode_ {
     box-sizing: border-box;
     padding-right: 0;
 }
+
 /* #myInput i {
     padding: 0 7px;
     font-style: normal;
@@ -231,10 +251,11 @@ header.header__sub div {
 } */
 
 .dropdown-content .show {
-    box-shadow: 0px 0px 3px #888888;  /* тень вокруг блока выпадающего списка */
+    box-shadow: 0px 0px 3px #888888;
+    /* тень вокруг блока выпадающего списка */
 }
 
-.dropdown-content li i{
+.dropdown-content li i {
     padding: 0 7px;
     font-style: normal;
 }
@@ -250,7 +271,7 @@ header.header__sub div {
 }
 
 .wide-100 .dropdown input {
-    margin: 0!important;
+    margin: 0 !important;
 }
 
 /* Dropdown Content (Hidden by Default) */
@@ -260,8 +281,10 @@ header.header__sub div {
     min-width: 100%;
     z-index: 1;
     margin: 1.3em 0 0 0em;
-    height: 90vh;  /* для скролла в списке */
-    overflow-y: auto;  /* для скролла в списке */
+    max-height: 70vh;
+    /* для скролла в списке */
+    overflow-y: auto;
+    /* для скролла в списке */
 }
 
 /* Links inside the dropdown */
@@ -273,14 +296,17 @@ header.header__sub div {
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content li:hover, .dropdown-content li .selected {
+.dropdown-content li:hover,
+.dropdown-content .selected {
     color: #fff;
     background-color: #3A72E0;
     cursor: pointer;
 }
+
 .show {
     display: block;
 }
+
 /* Hide the dropdown menu (use JS to remove this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .hidden {
     display: none;
@@ -320,11 +346,24 @@ main {
     grid-area: 1 / 1 / 2 / 3;
 }
 
+/* .gridContainer--menu header.header-top {
+    grid-area: 1 / 1 / 2 / 2;
+} */
+
 /* Левая панель с канвасом */
 .item-1 {
     display: grid;
     grid-area: 3 / 1 / 4 / 2;
 }
+
+.gridContainer--menu .top-menu {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.gridContainer--menu .sub-menu {
+    grid-area: 3 / 1 / 4 / 2;
+}
+
 
 /* Правая панель с размерами прямоугольников */
 .item-2,
@@ -445,18 +484,170 @@ main {
 
 /* TOP - Панель с заголовком */
 .gridContainer header.header-top,
-.gridContainer--whouse header.header-top {
-    height: 2rem;
+.gridContainer--whouse header.header-top .gridContainer--menu header.header-top {
+    /* height: 2rem; только если нет текста, иначе маловато */
     padding: 0 0.5rem;
-    justify-content: center;
+    justify-content: space-between;
     border-bottom: 1px dotted var(--color-chiffon);
     display: flex;
+    align-content: center;
 }
+
+header.header-top .logo-left {
+    width: 290px;
+    background-image: url("..//img/logo-grey-362x50.png");
+    background-size: 160px 22px;
+    background-repeat: no-repeat;
+    background-position: left;
+    /* -webkit-filter: drop-shadow(0px 0px 1px #222);
+    filter: drop-shadow(0px 0px 1px #222); */
+}
+
+.user {
+    /* justify-content: flex-end; */
+    justify-content: center;
+}
+.user span {
+    padding-left: 5px;
+}
+.user span .out {
+    background-color: #4DD8E6;
+    /* background-size: contain; */
+    height: 22px;
+    width: 22px;
+    display: block;
+    /* background-image: url('..//img/svg/exit-icon-22.svg'); */
+    mask-image: url('..//img/svg/exit-icon-22.svg');
+    -webkit-mask-image: url('..//img/svg/exit-icon-22.svg');
+}
+
+
+/* // TOP - Панель с заголовком */
 
 /* Заголовок в TOP - Панели */
 header.header-top div {
+    width: 290px;
     align-content: center;
-    display: grid;
+    display: flex;
+    /* justify-content: space-between; */
+    color: #4DD8E6;
+    /* ЦВЕТ текста в верхней панели */
+    padding: 10px 0;
+    align-items: center;
+}
+
+header.header-top .menu-name {
+    text-transform: uppercase;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 36px;
+}
+
+menu.top-menu, menu.sub-menu {
+    display: flex;
+    justify-content: center;
+}
+
+menu.top-menu ul {
+    margin-top: 8px;
+}
+menu.sub-menu ul {
+    margin-top: 80px;
+}
+menu.sub-menu ul li {
+    position: relative;
+}
+
+menu.top-menu ul li, menu.sub-menu ul li, menu.sub-menu ul li span {
+    /* размеры блоков и цвет фона меню */
+    background-color: #3E4349;
+    width: 350px;
+    margin: 0 auto;
+    padding: 5px;
+    margin-bottom: 6px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+menu.top-menu ul li:hover, menu.sub-menu ul li:hover, menu.sub-menu ul li:hover span {
+    background-color: #4a5057;
+    cursor: pointer;
+}
+
+menu.top-menu li, menu.sub-menu li {
+    text-transform: uppercase;
+}
+
+menu.top-menu ul li:nth-child(1) {
+    color: #F8EC72;
+}
+
+menu.top-menu ul li:nth-child(2) {
+    color: #79CA42;
+}
+
+menu.top-menu ul li:nth-child(3) {
+    color: #D9C898;
+}
+
+menu.top-menu ul li:nth-child(4) {
+    color: #FFA634;
+}
+
+menu.top-menu ul li:nth-child(5) {
+    color: #fff;
+}
+
+menu.top-menu ul li:nth-child(6) {
+    color: #FF8682;
+}
+
+menu.top-menu ul li:nth-child(7) {
+    color: #6AA6D7;
+}
+
+menu.sub-menu ul li:nth-child(1) {
+    color: #F8FF77;
+}
+menu.sub-menu ul li:nth-child(2) {
+    color: #41DDC4;
+}
+menu.sub-menu ul li:nth-child(3) {
+    color: #00B7D9;
+}
+menu.sub-menu ul li:nth-child(4) {
+    color: #FFB42B;
+}
+menu.sub-menu ul li:nth-child(5) {
+    color: #C48455;
+}
+menu.sub-menu ul li:nth-child(6) {
+    color: #90D94B;
+}
+menu.sub-menu ul li:nth-child(7) {
+    color: #647AF5;
+}
+menu.sub-menu ul li:nth-child(8) {
+    color: #fff;
+}
+menu.sub-menu ul li:nth-child(9) {
+    color: #D75341;
+}
+menu.sub-menu ul li span {
+    display: inline-block;
+    margin-left: 37px;
+    width: 40px;
+    font: inherit;
+    position: absolute;
+    top: 0; left: 320px;
+    padding: 5px;
+}
+header.header-top div.menu-name {
+    text-transform: uppercase;
+    font-style: bold;
+    font-size: 34px;
+    /* padding: 10px; */
 }
 
 label {
@@ -468,9 +659,11 @@ label {
 
 .label-heading,
 .gridContainer header.header-top,
-.gridContainer--whouse header.header-top {
+.gridContainer--whouse header.header-top,
+.gridContainer--menu header.header-top {
     font-family: 'CoreSansDS35Regular';
-    font-size: 1.125rem;
+    font-size: 18px;
+    justify-content: space-between;
     display: flex;
     /* padding-bottom: 10px; Убрал для того чтобы checkbox выровнять */
 }
@@ -653,4 +846,12 @@ section.section__main div:nth-child(2) {
     padding-left: 1.5rem;
     padding-right: 1.5rem;
     color: var(--color-chiffon);
+}
+
+.status-bar .status-label-changed {
+    vertical-align: middle;
+    text-align: start;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+    color: var(--color-alert);
 }

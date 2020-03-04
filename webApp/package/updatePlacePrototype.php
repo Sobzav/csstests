@@ -33,6 +33,7 @@ if (array_key_exists('item', $_POST)) {
         $query = " 
             SELECT
                 place_prototype.sub_package_id,
+                place_prototype.inrow,
                 place_prototype.y,
                 place_prototype.x
             FROM
@@ -73,6 +74,7 @@ if (array_key_exists('item', $_POST)) {
     
                 // готовим данные для запроса
                 $item_sub_package_id = $subItem['sub_package_id'];
+                $item_inrow = $subItem['inrow'];
                 $item_y = $subItem['y'];
                 $item_x = $subItem['x'];
     
@@ -90,7 +92,8 @@ if (array_key_exists('item', $_POST)) {
                             UPDATE
                                 place_prototype
                             SET
-                                place_prototype.sub_package_id = $item_sub_package_id
+                                place_prototype.sub_package_id = $item_sub_package_id,
+                                place_prototype.inrow = $item_inrow
                             WHERE
                                 place_prototype.package_id = $package_id AND
                                 place_prototype.y LIKE $item_y AND
@@ -110,12 +113,14 @@ if (array_key_exists('item', $_POST)) {
                                 place_prototype (
                                     place_prototype.package_id,
                                     place_prototype.sub_package_id,
+                                    place_prototype.inrow,
                                     place_prototype.y,
                                     place_prototype.x
                                 )
                             VALUES (
                                     $package_id,
                                     $item_sub_package_id,
+                                    $item_inrow,
                                     $item_y,
                                     $item_x
                             );

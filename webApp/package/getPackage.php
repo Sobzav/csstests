@@ -52,6 +52,7 @@ function loadItems($mySqli, $id, $package_depth) {
         $query = " 
             SELECT
                 place_prototype.sub_package_id,
+                place_prototype.inrow,
                 place_prototype.x,
                 place_prototype.y,
                 package.id,

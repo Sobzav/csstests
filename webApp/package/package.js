@@ -65,7 +65,7 @@ class PackageSimple {
     // -------------------------------------------------------
     // Метод | Создаем элемент
     constructor(parent, id = 0, canvas) {
-        console.group("class PackageSimple.constructor {");
+        console.group("class PackageSimple.constructor");
         console.log("id: %i", id);
         
         this._parent = parent;      // родительский контейнер
@@ -137,8 +137,9 @@ class PackageSimple {
 
         // поведенческие свойства элемента
         //
-        this._depth = 0;
-        this._turned = 0;
+        this._inRow = 0;            // элемент встает в один ряд с предыдущим 
+        this._depth = 0;            // количество уровней внутренних элементов
+        this._turned = 0;           // элемент отображается повернутым
         this._hidden = true;        // если true, то элемент невидимый
         this._active = false;       // если true, то элемент будет реагировать на указатель мыши
         this._mouseOver = false;    // когда указатель мыши над элементом true
@@ -146,6 +147,9 @@ class PackageSimple {
         this._changed = true;       // если true, то элемент был изменен
         this._new = true;           // если true, то элемент новый и его нет в базе данных
 
+        this.onChange;
+
+        console.log("this: %o", this);
         console.groupEnd();
     }
 
@@ -422,6 +426,17 @@ class PackageSimple {
 
 
     // -------------------------------------------------------
+    // Свойство | Определяет положение элемента в один ряд со следующим
+    //
+    set inRow(value) {
+        this._inRow = value;
+    }
+
+    get inRow() {return this._inRow;}
+
+
+
+    // -------------------------------------------------------
     // Свойство | Определяет глубину загрузки и отображения
     //            внутренних элементов
     //
@@ -471,7 +486,10 @@ class PackageSimple {
     // -------------------------------------------------------
     // Свойство | Если true, то элемент был изменен и не сохранен
     //
-    set changed(value) {this._changed = value;}
+    set changed(value) {
+        this._changed = value;
+        if (this.onChange) {this.onChange(this);}
+    }
 
     get changed() {return this._changed;}
 
@@ -765,11 +783,14 @@ class PackageContainerItem extends PackageSimple {
     //              }
     //
     constructor(parent, data, settings, canvas) {
-        console.groupCollapsed("class PackageContainerItem.constructor {");
+        console.groupCollapsed("Class PackageContainerItem.constructor");
         console.log("data: %o", data);
 
         // вызов конструктора родителя
         super(parent, data.id, canvas);
+
+        // ссылка на набор настроект для данного уровня
+        this._settings = settings;
 
         // массив внутренних элементов
         this.item = [];
@@ -795,6 +816,7 @@ class PackageContainerItem extends PackageSimple {
             super.color = value;
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
 
     get color() {return this._color;}
@@ -939,6 +961,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
 
     get x() {return this._x;}
@@ -955,6 +978,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
 
     get y() {return this._y;}
@@ -971,6 +995,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
         
     get wx() {return this._wx;}
@@ -987,6 +1012,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
     
     get wy() {return this._wy;}
@@ -1003,6 +1029,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
 
     get wz() {return this._wz;}
@@ -1019,6 +1046,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
         
     get iwx() {return this._iwx;}
@@ -1035,6 +1063,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
     
     get iwy() {return this._iwy;}
@@ -1051,6 +1080,7 @@ class PackageContainerItem extends PackageSimple {
             this.setItemsViewBox();
             if (!this._hidden && !this._parent) {this.draw();}
         }
+        if (!this._parent) {this.changed = true;}
     }
 
     get iwz() {return this._iwz;}
@@ -1099,6 +1129,8 @@ class PackageContainerItem extends PackageSimple {
         });        
         
         if (!this._hidden && !this._parent) {this.draw();}
+
+        if (!this._parent) {this.changed = true;}
     }
 
     get disposition() {return this._disposition;}
@@ -1118,6 +1150,7 @@ class PackageContainerItem extends PackageSimple {
                 this.show();
             }
         }
+        if (!this._parent) {this.changed = true;}
     }
 
     get depth() {return this._depth;}
@@ -1130,16 +1163,18 @@ class PackageContainerItem extends PackageSimple {
     set turned(value) {
         super.turned = value;
         console.log("this: ", this);
-        console.log("settings: ", settings);
+        console.log("settings: ", this._settings);
         if (normalView && turnedView) {
             if (this._turned == 1) {
-                settings = turnedView;
+                this._settings = turnedView;
             } else {
-                settings = normalView;
+                this._settings = normalView;
             }
         }
 
-        this.turn(settings)
+        this.turn(this._settings)
+
+        if (!this._parent) {this.changed = true;}
     }
 
     get turned() {return this._turned;}
@@ -1241,7 +1276,8 @@ class PackageContainerItem extends PackageSimple {
     //         иначе оновляет объект в базе запросом UPDATE
     //
     save(successFunction, errorFunction) {
-        console.group('class PackageContainerItem.save { pack: %o', this);
+        console.group('Class PackageContainerItem.save');
+        console.log('pack: %o', this);
 
             // Формируем данные для отправки на сервер
             var url = "setPackage.php";
@@ -1275,6 +1311,7 @@ class PackageContainerItem extends PackageSimple {
                     "package_iwz": this._iwz,
                     "package_color": this._color.replace("#", ""),
                     "item": subItems.length > 0 ? subItems : null,
+                    "package_inrow": this._inRow,
                     "package_depth": this._depth,
                     "package_turned": this._turned
                 },
@@ -1295,7 +1332,7 @@ class PackageContainerItem extends PackageSimple {
                         target._new = false;
                     }
                     // помечаем что элемент сохранен
-                    target._changed = false;
+                    target.changed = false;
 
                     successFunction(target, result);
                 },
@@ -1334,10 +1371,10 @@ class PackageContainerItem extends PackageSimple {
                 var row = jsonResponce[0];
 
                 // Заполняем все свойства элемента из ответа сервера
-                target.setData(row, settings);
+                target.setData(row, target._settings);
 
                 // убираем статус "изменен", так как элемент существует в базе данных
-                target._changed = false;
+                target.changed = false;
 
                 // убираем статус "новый", так как элемент существует в базе данных
                 target._new = false;
@@ -1350,6 +1387,7 @@ class PackageContainerItem extends PackageSimple {
                 
                 errorFunction(XMLHttpRequest, textStatus);
             },
+
             caller      // вызывающий объект
         );   
         console.groupEnd();
@@ -1373,7 +1411,7 @@ class PackageContainerItem extends PackageSimple {
         this.autoFit      = settings.autoFit      ? settings.autoFit      : 'none';
     }
 
-    // get settings() {return this._turned;}
+    get settings() {return this._settings;}
 
 
 
@@ -1413,6 +1451,7 @@ class PackageContainerItem extends PackageSimple {
             parseInt(data.iwy ? data.iwy : 0),      // размеры элемента из базы
             parseInt(data.iwz ? data.iwz : 0)       // размеры элемента из базы
         );               
+        this.inRow        = data.inrow ? parseFloat(data.inrow) : 0;     // если в data есть inRow, то беерем, иначе берем 0
 
         // создаем внутренние элементы
         this.createItems(data.item, settings.item);
@@ -1434,7 +1473,7 @@ class PackageContainerItem extends PackageSimple {
     // Метод | Удаляет все внутренние элементы
     //
     createItems(data, settings) {
-        console.group("class PackageContainerItem.createItems {");
+        console.group("Class PackageContainerItem.createItems");
         console.log("this: %o", this);
 
         // if (!this._hidden) {this.clear();}
@@ -1448,7 +1487,6 @@ class PackageContainerItem extends PackageSimple {
 
                 // создаем новый внутренний элемент
                 var item = new PackageContainerItem(this, sub, settings, canvas);
-                // console.log("settings: %o }", _settings);
 
                 // сообщаем новому элементу область, где он будет размещен
                 item.viewBox = {x: this._x, y: this._y, wx: this._wx, wy: this._wy};
@@ -1458,6 +1496,8 @@ class PackageContainerItem extends PackageSimple {
 
                 // добавляем новый элемент в массив внутренних элементов
                 this.item.push(item);
+
+                if (!this._parent) {this.changed = true;}
             });
         }
         // if (!this._hidden) {this.draw();}
@@ -1477,6 +1517,8 @@ class PackageContainerItem extends PackageSimple {
         if (!this._hidden) {this.clear();}
         
         this.item = [];
+
+        if (!this._parent) {this.changed = true;}
 
         if (!this._hidden) {this.draw();}
 

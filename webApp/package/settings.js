@@ -1,3 +1,5 @@
+var settings;
+
 // настройки элементов и внутренних элементов
 const normalView = {
 

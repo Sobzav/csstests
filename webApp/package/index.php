@@ -28,22 +28,11 @@
             <!-- Выпадающий список элементов -->
             <div class="wide-100">
                 <label class="" for="selCode"> Тип </label>
-                <!-- <select class="wide-100" id="selCode" name="package_code">
-                Список всех элементов в базе
-                    <option value="0"> Новый </option>
-                </select> -->
-
+                
                 <!-- Поисковая строка с выпадающим списком -->
                 <div class="dropdown wide-100" tabindex="0">
                     <input class="wide-100" type="text" placeholder="Поиск.." id="myInput">
                     <ul id="packList" class="dropdown-content hidden" tabindex="0">
-                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
-                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
-                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
-                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
-                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
-                        <!-- <li> Обозначение <i>|</i>  Нименование наименование <i>|</i>  777x888x999  <i>|</i>  Внут 10шт </li> -->
                     </ul>
                     <button class="dropbtn">&#9013</button>
                 </div>
@@ -184,28 +173,28 @@
                         </div>
                     </header>
 
-                    <section id="subBlockTamplate" class="section-sub hidden">
+                    <section id="subBlock_" class="section-sub hidden">
                         <!-- внутреннее содержимое -->
                         <!-- блок внутренних прямоугольников -->
 
                         <div class="section-sub__grid--5x2">
-                            <div class="nmbr"><label class="" id="subLabel"> 1. </label></div>
+                            <div class="nmbr"><label class="" id="subLabel_"> 1. </label></div>
                             <div class="frst">
                                 <label class="" for="inpSizeWx_">Ширина</label>
-                                <input class="disabled" size="5" type="text" id="inpSizeWx_" name="package_wx_">
+                                <input class="disabled" size="5" type="text" id="inpSizeWx_">
                                 <label class="" for="inpSizeWx_">мм</label>
                             </div>
 
                             <div class="scnd">
                                 <label class="" for="inpSizewY_">Высота</label>
-                                <input class="disabled" size="5" type="text" id="inpSizeWy_" name="package_wy_">
+                                <input class="disabled" size="5" type="text" id="inpSizeWy_">
                                 <label class="" for="inpSizewY_">мм</label>
                             </div>
 
-                            <div class="thrd dropdown wide-100" tabindex="0">
+                            <div class="thrd subInput dropdown wide-100" tabindex="0">
                                 <!-- <div class="dropdown wide-100" tabindex="0"> -->
-                                    <input size="6" class="dropdown-input" type="text" placeholder="Тип" id="selCode_">
-                                    <ul id="packList" class="dropdown-content hidden" tabindex="0">
+                                    <input size="6" class="subInput dropdown-input" type="text" placeholder="Тип">
+                                    <ul id="packList_" class="subInput dropdown-content hidden" tabindex="0">
                                         <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
                                         <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
                                         <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
@@ -215,21 +204,19 @@
                                         <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
                                         <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
                                     </ul>
-                                    <button class="dropbtn">&#9013</button>
+                                    <button class="subInput dropbtn">&#9013</button>
                                 <!-- </div> -->
+                            </div>
 
-                                <!-- <select class="subInput" id="selCode_" name="package_code_">
-                                    <option value=""> Тип </option>
-                                </select> -->
-                            </div>
                             <div class="checkbox">
-                                <label class="" for="checkBoxHasContent"> В ряд:&nbsp;</label>
-                                <input class="mainInput" type="checkbox" id="checkBoxHasContent" name="checkBoxHasContent">
+                                <label class="" for="checkBoxInRow_"> В ряд:&nbsp;</label>
+                                <input class="subInput" type="checkbox" id="checkBoxInRow_">
                             </div>
+                            
                             <!-- Second grid Line -->
                             <div class="frth">
                                 <label class="" for="inpNy_"> Количество<br>по вертикали </label>
-                                <input class="subInput" size="1" type="text" id="inpNy_" name="package_wy_">
+                                <input class="subInput" size="1" type="text" id="inpNy_">
                                 <label class="" for="inpNy_"> шт </label>
                             </div>
 
@@ -265,8 +252,9 @@
         <!-- Строка статуса -->
         <section class="status-bar">
             <div class="">
+                <label class="status-label" id="lblStatusEdit"> </label>
                 <label class="status-label"> | </label>
-                <label class="status-label" id="lblStatusChanged"> </label>
+                <label class="status-label-changed" id="lblStatusChanged"> </label>
                 <label class="status-label"> | </label>
                 <label class="status-label" id="lblStatus"> </label>
                 <label class="status-label"> | </label>
@@ -300,7 +288,7 @@
         </header>
 
         <!-- Тело сообщения -->
-        <main role="main">
+         <!-- УБРАЛ <main role="main"> - 2 РАЗА ПОВТОРЯЕТСЯ -->
 
             <header class="header__modal">
                 <div id="header" class="label-heading"> Подзаголовок id="header" </div>
@@ -321,7 +309,7 @@
 
             </section>
 
-        </main>
+         <!-- // УБРАЛ <main role="main"> - 2 РАЗА ПОВТОРЯЕТСЯ -->
     </div>
 </dialog>
 

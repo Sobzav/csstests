@@ -1,13 +1,5 @@
 "use strict";
 
-// Глубина логирования
-// 0 - логирование отключено
-// logEnt - только входы и выходы в блоки кода
-// logInf - только информационные сообщения
-// logErr - сообщения об ошибках
-// logDat - вывод данных, значений, контейнеров
-var logLevel = 1;
-
 
 
 
@@ -17,52 +9,39 @@ var logLevel = 1;
 //          Один блок это набор из нескольких строк однотипных элементов
 //         имеет количество горизонтальных рядов rowCount       (вводит пользователь - inpNy)
 //         и количество вертикальных столбцов colCount          (вводит пользователь - inpNx)
-//         а так же тип всех его элементов packId               (вводит пользователь - selCode)
+//         а так же тип всех его элементов packId               (вводит пользователь - packList)
 //          Если блоку задать тип элементов, то он отобразит 
 //         размеры данного типа в полях inpSizeWx, inpSizeWy
 //
 class SubBlock {
 
 
-    // Создаем блок рядов из элементов
-    constructor(
-        // -------------------------------------------------------
-        // Инициализация | 
-        //
-        index, 
-        selCode,
-        inpNx,
-        inpNy,
-        inpSizeWx,
-        inpSizeWy,
-        inpTotal) {
-
-            console.group("class SubBlock.constructor {"); 
-            console.log("index: %o; selCode: %o; inpNx: %o; inpNy: %o; inpSizeWx: %o; inpSizeWy: %o", 
-            index,
-            selCode,
-            inpNx,
-            inpNy,
-            inpSizeWx,
-            inpSizeWy,
-            inpTotal);
+    // Создаем блок для настройки внутренних элементов
+    constructor(index, subBlock) {
+        // console.group("Class SubBlock.constructor");
+        
 
 
         // -------------------------------------------------------
         // Свойства | 
         //
-        this._pack = null;
-        this._index = index;                // индекс данного блока в контейнере
-        this._rowCount = 0;
-        this._colCount = 0;
-        this._subPack = null;
+        this._pack = null;          // родительский элемент - контейнер внутренних элементов
+        this._index = index;        // индекс данного блока в контейнере
+        this._rowCount = 0;         // количество элементов в рядах блока
+        this._colCount = 0;         // количество рядов в блоке
+        this._subPack = null;       // указатель на элемент - тип внутренних элементов
+        this._inRow = 0;            // элементы данного блока располагаются в один ряд с элементами предыдущего блока
 
-        this._selCode = selCode;
-        this._inpNx = inpNx;
-        this._inpNy = inpNy;
-        this._inpSizeWx = inpSizeWx;
-        this._inpSizeWy = inpSizeWy;
-        this._inpTotal = inpTotal;
+        this._label = subBlock.querySelector('#' + 'subLabel' + index);   // номер блока (для отображения на форме)
+        this._packList = this.newPackList(subBlock.querySelector('#packList' + index));
+        this._inpNx = subBlock.querySelector('#inpNx' + index);
+        this._inpNy = subBlock.querySelector('#inpNy' + index);
+        this._checkBox = subBlock.querySelector('#checkBoxInRow' + index);
+        this._inpSizeWx = subBlock.querySelector('#inpSizeWx' + index);
+        this._inpSizeWy = subBlock.querySelector('#inpSizeWy' + index);
+        this._inpTotal = subBlock.querySelector('#inpTotal' + index);
+        
+        this._label.innerText = (index + 1);
 
         // подключаем слоты к сигналам внутренних визуальных элементов
         this.connectSignals();
@@ -78,9 +57,8 @@ class SubBlock {
         // изменился тип внутренних элементов
         this.contentChanged;
 
-        // this.changed;
-
-        console.groupEnd();
+        // console.log("this: %o", this);
+        // console.groupEnd();
     }
     
 
@@ -89,12 +67,14 @@ class SubBlock {
     // Метод | Подключение слотов к сигналам внутренних визуальных элементов
     //
     connectSignals() {
-        // console.group("class SubBlock.connectSignals {");
+        // console.group("class SubBlock.connectSignals");
         // console.log("this: %o", this);
 
-        this.selCode.addEventListener('input', event => this.slotSubPackChanged(event));
+        this.packList.onItem0 = (id) => this.slotSubPackChanged(id);
+        this.packList.onChange = (id) => this.slotSubPackChanged(id);
         this.inpNx.addEventListener('input', event => this.slotSizeChanged(event));
         this.inpNy.addEventListener('input', event => this.slotSizeChanged(event));
+        this._checkBox.addEventListener('change', event => this.slotSubPackChanged(event));
 
         // console.groupEnd();
     }
@@ -108,11 +88,37 @@ class SubBlock {
         // console.group("class SubBlock.disconnectSignals {");
         // console.log("this: %o", this);
 
-        this.selCode.removeEventListener('input', event => this.slotSubPackChanged(event));
+        this.pacList.onItem0 = null;
+        this.pacList.onChange = null;
         this.inpNx.removeEventListener('input', event => this.slotSizeChanged(event));
         this.inpNy.removeEventListener('input', event => this.slotSizeChanged(event));
+        this._checkBox.removeEventListener('change', event => this.slotSizeChanged(event));
 
         // console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Создает выпадающий список для блока внутренних элементов
+    //         для выбора типа элемента из базы данных
+    //
+    newPackList(ul) {
+        console.group("class SubBlockContainer.newPackList");
+        console.log("block index: %i", this._index);
+        
+        // выпадающий список
+        var packList = new SearchList(ul, '../searchList/getList.php');
+
+        packList.item0 = 'Тип'
+
+        packList.listFormat = listFormat;
+        packList.selectedFormat = ['code'];
+
+        packList.load();
+
+        console.groupEnd();
+        return packList;
     }
 
 
@@ -121,13 +127,15 @@ class SubBlock {
     // Метод | Задаем новые размеры блоку
     //
     setSize(rowCount, colCount) {
-        console.group("class SubBlock.setSize {");
+        console.group("class SubBlock.setSize");
         console.log("block: %o, rowCount: %o, colCount: %o", this, rowCount, colCount);
 
         if ((rowCount !== this._rowCount) || (colCount !== this._colCount)) {
             
             this._rowCount = rowCount;
             this._colCount = colCount;
+
+            this._inRow = parseInt(this._checkBox.checked);
 
             this._inpTotal.innerText = this._subPack ? (this._rowCount * this._colCount) : 0;
 
@@ -143,7 +151,7 @@ class SubBlock {
     // Метод | Выводим информацию об элементах блока
     //
     showInfo() {
-        console.group("class SubBlock.showInfo {");
+        console.group("class SubBlock.showInfo");
         console.log("block: %o", this);
 
         // получаем элемент соответствующий типу внутреннего содержимого данного блока
@@ -152,19 +160,21 @@ class SubBlock {
         // выводим информацию об элементах блока
         if (subPack) {
 
-            this._selCode.selectedIndex = this._selCode.querySelector("[value=\'" + subPack.id + "\']").index;
+            this._packList.selectedId = subPack.id;
             this._inpSizeWx.value = subPack.wx;
             this._inpSizeWy.value = subPack.wy;
             this._inpNy.value = this._rowCount;
             this._inpNx.value = this._colCount;
             this._inpTotal.innerText = this._rowCount * this._colCount;
+            this._checkBox.checked = subPack.inRow;
 
         } else {
 
-            this._selCode.selectedIndex = 0;
+            this._packList.selectedId = 0;
             this._inpSizeWx.value = '';
             this._inpSizeWy.value = '';
             this._inpTotal.innerText = 0;
+            this._checkBox.checked = 0;
         }
 
         console.groupEnd();
@@ -176,14 +186,16 @@ class SubBlock {
     // Метод | Очищаем данные блока
     //
     clearData() {
-        // console.group("class SubBlock.clearData { block: %i", this._index);
+        console.group("class SubBlock.clearData");
+        // console.log("block index: %i", this._index);
 
         this._pack = null;
         this._rowCount = 0;
         this._colCount = 0;
         this._subPack = null;
+        this._inRow = 0;
 
-        // console.groupEnd();
+        console.groupEnd();
     }
 
 
@@ -192,16 +204,18 @@ class SubBlock {
     // Метод | Очищаем визуальные элементы блока
     //
     clear() {
-        // console.group("class SubBlock.clear { block: %i", this._index);
+        console.group("class SubBlock.clear");
+        // console.log("block index: %i", this._index);
 
-        this._selCode.selectedIndex = 0;
+        this._packList.selectedId = 0;
         this._inpNx.value = '';
         this._inpNy.value = '';
         this._inpSizeWx.value = '';
         this._inpSizeWy.value = '';
         this._inpTotal.innerText = 0;
+        this._checkBox.checked = 0;
 
-        // console.groupEnd();
+        console.groupEnd();
     }
             
 
@@ -210,7 +224,8 @@ class SubBlock {
     // Слот | Если изменились размеры
     //
     slotSizeChanged(event) {
-        console.group("class SubBlock.slotSizeChanged { block: %i", this._index);
+        console.group("class SubBlock.slotSizeChanged");
+        console.log("block index: %i", this._index);
 
         var rowCount = this._inpNy.value ? parseInt(this._inpNy.value) : 0;
         var colCount = this._inpNx.value ? parseInt(this._inpNx.value) : 0;
@@ -225,12 +240,10 @@ class SubBlock {
     // -------------------------------------------------------
     // Слот | Если изменился id внутренних элементов
     //
-    slotSubPackChanged(event) {
-        console.group("class SubBlock.slotSubPackChanged { block: %i", this._index);
+    slotSubPackChanged(id) {
+        console.group("class SubBlock.slotSubPackChanged");
+        console.log("block index: %i", this._index);
 
-        // берем id элементы который соответствует выбранному <option>
-        var id = event.target.selectedOptions[0].value;
-        
         // если в данном блоке выбран элемент имеющий id
         if (parseInt(id) > 0) {
 
@@ -243,7 +256,7 @@ class SubBlock {
                 var pack = new PackageContainerItem(
                     this._pack,     // родительский контейнер
                     {id: id},       // данные элемента, получен из базы
-                    settings,       // настройки отображения элемента
+                    this._pack.settings.item,  // настройки отображения элемента
                     canvas          // canvas где будет отображен элемент
                 );
         
@@ -277,16 +290,11 @@ class SubBlock {
             this.contentChanged();
         }
 
-        this._selCode.blur();
-
         console.groupEnd();
     }
 
 
 
-    /**
-     * @param {number} pack
-     */
     set pack(value) {
         if (value !== this._pack) {
             // запоминаем какой элемент сейчас выбран на форме
@@ -300,22 +308,16 @@ class SubBlock {
 
 
 
-    /**
-     * @param {number} selCode
-     */
-    set selCode(value) {
-        this._selCode = value;
+    set packList(value) {
+        this._packList = value;
     } 
 
-    get selCode() {
-        return this._selCode;
+    get packList() {
+        return this._packList;
     }
 
 
 
-    /**
-     * @param {number} inpNx
-     */
     set inpNx(value) {
         this._inpNx = value;
     } 
@@ -326,9 +328,6 @@ class SubBlock {
 
 
 
-    /**
-     * @param {number} inpNy
-     */
     set inpNy(value) {
         this._inpNy = value;
     } 
@@ -339,9 +338,6 @@ class SubBlock {
 
 
 
-    /**
-     * @param {number} rowCount
-     */
     set rowCount(value) {
         console.group("class SubBlock.set rowCount { value: %i", value);
         
@@ -361,9 +357,6 @@ class SubBlock {
 
 
 
-    /**
-     * @param {number} colCount
-     */
     set colCount(value) {
         console.group("class SubBlock.set colCount { value: %i", value);
 
@@ -406,16 +399,26 @@ class SubBlockContainer {
 
 
     // Создаем контейнер
-    constructor() {
-        console.group("class SubBlockContainer.constructor { ");
+    constructor(templateId) {
+        console.group("Class SubBlockContainer.constructor");
+
+        this._subBlockTamplate = document.getElementById(templateId);    // темплейт блока внутренних элементов
 
         this._count = 0;
-        this._pack = null;
-        this._count;
         this.item = [];
 
         this._inpTotal = document.querySelector('#inpTotal');
 
+
+
+        // -------------------------------------------------------
+        // Создаем блоки для редактирования внутренних элементов
+        //
+        for(var index = 0; index < 9; index++) {
+                
+            // добавляем блок внутренних элементов
+            this.add(index, this._subBlockTamplate);
+        }
         console.groupEnd();
     }
 
@@ -425,7 +428,7 @@ class SubBlockContainer {
     // Метод | Очищаем все данные блоков
     //
     connectSignals() {
-        console.group("class SubBlockContainer.connectSignals { ");
+        console.group("class SubBlockContainer.connectSignals");
 
         this.item.forEach ( item => {
 
@@ -440,7 +443,7 @@ class SubBlockContainer {
     // Метод | Очищаем все данные блоков
     //
     disconnectSignals() {
-        console.group("class SubBlockContainer.disconnectSignals { ");
+        console.group("class SubBlockContainer.disconnectSignals");
 
         this.item.forEach ( item => {
 
@@ -496,15 +499,7 @@ class SubBlockContainer {
                         if (this._count < (index + 1)) {
                             
                             // добавляем новый блок
-                            this.add(
-                                index, 
-                                document.querySelector('#selCode' + index),
-                                document.querySelector('#inpNx' + index),
-                                document.querySelector('#inpNy' + index),
-                                document.querySelector('#inpSizeWx' + index),
-                                document.querySelector('#inpSizeWy' + index),
-                                document.querySelector('#inpTotal' + index)
-                            )
+                            this.add(index, this._subBlockTamplate);
                         }
 
                         // сообщаем блоку указатель на текущий элемент pack
@@ -547,41 +542,49 @@ class SubBlockContainer {
     // -------------------------------------------------------
     // Метод |  Добавляем новй блок в позицию index
     //
-    add(
-        index, 
-        selCode,
-        inpNx,
-        inpNy,
-        inpSizeWx,
-        inpSizeWy,
-        inpTotal) {
+    add(index, subBlockTamplate) {
+        console.group("class SubBlockContainer.add");
+        console.log("subBlockTamplate: %o", subBlockTamplate);
+        console.log("index: %i", index);
 
-        console.group("class SubBlockContainer.add { index: %i", index);
-
-        if (
-            selCode &&
-            inpNx &&
-            inpNy &&
-            inpSizeWx &&
-            inpSizeWy &&
-            inpTotal) {
+        if (subBlockTamplate) {
             
-            var item = new SubBlock(
-                index, 
-                selCode,
-                inpNx,
-                inpNy,
-                inpSizeWx,
-                inpSizeWy,
-                inpTotal
-            );
+            // массив имен всех внутренних элементовбез суфиксов
+            var subBlockElementIds = ['subLabel', 'checkBoxInRow', 'inpSizeWx', 'inpSizeWy', 'packList', 'inpNy', 'inpNx', 'inpTotal'];
 
+            // получаем контейнер темплейта
+            var subBlockContainer = subBlockTamplate.parentNode;
+                        
+            // копированием из темплейта создаем очередной блок внутренних элементов
+            var newSubBlock = subBlockTamplate.cloneNode(true);
+
+            // даем id новому блоку
+            newSubBlock.id = 'subBlock' + (index);
+                    
+            // перебираем все варианты имеен элементов в новом блоке
+            subBlockElementIds.forEach(elementId => {
+                
+                // получаем очередной элемент блока
+                var subBlockElement = newSubBlock.querySelector('#' + elementId + '_');
+                
+                // даем id и name элементу блока 
+                subBlockElement.id = elementId + index;
+            });
+
+            // добавляеем созданный блок в конейнер
+            subBlockContainer.appendChild(newSubBlock);
+
+            // показываем блок внутренних элементов
+            newSubBlock.classList.remove('hidden');
+
+            var item = new SubBlock(index, newSubBlock);
+            
             // подписываемся на сигналы блока
             item.sizeChanged = () => this.onItemSizeChanged();
             item.contentChanged = () => this.onItemContentChanged();
-
+            
             this.item.push(item);
-
+            
             // увеличиваем количество блоков
             this._count++;
         }
@@ -594,7 +597,7 @@ class SubBlockContainer {
     // Метод | Пересоздаем и показываем внутренние элементы pack 
     //
     updatePack() {
-        console.group("class SubBlockContainer.updatePack { ");
+        console.group("class SubBlockContainer.updatePack");
 
         var pack = this._pack;
         console.log("updatePack: %o", pack);
@@ -679,7 +682,7 @@ class SubBlockContainer {
                                         wz: subPack.wz
                                     }
                                 ],
-                                settings.item
+                                this._pack.settings.item
                             );
                             // расчитываем координату x следующего элемента
                             x += subPack.wx;
@@ -737,7 +740,7 @@ class SubBlockContainer {
     // Метод | Очищаем все данные блоков
     //
     clearData() {
-        console.group("class SubBlockContainer.clear { ");
+        console.group("class SubBlockContainer.clearData");
 
         for (var index = 0; index < this._count; index++) {
 
@@ -752,7 +755,7 @@ class SubBlockContainer {
     // Метод | Очищаем все визуальные элементы блоков
     //
     clear() {
-        console.group("class SubBlockContainer.clear { ");
+        console.group("class SubBlockContainer.clear");
 
         for (var index = 0; index < this._count; index++) {
 
@@ -767,9 +770,6 @@ class SubBlockContainer {
 
 
 
-    /**
-     * @param {number} pack
-     */
     set pack(value) {
         this.showInfo(value);
     } 
@@ -779,10 +779,6 @@ class SubBlockContainer {
     }
 
 
-
-    /**
-     * @param {number} count
-     */
 
     get count() {
         return this._count;

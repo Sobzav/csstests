@@ -301,7 +301,7 @@
         </header>
 
         <!-- Тело сообщения -->
-        <main role="main">
+         <!-- УБРАЛ <main role="main"> - 2 РАЗА ПОВТОРЯЕТСЯ -->
 
             <header class="header__modal">
                 <div id="header" class="label-heading"> Подзаголовок id="header" </div>
@@ -322,7 +322,7 @@
 
             </section>
 
-        </main>
+         <!-- УБРАЛ <main role="main"> - 2 РАЗА ПОВТОРЯЕТСЯ -->
     </div>
 </dialog>
 
