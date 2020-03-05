@@ -36,14 +36,14 @@
                 <!-- Список уровней  -->
                 <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
                 <li><span>склад</span><label>5</label></li>
-                <!-- <li><span>секция</span><label>1</label></li> -->
-                <!-- <li><span>уровень</span><label>2</label></li> -->
-                <!-- <li class="beforedot"><span>линия</span><label>3</label></li> beforedot: Перед этим li будет точка и li сдвинется влево чтобы эту точку уместить -->
-                <!-- <li><span>стеллаж</span><label>A</label></li> -->
-                <!-- <li class="beforedot"><span>полка</span><label>6</label></li> -->
-                <!-- <li><span>лоток</span><label>54</label></li> -->
-                <!-- <li class="beforedot"><span>контейнер</span><label>А</label></li> -->
-                <!-- <li><span>ячейка</span><label>87</label></li> -->
+                <li><span>секция</span><label>1</label></li>
+                <li><span>уровень</span><label>2</label></li>
+                <li class="beforedot"><span>линия</span><label>3</label></li> 
+                <li><span>стеллаж</span><label>A</label></li>
+                <li class="beforedot"><span>полка</span><label>6</label></li>
+                <li><span>лоток</span><label>54</label></li>
+                <li class="beforedot"><span>контейнер</span><label>А</label></li>
+                <li><span>ячейка</span><label>87</label></li>
             </ul>
             <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code"> <!-- Последний элемент .nav li:last-child пока скрыт в css -->
             <!-- </div> -->

@@ -1,0 +1,33 @@
+.local-grid header.header-top, .local-grid header.header-top div {
+    border-bottom: none;
+
+}
+.local-grid .menu-name {
+    color: #FFB42B!important;
+    /* justify-self: center; */
+}
+
+.local-grid main {
+    display: grid;
+    /* grid-area: 2 / 1 / 3 / 3; */
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 50px;
+    height: 600px;
+}
+
+.local-grid main .item-1 {
+    display: grid;
+    grid-area: 2 / 1 / 3 / 2;
+    overflow-y: auto;
+}
+
+.local-grid main .item-2 {
+    display: grid;
+    grid-area: 2 / 2 / 3 / 3;
+    overflow-y: auto;
+}
+
+.local-grid main .title {
+    font-weight: bold;
+    font-size: 34px;
+}

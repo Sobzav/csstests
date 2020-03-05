@@ -15,85 +15,87 @@
 
     <!-- корневой контейнер формы -->
     <div class="gridContainer--menu">
-        <header class="header-top">
-            <!-- TOP - Панель с заголовком -->
-            <div class="logo-left"> </div><!-- Логотип -->
-            <div class="menu-name"> Главное меню </div><!-- Имя страницы -->
-            <div class="user">Vladimir Cherepovskiy <span><a class="out" href="#"></a></span> </div> <!-- User -->
-        </header>
-        <menu class="top-menu">
-            <ul>
-                <li>
-                    ССМ
-                </li>
-                <li>
-                    Работа склада
-                </li>
-                <li>
-                    Сотрудники склада
-                </li>
-                <li>
-                    Управление аккаунтами
-                </li>
-                <li>
-                    Доступ
-                </li>
-                <li>
-                    Приоритеты склада
-                </li>
-                <li>
-                    Создать заказ
-                </li>
-            </ul>
-        </menu>
-        <menu class="sub-menu">
-            <ul>
-                <li>
-                    Резка <span>4</span>
-                </li>
-                <li>
-                    Проверка <span>1</span>
-                </li>
-                <li>
-                    Доп. обработка <span>1</span>
-                </li>
-                <li>
-                    Комплектовка <span>17</span>
-                </li>
-                <li>
-                    Упаковка <span>4</span>
-                </li>
-                <li>
-                    Отгрузка <span>9</span>
-                </li>
-                <li>
-                    Инвентаризация <span>12</span>
-                </li>
-                <li>
-                    Приход <span>1</span>
-                </li>
-                <li>
-                    Заготовки <span>4</span>
-                </li>
-            </ul>
-        </menu>
+        <div class="menu-main"> <!-- Пока не определенный класс -->
+            <header class="header-top">
+                <!-- TOP - Панель с заголовком -->
+                <div class="logo-left"> </div><!-- Логотип -->
+                <div class="menu-name"> Главное меню </div><!-- Имя страницы -->
+                <div class="user">Vladimir Cherepovskiy <span><a class="out" href="#"></a></span> </div> <!-- User -->
+            </header>
+            <menu class="top-menu">
+                <ul>
+                    <li>
+                        ССМ
+                    </li>
+                    <li>
+                        Работа склада
+                    </li>
+                    <li>
+                        Сотрудники склада
+                    </li>
+                    <li>
+                        Управление аккаунтами
+                    </li>
+                    <li>
+                        Доступ
+                    </li>
+                    <li>
+                        Приоритеты склада
+                    </li>
+                    <li>
+                        Создать заказ
+                    </li>
+                </ul>
+            </menu>
+            <menu class="sub-menu">
+                <ul>
+                    <li>
+                        Резка <span>4</span>
+                    </li>
+                    <li>
+                        Проверка <span>1</span>
+                    </li>
+                    <li>
+                        Доп. обработка <span>1</span>
+                    </li>
+                    <li>
+                        Комплектовка <span>17</span>
+                    </li>
+                    <li>
+                        Упаковка <span>4</span>
+                    </li>
+                    <li>
+                        Отгрузка <span>9</span>
+                    </li>
+                    <li>
+                        Инвентаризация <span>12</span>
+                    </li>
+                    <li>
+                        Приход <span>1</span>
+                    </li>
+                    <li>
+                        Заготовки <span>4</span>
+                    </li>
+                </ul>
+            </menu>
 
-        <!--right item-->
+        </div>
 
 
-        <!-- Строка статуса -->
-        <section class="status-bar">
-            <div class="">
-                <label class="status-label" id="lblStatusEdit"> </label>
-                <label class="status-label"> | </label>
-                <label class="status-label-changed" id="lblStatusChanged"> </label>
-                <label class="status-label"> | </label>
-                <label class="status-label" id="lblStatus"> </label>
-                <label class="status-label"> | </label>
-                <label class="status-label" id="lblStatusInfo"> </label>
-                <label hidden class="status-label"> | </label>
-            </div>
-        </section>
+
+    <!-- Строка статуса -->
+    <section class="status-bar">
+        <div class="">
+            <label class="status-label" id="lblStatusEdit"> </label>
+            <label class="status-label"> | </label>
+            <label class="status-label-changed" id="lblStatusChanged"> </label>
+            <label class="status-label"> | </label>
+            <label class="status-label" id="lblStatus"> </label>
+            <label class="status-label"> | </label>
+            <label class="status-label" id="lblStatusInfo"> </label>
+            <label hidden class="status-label"> | </label>
+        </div>
+    </section>
     </div>
 
     <!--скрипты для стилей -->

@@ -1,0 +1,56 @@
+/* .gridContainer--menu-acc {
+    min-height: 100vh;
+    max-height: 100%;
+} */
+.menu-acc header.header-top .menu-name {
+    color: #FFB42B!important;
+}
+
+.menu-acc header.header-top, .menu-acc header.header-top div {
+    display: grid;
+    grid-column: 1 / -1;
+    /* grid-area: 1 / 1 / 2 / 3; */
+    border: none;
+    padding: 0;
+    vertical-align: center;
+}
+
+}
+/* GRID-Контейнер для всего содержимого страницы */
+.gridContainer,
+.gridContainer--whouse {
+    display: grid;
+    background-color: var(--color-raven);
+    /* margin: 0 1.5rem; по левой стороне */
+    margin: 0 auto;
+    /* по центру */
+    padding: 0 25px;
+    /* width: max-content; */
+    width: 1200px;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(5, min-content);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+}
+
+/* TOP - Панель с заголовком */
+.gridContainer header.header-top,
+.gridContainer--whouse header.header-top .gridContainer--menu header.header-top {
+    /* height: 2rem; только если нет текста, иначе маловато */
+    padding: 0 0.5rem;
+    justify-content: space-between;
+    /* border-bottom: 1px dotted var(--color-chiffon); */
+    display: flex;
+    align-content: center;
+}
+
+.label-heading,
+.gridContainer header.header-top,
+.gridContainer--whouse header.header-top,
+.gridContainer--menu header.header-top {
+    font-family: 'CoreSansDS35Regular';
+    font-size: 18px;
+    justify-content: space-between;
+    display: flex;
+    /* padding-bottom: 10px; Убрал для того чтобы checkbox выровнять */
+}

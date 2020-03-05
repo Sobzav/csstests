@@ -34,26 +34,83 @@ body {
 }
 
 body,
-.gridContainer,
+.gridContainer, .gridContainer > div,
 .gridContainer--whouse,
 .gridContainer--menu {
     min-height: 100vh;
     max-height: 100%;
 }
 
-.gridContainer--menu {
+.gridContainer,
+.gridContainer > div { /* glob - Применяется только к gridContainer и к первому div после gridContainer */
+    display: grid;
+    grid-column: 1 / -1;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.gridContainer > div {  /* glob - ПОКА РАЗРАБОТКА 05.03 */
+    /* background-color: green; */
+    padding: 0 25px;
+}
+
+.gridContainer--menu { /* loc menu */
     display: grid;
     width: 1200px;
     background-color: var(--color-raven);
-    /* margin: 0 1.5rem; по левой стороне */
-    margin: 0 auto;
-    /* по центру */
-    padding: 0 25px;
-    /* width: max-content; */
+
+    /* margin: 0 auto;
+    padding: 0 25px; */
+
     grid-template-columns: 1fr;
     grid-template-rows: repeat(4, min-content);
     grid-column-gap: 0px;
     grid-row-gap: 0px;
+}
+
+.menu-burger {
+    cursor: pointer;
+    height: 60px;
+    width: 60px;
+    position: fixed;
+    right: 10px;
+    z-index: 50;
+    /* background-color: red; */
+}
+
+.menu-burger:hover {
+    background-color: #666c75;
+}
+
+.menu-burger span {
+    background-color: currentColor;
+    display: block;
+    height: 1px;
+    left: calc(50% - 18px);
+    position: absolute;
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    -webkit-transition-duration: 86ms;
+    transition-duration: 86ms;
+    -webkit-transition-property: background-color, opacity, -webkit-transform;
+    transition-property: background-color, opacity, -webkit-transform;
+    transition-property: background-color, opacity, transform;
+    transition-property: background-color, opacity, transform, -webkit-transform;
+    -webkit-transition-timing-function: ease-out;
+    transition-timing-function: ease-out;
+    width: 36px;
+}
+
+.menu-burger span:nth-child(1) {
+    top: calc(50% - 10px);
+}
+
+.menu-burger span:nth-child(2) {
+    top: calc(50% + 0px);
+}
+
+.menu-burger span:nth-child(3) {
+    top: calc(50% + 10px);
 }
 
 /* GRID-Контейнер для всего содержимого страницы */
@@ -62,9 +119,9 @@ body,
     display: grid;
     background-color: var(--color-raven);
     /* margin: 0 1.5rem; по левой стороне */
-    margin: 0 auto;
-    /* по центру */
-    padding: 0 25px;
+    /* margin: 0 auto;
+
+    padding: 0 25px; */
     /* width: max-content; */
     width: 1200px;
     grid-template-columns: repeat(2, 1fr);
@@ -182,6 +239,13 @@ header.header__sub div {
     font-size: 6em;
     line-height: 130px;
     border: 1px solid #000;
+    /* display: block;
+    align-content: center;
+    padding-top: 7px;
+    height: 112px;
+    font-family: 'CoreSansDS25LightItalic';
+    font-size: 6em;
+    border: 1px solid #000; */
 }
 
 /* Точка между цифрами */
@@ -237,18 +301,6 @@ header.header__sub div {
     box-sizing: border-box;
     padding-right: 0;
 }
-
-/* #myInput i {
-    padding: 0 7px;
-    font-style: normal;
-} */
-
-
-
-/* The search field when it gets focus/clicked on */
-/* #myInput:focus {
-    outline: 1px solid #ddd;
-} */
 
 .dropdown-content .show {
     box-shadow: 0px 0px 3px #888888;
@@ -312,6 +364,7 @@ header.header__sub div {
     display: none;
 }
 
+
 /********************************************************/
 
 /* MAIN: If убрать "display: flex;"=> оно станет "block" => отображение для мобильных - в один столбец */
@@ -342,13 +395,11 @@ main {
     flex: 1 0 auto;
 }
 
-.header-top {
-    grid-area: 1 / 1 / 2 / 3;
+.header-top,
+footer {
+    /* glob */
+    grid-column: 1 / -1;
 }
-
-/* .gridContainer--menu header.header-top {
-    grid-area: 1 / 1 / 2 / 2;
-} */
 
 /* Левая панель с канвасом */
 .item-1 {
@@ -484,17 +535,20 @@ main {
 
 /* TOP - Панель с заголовком */
 .gridContainer header.header-top,
+.gridContainer header.header-top div,
 .gridContainer--whouse header.header-top .gridContainer--menu header.header-top {
     /* height: 2rem; только если нет текста, иначе маловато */
-    padding: 0 0.5rem;
-    justify-content: space-between;
+    /* padding: 8px; */
+    height: 50px;
+    /* justify-content: space-between; */ /* распорка между элементами */
     border-bottom: 1px dotted var(--color-chiffon);
-    display: flex;
+    /* display: grid; */
     align-content: center;
+    /* по вертикали */
 }
 
 header.header-top .logo-left {
-    width: 290px;
+    width: 160px;
     background-image: url("..//img/logo-grey-362x50.png");
     background-size: 160px 22px;
     background-repeat: no-repeat;
@@ -506,10 +560,16 @@ header.header-top .logo-left {
 .user {
     /* justify-content: flex-end; */
     justify-content: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin: auto 0;
 }
+
 .user span {
     padding-left: 5px;
 }
+
 .user span .out {
     background-color: #4DD8E6;
     /* background-size: contain; */
@@ -524,14 +584,13 @@ header.header-top .logo-left {
 
 /* // TOP - Панель с заголовком */
 
-/* Заголовок в TOP - Панели */
+/* glob - Заголовок в TOP - Панели */
 header.header-top div {
-    width: 290px;
+    display: inline-flex;
+    position: relative;
     align-content: center;
-    display: flex;
-    /* justify-content: space-between; */
     color: #4DD8E6;
-    /* ЦВЕТ текста в верхней панели */
+    /* glob - ЦВЕТ текста в верхней панели */
     padding: 10px 0;
     align-items: center;
 }
@@ -541,9 +600,11 @@ header.header-top .menu-name {
     justify-content: center;
     font-weight: bold;
     font-size: 36px;
+    justify-content: center;
 }
 
-menu.top-menu, menu.sub-menu {
+menu.top-menu,
+menu.sub-menu {
     display: flex;
     justify-content: center;
 }
@@ -551,14 +612,18 @@ menu.top-menu, menu.sub-menu {
 menu.top-menu ul {
     margin-top: 8px;
 }
+
 menu.sub-menu ul {
     margin-top: 80px;
 }
+
 menu.sub-menu ul li {
     position: relative;
 }
 
-menu.top-menu ul li, menu.sub-menu ul li, menu.sub-menu ul li span {
+menu.top-menu ul li,
+menu.sub-menu ul li,
+menu.sub-menu ul li span {
     /* размеры блоков и цвет фона меню */
     background-color: #3E4349;
     width: 350px;
@@ -570,12 +635,15 @@ menu.top-menu ul li, menu.sub-menu ul li, menu.sub-menu ul li span {
     font-size: 18px;
 }
 
-menu.top-menu ul li:hover, menu.sub-menu ul li:hover, menu.sub-menu ul li:hover span {
+menu.top-menu ul li:hover,
+menu.sub-menu ul li:hover,
+menu.sub-menu ul li:hover span {
     background-color: #4a5057;
     cursor: pointer;
 }
 
-menu.top-menu li, menu.sub-menu li {
+menu.top-menu li,
+menu.sub-menu li {
     text-transform: uppercase;
 }
 
@@ -610,30 +678,39 @@ menu.top-menu ul li:nth-child(7) {
 menu.sub-menu ul li:nth-child(1) {
     color: #F8FF77;
 }
+
 menu.sub-menu ul li:nth-child(2) {
     color: #41DDC4;
 }
+
 menu.sub-menu ul li:nth-child(3) {
     color: #00B7D9;
 }
+
 menu.sub-menu ul li:nth-child(4) {
     color: #FFB42B;
 }
+
 menu.sub-menu ul li:nth-child(5) {
     color: #C48455;
 }
+
 menu.sub-menu ul li:nth-child(6) {
     color: #90D94B;
 }
+
 menu.sub-menu ul li:nth-child(7) {
     color: #647AF5;
 }
+
 menu.sub-menu ul li:nth-child(8) {
     color: #fff;
 }
+
 menu.sub-menu ul li:nth-child(9) {
     color: #D75341;
 }
+
 menu.sub-menu ul li span {
     display: inline-block;
     margin-left: 7px;
@@ -644,11 +721,13 @@ menu.sub-menu ul li span {
     left: 350px;
     padding: 5px;
 }
+
 header.header-top div.menu-name {
     text-transform: uppercase;
     font-style: bold;
     font-size: 34px;
     /* padding: 10px; */
+    flex-grow: 1;
 }
 
 label {
