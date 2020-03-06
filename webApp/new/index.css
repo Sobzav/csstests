@@ -11,7 +11,7 @@
     color: #FFB42B !important;
 }
 
-.local-grid main header, .form-container .form-acc-head .grid-head-7x1 div {
+.local-grid main header, .form-acc-head .grid-head-7x1 div {
     text-transform: uppercase;
     text-align: center;
     font-weight: bold;
@@ -60,17 +60,18 @@
     display: grid;
     justify-content: center;
 }
-.form-container .form-acc div *, .form-container .form-acc-head div * {
+.form-container .form-acc div *, .form-acc-head div * {
     display: flex;
     align-items: center;
 }
-.form-container .form-acc-head {
+.form-acc-head {
     height: 20px;
 }
 
 .form-container {
     height: 600px;
     overflow-y: auto;
+    z-index: 1;
 }
 
 .form-container div {
@@ -94,11 +95,11 @@
     width: 170px;
 }
 
-.form-container .form-acc-head .grid-head-7x1, .form-container .form-acc .grid--7x2 {
+.form-acc-head .grid-head-7x1, .form-container .form-acc .grid--7x2 {
     grid-template-columns: 25px 188px 100px 30px 130px 40px 40px; /* 7 столбцов - всего 570px - 17px полоса прокрутки = 553px */
 }
 
-.form-container .form-acc-head .grid-head-7x1 { /* Строка заголовков таблицы User accounts */
+.form-acc-head .grid-head-7x1 { /* Строка заголовков таблицы User accounts */
     display: grid;
     grid-template-rows: auto;
     grid-column-gap: 0px;

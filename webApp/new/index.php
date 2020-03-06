@@ -34,9 +34,7 @@
                 <div class="item-1">
                     <header>Аккаунты</header>
 
-                    <div class="form-container">
-
-                        <div class="form-acc-head">
+                    <div class="form-acc-head">
                             <div class="grid-head-7x1">
                                 <div class="div1">Логин</div>
                                 <div class="div2"> Пароль</div>
@@ -45,6 +43,10 @@
                                 <div class="div5"> <input type="checkbox" id="" name="" value=""></div>
                             </div>
                         </div>
+
+                    <div class="form-container">
+
+
                         <div class="form-acc">
                             <div class="grid--7x2">
                                 <!-- GRID для user accounts -->
