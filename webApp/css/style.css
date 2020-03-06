@@ -41,16 +41,17 @@ body,
     max-height: 100%;
 }
 
-.gridContainer,
-.gridContainer > div { /* glob - Применяется только к gridContainer и к первому div после gridContainer */
+.gridContainer { 
     display: grid;
     grid-column: 1 / -1;
     margin: 0 auto;
     width: 100%;
 }
 
-.gridContainer > div {  /* glob - ПОКА РАЗРАБОТКА 05.03 */
-    /* background-color: green; */
+.gridContainer {
+    display: grid;
+    background-color: var(--color-raven);
+    width: 1200px;
     padding: 0 25px;
 }
 
@@ -116,14 +117,7 @@ body,
 /* GRID-Контейнер для всего содержимого страницы */
 .gridContainer,
 .gridContainer--whouse {
-    display: grid;
-    background-color: var(--color-raven);
-    /* margin: 0 1.5rem; по левой стороне */
-    /* margin: 0 auto;
 
-    padding: 0 25px; */
-    /* width: max-content; */
-    width: 1200px;
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(5, min-content);
     grid-column-gap: 0px;
