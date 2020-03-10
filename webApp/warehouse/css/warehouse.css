@@ -1,0 +1,46 @@
+.local-grid {
+    grid-column: 1 / -1;
+}
+
+.item-1 {
+    padding: 0.25rem 0;
+}
+
+/* Правая панель с размерами */
+.item-2 {
+    padding: 4px 4px 4px 4px;
+    /* убрал для чистоты. Иначе кнопки, которые тоже внутри этого контейнера, некрасиво отступают от правого края */
+    flex-direction: column;
+    display: flex;
+    min-width: 575px;
+}
+.section__main {
+    padding: 0;    /* чтобы цифры в панели nav не отступали от краев */
+}
+
+
+.item-2 .section-general__grid,
+.item-2 .section-general__flex {
+    max-width: 470px;
+    margin-left: 0;
+}
+
+.item-2 {
+    padding: 4px 4px 4px 25px;
+    min-width: 600px;
+}
+
+.item-2 .right-form {
+    display: flex;
+    padding: 4px 0 25px 0;
+}
+
+.item-2 .right-form label {
+    font: normal 1rem 'CoreSansDS25Light';
+
+}
+
+.item-2 .right-block__buttons button#btnEdit {
+    padding-right: 0;
+    margin-right: 0;
+}

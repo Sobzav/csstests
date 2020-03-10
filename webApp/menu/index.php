@@ -7,6 +7,7 @@
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
+    <link rel="stylesheet" type="text/css" href="css\menu.css" />
     <title> Меню </title>
 
 </head>
@@ -14,7 +15,8 @@
 <body class="">
 
     <!-- корневой контейнер формы -->
-    <div class="gridContainer--menu">
+    <div class="gridContainer">
+        <div class="local-grid">
         <div class="menu-main"> <!-- Пока не определенный класс -->
             <header class="header-top">
                 <!-- TOP - Панель с заголовком -->
@@ -96,7 +98,7 @@
             <label hidden class="status-label"> | </label>
         </div>
     </section>
-    </div>
+    </div></div>
 
     <!--скрипты для стилей -->
     <script src="../jquery/jquery-3.4.1.min.js"></script>

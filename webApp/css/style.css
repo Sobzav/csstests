@@ -34,9 +34,7 @@ body {
 }
 
 body,
-.gridContainer, .gridContainer > div,
-.gridContainer--whouse,
-.gridContainer--menu {
+.gridContainer, .gridContainer > div {
     min-height: 100vh;
     max-height: 100%;
 }
@@ -53,20 +51,6 @@ body,
     background-color: var(--color-raven);
     width: 1200px;
     padding: 0 25px;
-}
-
-.gridContainer--menu { /* loc menu */
-    display: grid;
-    width: 1200px;
-    background-color: var(--color-raven);
-
-    /* margin: 0 auto;
-    padding: 0 25px; */
-
-    grid-template-columns: 1fr;
-    grid-template-rows: repeat(4, min-content);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
 }
 
 .menu-burger {
@@ -115,9 +99,7 @@ body,
 }
 
 /* GRID-Контейнер для всего содержимого страницы */
-.gridContainer,
-.gridContainer--whouse {
-
+.gridContainer {
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(5, min-content);
     grid-column-gap: 0px;
@@ -151,10 +133,7 @@ header.header__sub div {
     margin-top: -6px;
 }
 
-.gridContainer--whouse .section__main {
-    padding: 0;
-    /* чтобы цифры в панели nav не отступали от краев */
-}
+
 
 .nav li label,
 .nav li span {
@@ -401,26 +380,13 @@ footer {
     grid-area: 3 / 1 / 4 / 2;
 }
 
-.gridContainer--menu .top-menu {
-    grid-area: 2 / 1 / 3 / 2;
-}
-
-.gridContainer--menu .sub-menu {
-    grid-area: 3 / 1 / 4 / 2;
-}
 
 
 /* Правая панель с размерами прямоугольников */
-.item-2,
-.item-2--whouse {
+.item-2 {
     grid-area: 3 / 2 / 4 / 3;
 }
 
-.item-2--whouse .section-general__grid,
-.item-2--whouse .section-general__flex {
-    max-width: 470px;
-    margin-left: 0;
-}
 
 .bold {
     font-weight: bold;
@@ -447,20 +413,7 @@ footer {
     vertical-align: top;
 }
 
-.item-2--whouse {
-    padding: 4px 4px 4px 25px;
-    min-width: 600px;
-}
 
-.item-2--whouse .right-form {
-    display: flex;
-    padding: 4px 0 25px 0;
-}
-
-.item-2--whouse .right-form label {
-    font: normal 1rem 'CoreSansDS25Light';
-
-}
 
 .right-block__buttons {
     display: flex;
@@ -509,16 +462,7 @@ footer {
     padding: 0.25rem 0;
 }
 
-/* Правая панель с размерами */
-.item-2 {
-    padding: 4px 4px 4px 4px;
-    /* убрал для чистоты. Иначе кнопки, которые тоже внутри этого контейнера, некрасиво отступают от правого края */
-    flex-direction: column;
-    display: flex;
-    min-width: 580px;
-    /* min-width: 530px; */
-    /* min-width: 459px; */
-}
+
 
 /* Верх правой панели с вводом высоты ширины и глубины */
 .section-general {
@@ -529,8 +473,7 @@ footer {
 
 /* TOP - Панель с заголовком */
 .gridContainer header.header-top,
-.gridContainer header.header-top div,
-.gridContainer--whouse header.header-top .gridContainer--menu header.header-top {
+.gridContainer header.header-top div {
     /* height: 2rem; только если нет текста, иначе маловато */
     /* padding: 8px; */
     height: 50px;
@@ -732,9 +675,7 @@ label {
 }
 
 .label-heading,
-.gridContainer header.header-top,
-.gridContainer--whouse header.header-top,
-.gridContainer--menu header.header-top {
+.gridContainer header.header-top {
     font-family: 'CoreSansDS35Regular';
     font-size: 18px;
     justify-content: space-between;
@@ -748,7 +689,55 @@ label {
     /* color:  red; */
 }
 
-/* Здесь был input  */
+/* Зеленые чекбоксы и радиокнопки  */
+
+input[type=checkbox].green {
+    position: relative;
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    background-color:#474443;
+}
+input[type=checkbox].green:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    background-color:#474443;
+}
+input[type=checkbox].green:checked:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: 0;
+    left: 0;
+    background-color:#474443;
+}
+input[type=checkbox].green:checked:after {
+    content: "";
+    display: block;
+    /* width: 5px;
+    height: 10px; */
+    width: 5px;
+    height: 9px;
+    border: solid #79CA42;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    /* top: 2px;
+    left: 6px; Расположение зеленой галки внутри инпута */
+    top: 2px;
+    left: 6px;
+}
+
+/* // Зеленые чекбоксы и радиокнопки  */
 
 option {
     padding-left: 0;
@@ -768,6 +757,17 @@ button {
     max-height: 1.7em;
 }
 
+button.x-but, .plus-button {
+    border: none;
+    height: 100%;
+    line-height: 10px;
+    padding: 0px;
+    margin: 0px;
+    justify-content: center;
+    /* align-items: center; */
+    font-size: 10px;
+    font-weight: bold;
+}
 
 #selCode,
 #inpCodeEdit {
@@ -884,11 +884,6 @@ section.section__main div:nth-child(2) {
     padding: 0 0.6rem;
     /* margin: 0 0.4rem; */
     /* margin-top: 0.25em; */
-}
-
-.item-2--whouse .right-block__buttons button#btnEdit {
-    padding-right: 0;
-    margin-right: 0;
 }
 
 .right-block__buttons button.button-right:first-child {

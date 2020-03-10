@@ -1,0 +1,16 @@
+.local-grid {
+    grid-column: 1 / -1;
+}
+
+.item-1 {
+    padding: 0.25rem 0;
+}
+
+/* Правая панель с размерами */
+.item-2 {
+    padding: 4px 4px 4px 4px;
+    /* убрал для чистоты. Иначе кнопки, которые тоже внутри этого контейнера, некрасиво отступают от правого края */
+    flex-direction: column;
+    display: flex;
+    min-width: 575px;
+}

@@ -7,6 +7,7 @@
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <!-- <link rel="stylesheet" type="text/css" href="..\css\style.css" /> Черновая версия - > и . шрифтовые, (. before li), (> before span) -->
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
+    <link rel="stylesheet" type="text/css" href="css/warehouse.css" />
 
     <title> Склад </title>
 </head>
@@ -14,7 +15,8 @@
 <body class="">
 
     <!-- корневой контейнер формы -->
-    <div class="gridContainer--whouse">
+    <div class="gridContainer">
+        <div class="local-grid">
         <header class="header-top">
             <!-- TOP - Панель с заголовком -->
 
@@ -72,7 +74,7 @@
             </div>
             <!-- характеристики -->
             <!-- Right item -->
-            <div class="item-2--whouse">
+            <div class="item-2">
 
 
 
@@ -275,7 +277,7 @@
                 <label hidden class="status-label"> | </label>
             </div>
         </section>
-    </div>
+    </div></div>
 
     <!--скрипты для стилей -->
     <script src="../jquery/jquery-3.4.1.min.js"></script>
