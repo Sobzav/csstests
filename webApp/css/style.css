@@ -697,6 +697,7 @@ input[type=checkbox].green {
     width: 16px;
     height: 16px;
     background-color:#474443;
+    text-align:  center;
 }
 input[type=checkbox].green:before {
     content: "";
@@ -764,10 +765,11 @@ button.x-but, .plus-button {
     padding: 0px;
     margin: 0px;
     justify-content: center;
-    /* align-items: center; */
-    font-size: 10px;
+    align-items: center;
     font-weight: bold;
 }
+button.x-but {font-size: 14px;}
+.plus-button {font-size: 10px;}
 
 #selCode,
 #inpCodeEdit {

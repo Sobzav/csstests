@@ -91,13 +91,13 @@
     width: 176px;
 }
 
-.form-container .form-acc .grid--7x2 div {  /* Левая таблица. Flex нужен чтобы input и label вставали в одну строку */
+.grid--7x2 div:nth-child(n+7) {  /* Левая таблица. Flex нужен чтобы input и label вставали в одну строку */
     display: flex;
     align-items: center;
 }
 
 .grid-head-7x1, .form-acc .grid--7x2 {
-    grid-template-columns: 27px 189px 100px 31px 131px 40px 40px; /* Левая таблица - 7 столбцов - всего 575px - 17px полоса прокрутки = 558px */
+    grid-template-columns: 27px 189px 100px 31px 131px 49px 31px; /* Левая таблица - 7 столбцов - всего 575px - 17px полоса прокрутки = 558px */
 }
 .grid--7x2 > div { /* Жирный шрифт в 1 столбце */
     font-weight: bold;
@@ -114,6 +114,7 @@
 .form-acc-head .grid-head-7x1 .div3 { grid-area: 1 / 5 / 2 / 6; }
 .form-acc-head .grid-head-7x1 .div4 { grid-area: 1 / 6 / 2 / 7; }
 .form-acc-head .grid-head-7x1 .div5 { grid-area: 1 / 7 / 2 / 8; }
+.item-1 input[type=checkbox].green {margin-left: 12px;} /* сдвиг зеленого инпута вправо, чтобы был посередине  */
 
 .form-container .form-acc .grid--7x2 {  /* Таблица User accounts */
     display: grid;
@@ -136,7 +137,7 @@
 .form-acc .grid--7x2 .div5 { grid-area: 1 / 6 / 2 / 7; }
 .form-acc .grid--7x2 .div6 { grid-area: 1 / 7 / 2 / 8; }
 .form-acc .grid--7x2 .div7 { grid-area: 2 / 2 / 3 / 4; justify-self: start; padding-left: 5px;}
-.form-acc .grid--7x2 .div8 { grid-area: 2 / 5 / 3 / 7; justify-self: end; padding-right: 10px;}
+.form-acc .grid--7x2 .div8 {grid-area: 2 / 5 / 3 / 7;justify-self: end;padding-right: 18px;}
 .form-acc .grid--7x2 .div9 { grid-area: 2 / 7 / 3 / 8; }
 
 /*******************************************************/
