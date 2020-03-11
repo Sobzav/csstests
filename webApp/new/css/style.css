@@ -1,9 +1,41 @@
+.gridContainer {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+}
+
 .local-grid {
-    grid-column: 1 / -1; /* На всю ширину  */
+    display: grid;
+    /*grid-column: 1 / -1; /* На всю ширину  */
+    grid-area: 1 / 1 / 4 / 2;
+    grid-template-rows: 50px min-content auto;
+}
+
+.local-grid main {
+    display: grid;
+    grid-area: 2 / 1 / 3 / 2;
+    grid-template-columns: repeat(2, 1fr);
+    grid-column-gap: 0px;
+}
+
+.local-grid main .item-1 {
+    display: grid;
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.local-grid main .item-2 {
+    display: grid;
+    grid-area: 2 / 2 / 3 / 2;
+}
+
+.status-bar {
+    display: grid;
+    align-self: end;
+    grid-area: 3 / 1 / 4 / 2;
 }
 
 .local-grid header.header-top,
 .local-grid header.header-top div {
+    display: flex;
     border-bottom: none;
 }
 
@@ -33,26 +65,9 @@
     padding: 25px 0px 10px 0px;
 }
 
-.local-grid main {
-    display: grid;
-    grid-area: 2 / 1 / 3 / 3;
-    grid-template-columns: repeat(2, 1fr);
-    grid-column-gap: 0px;
-}
-
-.local-grid main .item-1 {
-    display: grid;
-    grid-area: 2 / 1 / 3 / 2;
-}
-
 .form-container {
     display: grid;
     grid-template-rows: min-content 1fr;
-}
-
-.local-grid main .item-2 {
-    display: grid;
-    grid-area: 2 / 2 / 3 / 3;
 }
 
 .local-grid main header {  /* Заголовки левой и правой областей */

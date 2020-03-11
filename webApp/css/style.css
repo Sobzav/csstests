@@ -3,7 +3,7 @@
 @import 'atomic.css';
 @import 'modal.css';
 @import 'forms.css';
-@import 'table.css';
+/* @import 'table.css'; */
 @import 'grids.css';
 
 * {
@@ -101,7 +101,7 @@ body,
 /* GRID-Контейнер для всего содержимого страницы */
 .gridContainer {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(5, min-content);
+    grid-template-rows: auto;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
 }
@@ -540,124 +540,6 @@ header.header-top .menu-name {
     justify-content: center;
 }
 
-menu.top-menu,
-menu.sub-menu {
-    display: flex;
-    justify-content: center;
-}
-
-menu.top-menu ul {
-    margin-top: 8px;
-}
-
-menu.sub-menu ul {
-    margin-top: 80px;
-}
-
-menu.sub-menu ul li {
-    position: relative;
-}
-
-menu.top-menu ul li,
-menu.sub-menu ul li,
-menu.sub-menu ul li span {
-    /* размеры блоков и цвет фона меню */
-    background-color: #3E4349;
-    width: 350px;
-    margin: 0 auto;
-    padding: 5px;
-    margin-bottom: 6px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 18px;
-}
-
-menu.top-menu ul li:hover,
-menu.sub-menu ul li:hover,
-menu.sub-menu ul li:hover span {
-    background-color: #4a5057;
-    cursor: pointer;
-}
-
-menu.top-menu li,
-menu.sub-menu li {
-    text-transform: uppercase;
-}
-
-menu.top-menu ul li:nth-child(1) {
-    color: #F8EC72;
-}
-
-menu.top-menu ul li:nth-child(2) {
-    color: #79CA42;
-}
-
-menu.top-menu ul li:nth-child(3) {
-    color: #D9C898;
-}
-
-menu.top-menu ul li:nth-child(4) {
-    color: #FFA634;
-}
-
-menu.top-menu ul li:nth-child(5) {
-    color: #fff;
-}
-
-menu.top-menu ul li:nth-child(6) {
-    color: #FF8682;
-}
-
-menu.top-menu ul li:nth-child(7) {
-    color: #6AA6D7;
-}
-
-menu.sub-menu ul li:nth-child(1) {
-    color: #F8FF77;
-}
-
-menu.sub-menu ul li:nth-child(2) {
-    color: #41DDC4;
-}
-
-menu.sub-menu ul li:nth-child(3) {
-    color: #00B7D9;
-}
-
-menu.sub-menu ul li:nth-child(4) {
-    color: #FFB42B;
-}
-
-menu.sub-menu ul li:nth-child(5) {
-    color: #C48455;
-}
-
-menu.sub-menu ul li:nth-child(6) {
-    color: #90D94B;
-}
-
-menu.sub-menu ul li:nth-child(7) {
-    color: #647AF5;
-}
-
-menu.sub-menu ul li:nth-child(8) {
-    color: #fff;
-}
-
-menu.sub-menu ul li:nth-child(9) {
-    color: #D75341;
-}
-
-menu.sub-menu ul li span {
-    display: inline-block;
-    margin-left: 7px;
-    width: 40px;
-    font: inherit;
-    position: absolute;
-    top: 0;
-    left: 350px;
-    padding: 5px;
-}
 
 header.header-top div.menu-name {
     text-transform: uppercase;
@@ -722,8 +604,6 @@ input[type=checkbox].green:checked:before {
 input[type=checkbox].green:checked:after {
     content: "";
     display: block;
-    /* width: 5px;
-    height: 10px; */
     width: 5px;
     height: 9px;
     border: solid #79CA42;
@@ -732,13 +612,153 @@ input[type=checkbox].green:checked:after {
     -ms-transform: rotate(45deg);
     transform: rotate(45deg);
     position: absolute;
-    /* top: 2px;
-    left: 6px; Расположение зеленой галки внутри инпута */
     top: 2px;
     left: 6px;
 }
 
 /* // Зеленые чекбоксы и радиокнопки  */
+
+/*************************************************************/
+/**** Grüne CHECKBOXES und RADIOBUTTONS fur Meine Hecke******//*Grüne Kontrollkästchen und radioknöpfe für meinen Heck*/
+/*************************************************************/
+
+/* @supports(-webkit-appearance: none) or (-moz-appearance: none) {
+    input[type='checkbox'].green,
+    input[type='radio'].green {
+      --active: #474443; 
+      --active-inner: #79CA42; 
+      --focus: 2px rgba(39, 94, 254, .3);
+      --border: #BBC1E1;
+      --border-hover: #275EFE;
+      --background: #474443; 
+      --disabled: #F6F8FF;
+      --disabled-inner: #E1E6F9;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      height: 21px;
+      outline: none;
+      display: inline-block;
+      vertical-align: top;
+      position: relative;
+      margin: 0;
+      cursor: pointer;
+      border: 1px solid var(--bc, var(--border));
+      background: var(--b, var(--background));
+      transition: background .3s, border-color .3s, box-shadow .2s;
+      &:after { 
+        content: '';
+        display: block;
+        left: 0;
+        top: 0;
+        position: absolute;
+        transition: transform var(--d-t, .3s) var(--d-t-e, ease), opacity var(--d-o, .2s);
+      }
+      &:checked {
+        --b: var(--active);
+        --bc: var(--active);
+        --d-o: .3s;
+        --d-t: .6s;
+        --d-t-e: cubic-bezier(.2, .85, .32, 1.2);
+      }
+      &:disabled {
+        --b: var(--disabled);
+        cursor: not-allowed;
+        opacity: .9;
+        &:checked {
+          --b: var(--disabled-inner);
+          --bc: var(--border);
+        }
+        & + label {
+          cursor: not-allowed;
+        }
+      }
+      &:hover {
+        &:not(:checked) {
+          &:not(:disabled) {
+            --bc: var(--border-hover);
+          }
+        }
+      }
+      &:focus {
+        box-shadow: 0 0 0 var(--focus);
+      }
+      &:not(.switch) {
+        width: 21px;
+        &:after {
+          opacity: var(--o, 0);
+        }
+        &:checked {
+          --o: 1;
+        }
+      }
+      & + label {
+        font-size: 14px;
+        line-height: 21px;
+        display: inline-block;
+        vertical-align: top;
+        cursor: pointer;
+        margin-left: 4px;
+      }
+    }
+    input[type='checkbox'].green {
+      &:not(.switch) {
+        border-radius: 0;
+        &:after {
+          width: 5px;
+          height: 9px;
+          border: 2px solid var(--active-inner);
+          border-top: 0;
+          border-left: 0;
+          left: 7px;
+          top: 4px;
+          transform: rotate(var(--r, 20deg));
+        }
+        &:checked {
+          --r: 43deg;
+        }
+      }
+      &.switch {
+        width: 38px;
+        border-radius: 11px;
+        &:after {
+          left: 2px;
+          top: 2px;
+          border-radius: 50%;
+          width: 15px;
+          height: 15px;
+          background: var(--ab, var(--border));
+          transform: translateX(var(--x, 0));
+        }
+        &:checked {
+          --ab: var(--active-inner);
+          --x: 17px;
+        }
+        &:disabled {
+          &:not(:checked) {
+            &:after {
+              opacity: .6;
+            }
+          }
+        }
+      }
+    }
+    input[type='radio'].green {
+      border-radius: 50%;
+      &:after {
+        width: 19px;
+        height: 19px;
+        border-radius: 50%;
+        background: var(--active-inner);
+        opacity: 0;
+        transform: scale(var(--s, .7));
+      }
+      &:checked {
+        --s: .5;
+      }
+    }
+  }
+   */
+  /**********************************************************************/
 
 option {
     padding-left: 0;

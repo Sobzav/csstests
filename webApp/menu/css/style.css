@@ -1,0 +1,102 @@
+.gridContainer {
+    grid-template-columns: 1fr; /* Одна колонка */
+}
+
+.local-grid {
+    display: grid;
+    grid-column: 1 / -1;
+    grid-template-rows: 50px min-content min-content auto;
+}
+.local-grid header.header-top {
+    display: flex;
+}
+
+.top-menu {
+    grid-area: 2 / 1 / 3 / 2;
+    align-self: start;
+}
+
+.sub-menu {
+    grid-area: 3 / 1 / 4 / 2;
+    align-self: start;
+}
+.local-grid header.header-top, .local-grid header.header-top div { border: none; }
+
+.status-bar {
+    display: grid;
+    align-self: end;
+    grid-area: 4 / 1 / 5 / 2;
+}
+
+menu.top-menu,
+menu.sub-menu {
+    display: flex;
+    justify-content: center;
+}
+
+menu.top-menu ul {
+    margin-top: 45px;
+}
+
+menu.sub-menu ul {
+    margin-top: 95px;
+}
+
+menu.sub-menu ul li {
+    position: relative;
+}
+
+menu.top-menu ul li,
+menu.sub-menu ul li,
+menu.sub-menu ul li span {
+    /* размеры блоков и цвет фона меню */
+    background-color: #3E4349;
+    width: 350px;
+    margin: 0 auto;
+    padding: 5px;
+    margin-bottom: 6px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+menu.top-menu ul li:hover,
+menu.sub-menu ul li:hover,
+menu.sub-menu ul li:hover span {
+    background-color: #4a5057;
+    cursor: pointer;
+}
+
+menu.top-menu li,
+menu.sub-menu li {
+    text-transform: uppercase;
+}
+
+menu.top-menu ul li:nth-child(1) { color: #F8EC72; }
+menu.top-menu ul li:nth-child(2) { color: #79CA42; }
+menu.top-menu ul li:nth-child(3) { color: #D9C898; }
+menu.top-menu ul li:nth-child(4) { color: #FFA634; }
+menu.top-menu ul li:nth-child(5) { color: #fff; }
+menu.top-menu ul li:nth-child(6) { color: #FF8682; }
+menu.top-menu ul li:nth-child(7) { color: #6AA6D7; }
+menu.sub-menu ul li:nth-child(1) { color: #F8FF77; }
+menu.sub-menu ul li:nth-child(2) { color: #41DDC4; }
+menu.sub-menu ul li:nth-child(3) { color: #00B7D9; }
+menu.sub-menu ul li:nth-child(4) { color: #FFB42B; }
+menu.sub-menu ul li:nth-child(5) { color: #C48455; }
+menu.sub-menu ul li:nth-child(6) { color: #90D94B; }
+menu.sub-menu ul li:nth-child(7) { color: #647AF5; }
+menu.sub-menu ul li:nth-child(8) { color: #fff; }
+menu.sub-menu ul li:nth-child(9) { color: #D75341; }
+
+menu.sub-menu ul li span {
+    display: inline-block;
+    margin-left: 7px;
+    width: 40px;
+    font: inherit;
+    position: absolute;
+    top: 0;
+    left: 350px;
+    padding: 5px;
+}
+
