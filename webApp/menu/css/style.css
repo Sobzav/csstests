@@ -7,8 +7,10 @@
     grid-column: 1 / -1;
     grid-template-rows: 50px min-content min-content auto;
 }
-.local-grid header.header-top {
+
+.local-grid header.header-top, .local-grid header.header-top div{
     display: flex;
+    height: 50px;
 }
 
 .top-menu {

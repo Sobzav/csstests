@@ -25,6 +25,8 @@
     --color-alert: #fc8181;
     /* --color-alert: #fefcbf; */
     --color-disabled: #2d3748;
+    --color-menu:#3E4349;
+    --color-input: #464A4E;
 }
 
 html,
@@ -33,24 +35,19 @@ body {
     background-color: #AAA8A9;
 }
 
-body,
-.gridContainer, .gridContainer > div {
+.gridContainer {
     min-height: 100vh;
-    max-height: 100%;
+    /* max-height: 100%; */
 }
-
-.gridContainer { 
-    display: grid;
-    grid-column: 1 / -1;
-    margin: 0 auto;
-    width: 100%;
-}
+.gridContainer div {}
 
 .gridContainer {
     display: grid;
     background-color: var(--color-raven);
     width: 1200px;
     padding: 0 25px;
+    margin: 0 auto;
+    grid-column: 1 / -1;
 }
 
 .menu-burger {
@@ -110,19 +107,9 @@ body,
 /* Отступ слева для элемента div Заголовка правой стороны, Отступ слева для элемента div Заголовка секции Sub с чекбоксом */
 header.header__general div,
 header.header__sub div {
-    margin: 0.8em 0.5em 0.8em 1.2em;
+    margin: 14px 0;
 }
 
-.section__main {
-    display: flex;
-    grid-area: 2 / 1 / 3 / 3;
-    justify-content: space-between;
-    /* margin: 0.25rem 0 0 0; */
-    margin: 0.5rem 0 0.3em 0;
-    width: 100%;
-    padding: 0 0.5rem;
-    /* section__main - зазор от краев экрана с помощью padding */
-}
 
 /*===========================================*/
 /*========    НАВИГАЦИОННАЯ ПАНЕЛЬ    =======*/
@@ -238,7 +225,7 @@ header.header__sub div {
 /***********************************************************/
 
 .dropbtn {
-    background-color: var(--color-crBrown);
+    background-color: var(--color-input);
     color: white;
     padding: 0 8px;
     border: none;
@@ -251,7 +238,7 @@ header.header__sub div {
 /* Dropdown button on hover & focus */
 .dropbtn:hover,
 .dropbtn:focus {
-    background-color: var(--color-crBrown);
+    background-color: var(--color-input);
 }
 
 .dropdown-input {
@@ -265,7 +252,7 @@ header.header__sub div {
 
 .dropdown input:focus {
     /* padding-right: 0; */
-    border: 1px solid var(--color-crBrown);
+    border: 1px solid var(--color-input);
 }
 
 /* The search field */
@@ -275,9 +262,9 @@ header.header__sub div {
     padding-right: 0;
 }
 
+ /* тень вокруг блока выпадающего списка */
 .dropdown-content .show {
     box-shadow: 0px 0px 3px #888888;
-    /* тень вокруг блока выпадающего списка */
 }
 
 .dropdown-content li i {
@@ -293,8 +280,10 @@ header.header__sub div {
 
 .wide-100 .dropdown {
     margin: 0 0.5em;
+    height:  21px;
 }
 
+/* чтобы кнопка справа прилипала к инпуту */
 .wide-100 .dropdown input {
     margin: 0 !important;
 }
@@ -335,6 +324,7 @@ header.header__sub div {
 /* Hide the dropdown menu (use JS to remove this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .hidden {
     display: none;
+    visibility: hidden;
 }
 
 
@@ -343,7 +333,7 @@ header.header__sub div {
 /* MAIN: If убрать "display: flex;"=> оно станет "block" => отображение для мобильных - в один столбец */
 main {
     display: grid;
-    flex-direction: row;
+    /* flex-direction: row; */
     /* padding: 0 0.25rem 0.75rem 0.25rem; убрал paddings слева и справа */
     padding: 0 0 0.75rem 0;
 }
@@ -355,9 +345,8 @@ main {
 }
 
 /* Растягивающийся элемент */
-.wide-100 {
-    flex: 1 0 auto;
-}
+.wide-100, .wide-100 label, .wide-100 input {display: flex;}
+.wide-100 {flex: 1 0 auto;}
 
 .input-flex label {
     flex: 0 0 100px;
@@ -469,6 +458,7 @@ footer {
     /* flex-direction: row;
     font-size: .875rem; */
     display: block;
+    padding-top: 16px;
 }
 
 /* TOP - Панель с заголовком */
@@ -476,7 +466,7 @@ footer {
 .gridContainer header.header-top div {
     /* height: 2rem; только если нет текста, иначе маловато */
     /* padding: 8px; */
-    height: 50px;
+    height: 32px;
     /* justify-content: space-between; */ /* распорка между элементами */
     border-bottom: 1px dotted var(--color-chiffon);
     /* display: grid; */
@@ -567,75 +557,35 @@ label {
 
 
 .header__sub label.label-heading {
-    padding-left: 0.1em;
+    /* padding-left: 0.1em; */
     /* color:  red; */
 }
-
-/* Зеленые чекбоксы и радиокнопки  */
-
-input[type=checkbox].green {
-    position: relative;
-    cursor: pointer;
-    width: 16px;
-    height: 16px;
-    background-color:#474443;
-    text-align:  center;
-}
-input[type=checkbox].green:before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    top: 0;
-    left: 0;
-    background-color:#474443;
-}
-input[type=checkbox].green:checked:before {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    top: 0;
-    left: 0;
-    background-color:#474443;
-}
-input[type=checkbox].green:checked:after {
-    content: "";
-    display: block;
-    width: 5px;
-    height: 9px;
-    border: solid #79CA42;
-    border-width: 0 2px 2px 0;
-    -webkit-transform: rotate(45deg);
-    -ms-transform: rotate(45deg);
-    transform: rotate(45deg);
-    position: absolute;
-    top: 2px;
-    left: 6px;
-}
-
-/* // Зеленые чекбоксы и радиокнопки  */
-
 /*************************************************************/
-/**** Grüne CHECKBOXES und RADIOBUTTONS fur Meine Hecke******//*Grüne Kontrollkästchen und radioknöpfe für meinen Heck*/
+/*                           INPUT                           */
 /*************************************************************/
 
-/* @supports(-webkit-appearance: none) or (-moz-appearance: none) {
-    input[type='checkbox'].green,
-    input[type='radio'].green {
-      --active: #474443; 
-      --active-inner: #79CA42; 
-      --focus: 2px rgba(39, 94, 254, .3);
+input, select {
+    height: 21px;
+}
+
+
+/*************************************************************/
+/****  Grüne CHECKBOXES und RADIOBUTTONS fur Meine Hecke  ****/
+/*************************************************************/
+
+@supports (-webkit-appearance: none) or (-moz-appearance: none) {
+    input.green[type='checkbox'], input.green[type='radio'] {
+      --active: #474443;
+      --active-inner: #79CA42;
+      --focus: 2px rgba(39, 94, 254, 0.3);
       --border: #BBC1E1;
       --border-hover: #275EFE;
-      --background: #474443; 
+      --background: #3E4349;
       --disabled: #F6F8FF;
       --disabled-inner: #E1E6F9;
       -webkit-appearance: none;
       -moz-appearance: none;
-      height: 21px;
+      height:21px;
       outline: none;
       display: inline-block;
       vertical-align: top;
@@ -644,121 +594,111 @@ input[type=checkbox].green:checked:after {
       cursor: pointer;
       border: 1px solid var(--bc, var(--border));
       background: var(--b, var(--background));
-      transition: background .3s, border-color .3s, box-shadow .2s;
-      &:after { 
+      transition: background 0.3s, border-color 0.3s, box-shadow 0.2s;
+    }
+      input.green[type='checkbox']:after, input.green[type='radio']:after {
         content: '';
         display: block;
         left: 0;
         top: 0;
         position: absolute;
-        transition: transform var(--d-t, .3s) var(--d-t-e, ease), opacity var(--d-o, .2s);
-      }
-      &:checked {
-        --b: var(--active);
-        --bc: var(--active);
-        --d-o: .3s;
-        --d-t: .6s;
-        --d-t-e: cubic-bezier(.2, .85, .32, 1.2);
-      }
-      &:disabled {
-        --b: var(--disabled);
-        cursor: not-allowed;
-        opacity: .9;
-        &:checked {
-          --b: var(--disabled-inner);
-          --bc: var(--border);
-        }
-        & + label {
-          cursor: not-allowed;
-        }
-      }
-      &:hover {
-        &:not(:checked) {
-          &:not(:disabled) {
-            --bc: var(--border-hover);
-          }
-        }
-      }
-      &:focus {
-        box-shadow: 0 0 0 var(--focus);
-      }
-      &:not(.switch) {
-        width: 21px;
-        &:after {
-          opacity: var(--o, 0);
-        }
-        &:checked {
-          --o: 1;
-        }
-      }
-      & + label {
-        font-size: 14px;
-        line-height: 21px;
-        display: inline-block;
-        vertical-align: top;
-        cursor: pointer;
-        margin-left: 4px;
-      }
-    }
-    input[type='checkbox'].green {
-      &:not(.switch) {
-        border-radius: 0;
-        &:after {
-          width: 5px;
-          height: 9px;
-          border: 2px solid var(--active-inner);
-          border-top: 0;
-          border-left: 0;
-          left: 7px;
-          top: 4px;
-          transform: rotate(var(--r, 20deg));
-        }
-        &:checked {
-          --r: 43deg;
-        }
-      }
-      &.switch {
-        width: 38px;
-        border-radius: 11px;
-        &:after {
-          left: 2px;
-          top: 2px;
-          border-radius: 50%;
-          width: 15px;
-          height: 15px;
-          background: var(--ab, var(--border));
-          transform: translateX(var(--x, 0));
-        }
-        &:checked {
-          --ab: var(--active-inner);
-          --x: 17px;
-        }
-        &:disabled {
-          &:not(:checked) {
-            &:after {
-              opacity: .6;
-            }
-          }
-        }
-      }
-    }
-    input[type='radio'].green {
-      border-radius: 50%;
-      &:after {
-        width: 19px;
-        height: 19px;
-        border-radius: 50%;
-        background: var(--active-inner);
-        opacity: 0;
-        transform: scale(var(--s, .7));
-      }
-      &:checked {
-        --s: .5;
-      }
-    }
+        transition: transform var(--d-t, 0.3s) var(--d-t-e, ease), opacity var(--d-o, 0.2s);}
+
+  input.green[type='checkbox']:checked, input.green[type='radio']:checked {
+    --b: var(--active);
+    --bc: var(--active);
+    --d-o: 0.3s;
+    --d-t: 0.6s;
+    --d-t-e: cubic-bezier(0.2, 0.85, 0.32, 1.2);
   }
-   */
-  /**********************************************************************/
+  input.green[type='checkbox']:disabled, input.green[type='radio']:disabled {
+    --b: var(--disabled);
+    cursor: not-allowed;
+    opacity: 0.9;
+  }
+  input.green[type='checkbox']:disabled:checked, input.green[type='radio']:disabled:checked {
+    --b: var(--disabled-inner);
+    --bc: var(--border);
+  }
+  input.green[type='checkbox']:disabled + label, input.green[type='radio']:disabled + label {
+    cursor: not-allowed;
+  }
+  input.green[type='checkbox']:hover:not(:checked):not(:disabled), input.green[type='radio']:hover:not(:checked):not(:disabled) {
+    --bc: var(--border-hover);
+  }
+  input.green[type='checkbox']:focus, input.green[type='radio']:focus {
+    box-shadow: 0 0 0 var(--focus);
+  }
+  input.green[type='checkbox']:not(.switch), input.green[type='radio']:not(.switch) {
+    width: 21px;
+  }
+  input.green[type='checkbox']:not(.switch):after, input.green[type='radio']:not(.switch):after {
+    opacity: var(--o, 0);
+  }
+  input.green[type='checkbox']:not(.switch):checked, input.green[type='radio']:not(.switch):checked {
+    --o: 1;
+  }
+  input.green[type='checkbox'] + label, input.green[type='radio'] + label {
+    font-size: 14px;
+    line-height: 21px;
+    display: inline-block;
+    vertical-align: top;
+    cursor: pointer;
+    margin-left: 4px;
+  }
+  input.green[type='checkbox']:not(.switch) {
+    border-radius: 0;
+  }
+  input.green[type='checkbox']:not(.switch):after {
+    width: 5px;
+    height: 9px;
+    border: 2px solid var(--active-inner);
+    border-top: 0;
+    border-left: 0;
+    left: 7px;
+    top: 4px;
+    transform: rotate(var(--r, 20deg));
+  }
+  input.green[type='checkbox']:not(.switch):checked {
+    --r: 43deg;
+  }
+  input.green[type='checkbox'].switch {
+    width: 38px;
+    border-radius: 11px;
+  }
+  input.green[type='checkbox'].switch:after {
+    left: 2px;
+    top: 2px;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    background: var(--ab, var(--border));
+    transform: translateX(var(--x, 0));
+  }
+  input.green[type='checkbox'].switch:checked {
+    --ab: var(--active-inner);
+    --x: 17px;
+  }
+  input.green[type='checkbox'].switch:disabled:not(:checked):after {
+    opacity: 0.6;
+  }
+  input.green[type='radio'] {
+    border-radius: 50%;
+  }
+  input.green[type='radio']:after {
+    width: 19px;
+    height: 19px;
+    border-radius: 50%;
+    background: var(--active-inner);
+    opacity: 0;
+    transform: scale(var(--s, 0.7));
+  }
+  input.green[type='radio']:checked {
+    --s: 0.5;
+  }
+    }
+
+/**********************************************************************/
 
 option {
     padding-left: 0;
@@ -772,15 +712,16 @@ button {
     background-color: transparent;
     border: 1px solid var(--color-black);
     font-size: inherit;
-    /* иначе текст вылезает из кнопки */
-    padding: 0 0.9em;
-    margin: 0 0.4rem;
-    max-height: 1.7em;
+    padding: 0 14px;
+    margin: 0 6px;
+    height: 21px;
+    max-height: 25px;
 }
 
 button.x-but, .plus-button {
     border: none;
     height: 100%;
+    width: 21px;
     line-height: 10px;
     padding: 0px;
     margin: 0px;
@@ -788,8 +729,9 @@ button.x-but, .plus-button {
     align-items: center;
     font-weight: bold;
 }
+
 button.x-but {font-size: 14px;}
-.plus-button {font-size: 10px;}
+button.plus-button {font-size: 10px;}
 
 #selCode,
 #inpCodeEdit {
@@ -860,8 +802,7 @@ section.section__main div:nth-child(2) {
 
 .section__main button,
 .section__main div:last-child {
-    /* padding-right: 0; */
-    /* margin: 0; */
+    margin: 0;
 }
 
 .section__main div {
@@ -888,22 +829,12 @@ section.section__main div:nth-child(2) {
     align-items: center;
 }
 
-.hidden {
-    display: none;
-}
-
-
-/* класс для увеличенной разрядки букв для текста ВСЕГО */
-.summ {
-    letter-spacing: .03rem;
-    font-size: 15px;
-}
 
 /* Кнопки внизу страницы - по правой стороне */
 .right-block__buttons {
     justify-content: flex-end;
     /* justify-content: space-between; */
-    padding: 0 0.6rem;
+    padding: 0 8px;
     /* margin: 0 0.4rem; */
     /* margin-top: 0.25em; */
 }

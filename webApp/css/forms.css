@@ -37,12 +37,12 @@ option {
     font-size: 13px;
     white-space: nowrap;
     color: var(--color-white);
-    background-color: var(--color-crBrown);
+    background-color: var(--color-input);
     box-sizing: border-box;
     padding: 0 4px;
     text-align: start;
     margin: 0 0.2rem;
-    border: 1px solid var(--color-crBrown);  /* Добавил border ко всем эл-там ввода чтобы не скакала верстка при изменении статуса input на required*/
+    border: 1px solid var(--color-input);  /* Добавил border ко всем эл-там ввода чтобы не скакала верстка при изменении статуса input на required*/
     /* border:  none; */
 }
 

@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="..\css\reset.css" />
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
     <!-- <link rel="stylesheet" type="text/css" href="..\css\table.css" /> -->
-    <link rel="stylesheet" type="text/css" href="css\index.css" />
+    <link rel="stylesheet" type="text/css" href="css\style.css" />
     <title> Адреса мест хранения </title>
 
 </head>
@@ -21,7 +21,11 @@
 
             <header class="header-top">
                 <!-- TOP - Панель с заголовком -->
-                <div class="wide-100">
+
+            </header>
+
+            <section class="section__main">
+            <div class="wide-100">
                     <label class="" for="selCode"> Тип </label>
 
                     <!-- Поисковая строка с выпадающим списком -->
@@ -38,7 +42,7 @@
                         <button class="" id="btnEdit"> Редактировать </button>
                     </div>
                 </div>
-            </header>
+            </section>
             <main class="table">
             <div class=""> 
             <table>
