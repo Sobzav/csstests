@@ -19,6 +19,10 @@ main {padding: 0px; align-items: start;}
     min-width: 575px;
 }
 
+.section-general label {
+    font-size: var(--font-size);
+}
+
 .inputBlock input[type='checkbox'] { /* Внутренние прямоугольники - По координатам */
     margin:0 10px 0 30px;
 }

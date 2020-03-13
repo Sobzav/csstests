@@ -103,6 +103,15 @@
                         <div class="dropdown wide-100" tabindex="0">
                             <input class="wide-100" type="text" placeholder="Поиск.." id="myInput">
                             <ul id="patternPackList" class="dropdown-content hidden" tabindex="0">
+                            <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+                                         <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+                                         <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+                                         <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+                                         <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+                                         <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+                                         <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+                                         <li> Обозначение <i>|</i> Наименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li>
+
                             </ul>
                             <button class="dropbtn">&#9013</button>
                         </div>
@@ -209,20 +218,20 @@
                             </div>
 
                             <div class="thrd subInput dropdown wide-100" tabindex="0">
-                                <!-- <div class="dropdown wide-100" tabindex="0"> -->
-                                    <input size="6" class="subInput dropdown-input" type="text" placeholder="Тип">
-                                    <ul id="packList_" class="subInput dropdown-content hidden" tabindex="0">
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
-                                        <!-- <li> Обозначение <i>|</i> Нименование наименование <i>|</i> 777x888x999 <i>|</i> Внут 10шт </li> -->
+                                <div class="dropdown wide-100" tabindex="0">
+                                    <input size="6" class="dropdown-input" type="text" placeholder="Тип">
+                                    <ul id="packList_" class="dropdown-content drop-over-left hidden" tabindex="0">
+                                         <li> Обозначение  </li>
+                                         <li> Обозначение  </li>
+                                         <li> Обозначение  </li>
+                                         <li> Обозначение  </li>
+                                         <li> Обозначение  </li>
+                                         <li> Обозначение  </li>
+                                         <li> Обозначение  </li>
+                                         <li> Обозначение  </li>
                                     </ul>
-                                    <button class="subInput dropbtn">&#9013</button>
-                                <!-- </div> -->
+                                    <button class="dropbtn">&#9013</button>
+                                </div>
                             </div>
 
                             <div class="checkbox">

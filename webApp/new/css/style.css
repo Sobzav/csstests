@@ -95,6 +95,10 @@ input {
 .form-container {
     height: 600px;
     overflow-y: auto;
+    /*-webkit-overflow-scrolling: touch; /* Нефиксированные скроллбары для более старых iOS чем iOS 13 */
+    /*-ms-overflow-style: -ms-autohiding-scrollbar; /* Нефиксированные скроллбары в Internet Explorer и в Edge, основанном на EdgeHTML */
+    /*scrollbar-width: var(--scrollbar-width); /* Ширина скроллбара для FF */
+    /*scrollbar-color: var(--scrollbar-color) var(--scrollbar-track-color); /* Цвет скроллбара для FF */
     z-index: 1;
 }
 

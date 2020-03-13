@@ -20,13 +20,22 @@
     --color-black: #000000;
     --color-white: #ffffff;
     --color-tr: transparent;
-    /* Цвета модальных окн */
+    /* Цвета модальных окон */
     --color-info: #90cdf4;
     --color-alert: #fc8181;
-    /* --color-alert: #fefcbf; */
+    --color-alert: #fefcbf;
     --color-disabled: #2d3748;
     --color-menu:#3E4349;
     --color-input: #464A4E;
+    --font-size: 16px;
+
+    /* --scrollbar-size: .375rem;
+    /* --scrollbar-minlength: 24px; /* Minimum length of scrollbar thumb (width of horizontal, height of vertical) */
+    /* --scrollbar-ff-width: thin; /* FF-only accepts auto, thin, none */
+    /* --scrollbar-track-color: transparent;
+    /* --scrollbar-color: rgba(0,0,0,.2);
+    /* --scrollbar-color-hover: rgba(0,0,0,.3);
+    /* --scrollbar-color-active: rgb(0,0,0);*/
 }
 
 html,
@@ -179,7 +188,7 @@ header.header__sub div {
 .nav li>span,
 .nav li.beforedot>span {
     text-align: center;
-    font-size: 0.95em;
+    font-size: 15px;
     overflow: hidden;
     text-overflow: clip;
     /* обрезание неуместившихся символов при возможном переполнении */
@@ -188,15 +197,15 @@ header.header__sub div {
 }
 
 .nav li.beforedot {
-    margin-left: 2.4em;
+    margin-left: 38px;
     /* сдвигаем весь блок li правее для того чтобы уместилась точка */
 }
 
 .nav li>label,
 .nav li.beforedot>label {
     font-family: 'CoreSansDS25LightItalic';
-    font-size: 2.8em;
-    font-size: 6em;
+    font-size: 45px;
+    font-size: 96px;
     line-height: 130px;
     border: 1px solid #000;
     /* display: block;
@@ -204,7 +213,7 @@ header.header__sub div {
     padding-top: 7px;
     height: 112px;
     font-family: 'CoreSansDS25LightItalic';
-    font-size: 6em;
+    font-size: 96px;
     border: 1px solid #000; */
 }
 
@@ -212,11 +221,11 @@ header.header__sub div {
 .nav li.beforedot::before {
     content: ".";
     font-family: 'CoreSansDS25LightItalic';
-    height: 0em;
-    font-size: 6em;
-    line-height: 1.8em;
+    height: 0px;
+    font-size: 96px;
+    line-height: 29px;
     cursor: default;
-    margin-left: -0.36em;
+    margin-left: -0.396px;
     /* переопределение - сдвигаем разделитель в виде точки между 511 . 1Ф левее */
 }
 
@@ -231,7 +240,7 @@ header.header__sub div {
     border: none;
     cursor: pointer;
     margin: 0;
-    line-height: 17px;
+    line-height: 21px;
     /* vertical-align: top; */
 }
 
@@ -279,7 +288,7 @@ header.header__sub div {
 }
 
 .wide-100 .dropdown {
-    margin: 0 0.5em;
+    margin: 0 8px;
     height:  21px;
 }
 
@@ -289,24 +298,38 @@ header.header__sub div {
 }
 
 /* Dropdown Content (Hidden by Default) */
-.dropdown-content {
+ul.dropdown-content {
     position: absolute;
     background-color: #C3C7C8;
     min-width: 100%;
     z-index: 1;
-    margin: 1.3em 0 0 0em;
-    max-height: 70vh;
-    /* для скролла в списке */
-    overflow-y: auto;
-    /* для скролла в списке */
+    margin: 21px 0 0 0;
+    max-height: 70vh; /* максимальная высота списка */
+    overflow-y: auto; /* Полоса прокрутки */
+    white-space: nowrap; /* по умолчанию запрет переноса. Если нужен перенос - убрать эту строку */
 }
+
+ul.dropdown-content.drop-nowrap { white-space: nowrap; }  /* Запрет переноса, список расширяется вправо  */
+ul.dropdown-content.drop-norm { max-width: 100%; }  /* Ограничивает выпадающий список шириной родительского div (с инпутом и кнопкой) */
+ul.dropdown-content.drop-right { right: 0; }  /* По правому краю */
+ul.dropdown-content.drop-over-left { right: 100%; top: -325px; }  /* По левому краю */
+
+ul.dropdown-content.drop-maxwidth-300 { max-width: 300px;}  /* Триста! Но если родительский div будет больше, чем 300, то ограничение будет по размеру родительского */
+ul.dropdown-content.drop-maxwidth-500 { max-width: 500px;} 
+ul.dropdown-content.drop-maxwidth-700 { max-width: 700px;} 
+ul.dropdown-content.drop-maxwidth-900 { max-width: 900px;} 
+ul.dropdown-content.drop-maxwidth-1000 { max-width: 1000px;} 
+
+ul.dropdown-content.drop-right-middle { margin:0!important; left: 100%; }  /* Смещает список по правой стороне и по центру родительского div  */
 
 /* Links inside the dropdown */
 .dropdown-content li {
     color: #000;
-    padding: 1px 10px;
+    padding: 3px 10px;
     text-decoration: none;
     display: block;
+    hyphens: none;
+    max-width: inherit;
 }
 
 /* Change color of dropdown links on hover */
@@ -334,8 +357,8 @@ header.header__sub div {
 main {
     display: grid;
     /* flex-direction: row; */
-    /* padding: 0 0.25rem 0.75rem 0.25rem; убрал paddings слева и справа */
-    padding: 0 0 0.75rem 0;
+    /* padding: 0 0.25rem 12px 0.25rem; убрал paddings слева и справа */
+    padding: 0 0 12px 0;
 }
 
 /* Растягивающийся input */
@@ -397,7 +420,7 @@ footer {
 
 .left .label-heading {
     /* align-self: center; */
-    font-size: 1rem;
+    font-size: 16px;
     align-self: start;
     vertical-align: top;
 }
@@ -444,11 +467,11 @@ footer {
     /* margin: auto; */
     background-color: var(--color-chateauGrey);
     padding: 0;
-    margin: 0 1.3 0.5rem 0;
+    margin: 0 0 8px 0;
 }
 
 .item-1 {
-    padding: 0.25rem 0;
+    padding: 4px 0;
 }
 
 
@@ -715,7 +738,9 @@ button {
     padding: 0 14px;
     margin: 0 6px;
     height: 21px;
-    max-height: 25px;
+    max-height: 30px;
+    line-height: 21px;
+
 }
 
 button.x-but, .plus-button {
@@ -735,32 +760,32 @@ button.plus-button {font-size: 10px;}
 
 #selCode,
 #inpCodeEdit {
-    width: 6em;
+    width: 96px;
 }
 
 #btnEdit {
-    width: 9rem;
+    width: 144px;
 }
 
 .inputLabel {
     display: inline-block;
     vertical-align: middle;
     text-align: end;
-    padding-right: 0.2rem;
-    padding-left: 0.1rem;
-    font-size: 0.85rem;
+    padding-right: 3px;
+    padding-left: 0.16px;
+    font-size: 14px;
 }
 
 .inputBlock-top>label,
 .inputBlock-top>input,
 .inputBlock-top>select,
 .inputBlock-top>button {
-    font-size: 0.95rem;
+    font-size: 15px;
     white-space: nowrap;
 }
 
 .inputBlock-base>label {
-    font-size: 0.95rem;
+    font-size: 16px;
     white-space: nowrap;
 }
 
@@ -772,32 +797,32 @@ button.plus-button {font-size: 10px;}
 }
 
 .multyLine {
-    line-height: 0.75rem;
+    line-height: 12px;
 }
 
 
 
 section.section__main div {
-    /* padding: 0 0.75rem; */
+    /* padding: 0 12px; */
 }
 
 section.section__main div:nth-child(2) {
-    /* margin: 0 0 0 1.5rem; */
+    /* margin: 0 0 0 24px; */
 }
 
 /* Ширина первого Select в Top-панели выбора Типа */
 .select-type {
-    width: 6em;
+    width: 96px;
 }
 
 .section__main select,
 .section__main input {
     /*конструкция ", .section__main input" на height не срабатывает - действует только на input */
     /* height: 1.25rem; Этот элемент влияет на вертикальное позиционирование текста внутри input и select в шапке, причем в противоположных направлениях */
-    font-size: 1rem;
-    /* вместо 0.95rem - потому что 0.95 срабатывало только на select */
+    font-size: 16px;
+    /* вместо 15px - потому что 0.95 срабатывало только на select */
     white-space: nowrap;
-    margin: 0 0.5em;
+    margin: 0 8px;
 }
 
 .section__main button,
@@ -812,10 +837,10 @@ section.section__main div:nth-child(2) {
 
 .section__main div label {
     font-family: 'CoreSansDS35Regular';
-    font-size: 0.95rem;
+    font-size: 15px;
     /* vertical-align: middle; */
     text-align: end;
-    padding: 0.1rem;
+    padding: 2px;
 }
 
 .section-general__grid,
@@ -844,19 +869,19 @@ section.section__main div:nth-child(2) {
 }
 
 .right-block__buttons button.button-right {
-    margin: 0 0 0 0.75em;
+    margin: 0 0 0 12px;
     word-break: break-all;
 }
 
 .section__subsumm {
     display: grid;
-    margin-top: 1rem;
+    margin-top: 16px;
     justify-content: end;
 }
 
 .section__subsumm label {
     font-family: 'CoreSansDS35Regular';
-    font-size: 0.95rem;
+    font-size: 15px;
     white-space: nowrap;
 
 }
@@ -865,15 +890,15 @@ section.section__main div:nth-child(2) {
 .status-bar .status-label {
     vertical-align: middle;
     text-align: start;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 24px;
+    padding-right: 24px;
     color: var(--color-chiffon);
 }
 
 .status-bar .status-label-changed {
     vertical-align: middle;
     text-align: start;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
+    padding-left: 24px;
+    padding-right: 24px;
     color: var(--color-alert);
 }
