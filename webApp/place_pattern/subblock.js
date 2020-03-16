@@ -25,6 +25,8 @@ class SubBlock {
         // -------------------------------------------------------
         // Свойства | 
         //
+        this.dh = null;
+
         this._pack = null;          // родительский элемент - контейнер внутренних элементов
         this._index = index;        // индекс данного блока в контейнере
         this._rowCount = 0;         // количество элементов в рядах блока
@@ -71,8 +73,8 @@ class SubBlock {
 
         this.packList.onItem0 = (id) => this.slotSubPackChanged(id);
         this.packList.onChange = (id) => this.slotSubPackChanged(id);
-        this.inpNx.addEventListener('input', event => this.slotSizeChanged(event));
-        this.inpNy.addEventListener('input', event => this.slotSizeChanged(event));
+        // this.inpNx.addEventListener('input', event => this.slotSizeChanged(event));
+        // this.inpNy.addEventListener('input', event => this.slotSizeChanged(event));
         this._checkBox.addEventListener('change', event => this.slotInRowChanged(event));
 
         // console.groupEnd();
@@ -87,10 +89,10 @@ class SubBlock {
         // console.group("class SubBlock.disconnectSignals {");
         // console.log("this: %o", this);
 
-        this.pacList.onItem0 = null;
-        this.pacList.onChange = null;
-        this.inpNx.removeEventListener('input', event => this.slotSizeChanged(event));
-        this.inpNy.removeEventListener('input', event => this.slotSizeChanged(event));
+        this.packList.onItem0 = null;
+        this.packList.onChange = null;
+        // this.inpNx.removeEventListener('input', event => this.slotSizeChanged(event));
+        // this.inpNy.removeEventListener('input', event => this.slotSizeChanged(event));
         this._checkBox.removeEventListener('change', event => this.slotInRowChanged(event));
 
         // console.groupEnd();
@@ -107,14 +109,12 @@ class SubBlock {
         console.log("block index: %i", this._index);
         
         // выпадающий список
-        var packList = new SearchList(ul, '../searchList/getList.php');
+        var packList = new SearchList(ul);
 
         packList.item0 = 'Тип'
 
         packList.listFormat = listFormat;
         packList.selectedFormat = ['code'];
-
-        packList.load();
 
         console.groupEnd();
         return packList;
@@ -125,24 +125,24 @@ class SubBlock {
     // -------------------------------------------------------
     // Метод | Задаем новые размеры блоку
     //
-    setSize(rowCount, colCount) {
-        console.group("class SubBlock.setSize");
-        console.log("block: %o, rowCount: %o, colCount: %o", this, rowCount, colCount);
+    // setSize(rowCount, colCount) {
+    //     console.group("class SubBlock.setSize");
+    //     console.log("block: %o, rowCount: %o, colCount: %o", this, rowCount, colCount);
 
-        if ((rowCount !== this._rowCount) || (colCount !== this._colCount)) {
+    //     if ((rowCount !== this._rowCount) || (colCount !== this._colCount)) {
             
-            this._rowCount = rowCount;
-            this._colCount = colCount;
+    //         this._rowCount = rowCount;
+    //         this._colCount = colCount;
 
-            this._inRow = parseInt(this._checkBox.checked);
+    //         this._inRow = parseInt(this._checkBox.checked);
 
-            this._inpTotal.innerText = this._subPack ? (this._rowCount * this._colCount) : 0;
+    //         this._inpTotal.innerText = this._subPack ? (this._rowCount * this._colCount) : 0;
 
-            // сообщаем контейнеру об изменениях
-            this.sizeChanged(this);
-        }
-        console.groupEnd();
-    }
+    //         // сообщаем контейнеру об изменениях
+    //         this.sizeChanged(this);
+    //     }
+    //     console.groupEnd();
+    // }
 
 
 
@@ -240,17 +240,17 @@ class SubBlock {
     // -------------------------------------------------------
     // Слот | Если изменились размеры
     //
-    slotSizeChanged(event) {
-        console.group("class SubBlock.slotSizeChanged");
-        console.log("block index: %i", this._index);
+    // slotSizeChanged(event) {
+    //     console.group("class SubBlock.slotSizeChanged");
+    //     console.log("block index: %i", this._index);
 
-        var rowCount = this._inpNy.value ? parseInt(this._inpNy.value) : 0;
-        var colCount = this._inpNx.value ? parseInt(this._inpNx.value) : 0;
+    //     var rowCount = this._inpNy.value ? parseInt(this._inpNy.value) : 0;
+    //     var colCount = this._inpNx.value ? parseInt(this._inpNx.value) : 0;
 
-        this.setSize(rowCount, colCount);
+    //     this.setSize(rowCount, colCount);
 
-        console.groupEnd();
-    }
+    //     console.groupEnd();
+    // }
 
 
 
@@ -261,6 +261,10 @@ class SubBlock {
         console.group("class SubBlock.slotSubPackChanged");
         console.log("block: %o", this);
 
+        // перебираем внутренние элементы
+        this._inpSizeWx.value = id ? this._packList.dataSet[ id ]['wx'] : '';
+        this._inpSizeWy.value = id ? this._packList.dataSet[ id ]['wy'] : '';
+        return false;
         // если в данном блоке выбран элемент имеющий id
         if (parseInt(id) > 0) {
 
@@ -422,7 +426,6 @@ class SubBlockContainer {
         this.item = [];
 
         this._inpTotal = document.querySelector('#inpTotal');
-
 
 
         // -------------------------------------------------------
@@ -599,8 +602,8 @@ class SubBlockContainer {
             var item = new SubBlock(index, newSubBlock);
             
             // подписываемся на сигналы блока
-            item.sizeChanged = () => this.onItemSizeChanged();
-            item.contentChanged = () => this.onItemContentChanged();
+            // item.sizeChanged = () => this.onItemSizeChanged();
+            // item.contentChanged = () => this.onItemContentChanged();
             
             this.item.push(item);
             

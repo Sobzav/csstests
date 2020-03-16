@@ -7,7 +7,7 @@
     <link rel="icon" href="..\img\favicon.ico" type="image/x-icon">
     <!-- <link rel="stylesheet" type="text/css" href="..\css\style.css" /> Черновая версия - > и . шрифтовые, (. before li), (> before span) -->
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
-    <link rel="stylesheet" type="text/css" href="css/warehouse.css" />
+    <link rel="stylesheet" type="text/css" href="css\style.css" />
 
     <title> Склад </title>
 </head>
@@ -15,8 +15,7 @@
 <body class="">
 
     <!-- корневой контейнер формы -->
-    <div class="gridContainer">
-        <div class="local-grid">
+    <div class="gridContainer--whouse">
         <header class="header-top">
             <!-- TOP - Панель с заголовком -->
 
@@ -37,15 +36,15 @@
             <ul class="nav" id="nav">
                 <!-- Список уровней  -->
                 <!-- <li class="nav-first-item" id="1"> Уровень 1 </li> -->
-                <li><span>склад</span><label>5</label></li>
-                <li><span>секция</span><label>1</label></li>
-                <li><span>уровень</span><label>2</label></li>
-                <li class="beforedot"><span>линия</span><label>3</label></li> 
-                <li><span>стеллаж</span><label>A</label></li>
-                <li class="beforedot"><span>полка</span><label>6</label></li>
-                <li><span>лоток</span><label>54</label></li>
-                <li class="beforedot"><span>контейнер</span><label>А</label></li>
-                <li><span>ячейка</span><label>87</label></li>
+                <li><span>склад</span><div>5</div></li>
+                <!-- <li><span>секция</span><label>1</label></li> -->
+                <!-- <li><span>уровень</span><label>2</label></li> -->
+                <!-- <li class="beforedot"><span>линия</span><label>3</label></li> beforedot: Перед этим li будет точка и li сдвинется влево чтобы эту точку уместить -->
+                <!-- <li><span>стеллаж</span><label>A</label></li> -->
+                <!-- <li class="beforedot"><span>полка</span><label>6</label></li> -->
+                <!-- <li><span>лоток</span><label>54</label></li> -->
+                <!-- <li class="beforedot"><span>контейнер</span><label>А</label></li> -->
+                <!-- <li><span>ячейка</span><label>87</label></li> -->
             </ul>
             <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code"> <!-- Последний элемент .nav li:last-child пока скрыт в css -->
             <!-- </div> -->
@@ -74,7 +73,7 @@
             </div>
             <!-- характеристики -->
             <!-- Right item -->
-            <div class="item-2">
+            <div class="item-2--whouse">
 
 
 
@@ -90,17 +89,27 @@
 
                 <!-- Выбор Типа -->
                 <div class="right-form">
+
                     <!-- выпадающий список элементов -->
-                    <label class="" for="selCode"> Обозначение </label>
-                    <select class="select-type" id="selCode" name="package_code">
-                        <!-- Список всех элементов в базе  -->
-                        <option id="0"> Новый </option>
-                    </select>
-                    <!-- Кнопка справа  -->
-                    <div class="right-block__buttons">
-                        <button class="" id="btnEdit"> Редактировать </button>
+                    <label class="" for="packList"> Тип </label>
+                    <div class="mainInput dropdown wide-100" tabindex="0">
+                        <input class="mainInput wide-100" type="text" placeholder="Поиск.." id="myInput">
+                        <ul id="packList" class="dropdown-content hidden" tabindex="0">
+                        </ul>
+                        <button class="mainInput dropbtn">&#9013</button>
                     </div>
-                    <input class="hidden mainInput" size="4" type="text" id="inpCodeEdit" name="package_code">
+
+                    <!-- Кнопка справа  -->
+                    <!-- <div class="input-flex"> -->
+                    <!-- </div> -->
+                    <div class="right-block__buttons">
+                        <label class="" for="inpName"> Адрес </label>
+                        <input class="mainInput" size="5" type="text" id="inpAddr">
+                        <button class="button-right" id="btnNew"> + </button>
+                        <button class="" id="btnEdit"> Редакт.. </button>
+                        <button class="" id="btnBack"> Назад </button>
+                        <button class="" id="btnApply"> ✅ </button>
+                    </div>
 
 
                 </div>
@@ -108,8 +117,10 @@
 
                     <!-- Растягивающийся блок с input - ВО ВТОРУЮ СТРОКУ -->
                     <div class="input-flex">
+                        <label class="" for="inpCode"> Обозначение </label>
+                        <input class="mainInput" size="4" type="text" id="inpCode">
                         <label class="" for="inpName"> Наименование </label>
-                        <input class="mainInput" type="text" id="inpName" name="package_name">
+                        <input class="mainInput" type="text" id="inpName">
                     </div>
                 </div>
 
@@ -120,13 +131,17 @@
                 <div class="section-general__flex">
                     <div class="left">
                         <label class="label-heading bold" for="inpInternalSizeWx"> X </label>
-                        <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWx" name="package_iwx" pattern="[0-9]+" required>
+                        <input class="h-11 mainInput" size="5" type="text" id="inpX" pattern="[0-9]+" required>
 
                     </div>
                     <div class="left">
                         <label class="label-heading bold" for="inpInternalSizeWy"> Y </label>
-                        <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWy" name="package_iwy" pattern="[0-9]+" required>
+                        <input class="h-11 mainInput" size="5" type="text" id="inpY" pattern="[0-9]+" required>
 
+                    </div>
+                    <div class="">
+                            <label class="" for="color"> Цвет: </label>
+                            <input class="mainInput" type="color" id="inpColor" name="package_color">
                     </div>
                 </div>
 
@@ -268,8 +283,9 @@
         <!-- Строка статуса -->
         <section class="status-bar">
             <div class="">
+                <label class="status-label" id="lblStatusEdit"> </label>
                 <label class="status-label"> | </label>
-                <label class="status-label" id="lblStatusChanged"> </label>
+                <label class="status-label-changed" id="lblStatusChanged"> </label>
                 <label class="status-label"> | </label>
                 <label class="status-label" id="lblStatus"> </label>
                 <label class="status-label"> | </label>
@@ -277,15 +293,16 @@
                 <label hidden class="status-label"> | </label>
             </div>
         </section>
-    </div></div>
+    </div>
 
     <!--скрипты для стилей -->
     <script src="../jquery/jquery-3.4.1.min.js"></script>
     <script src="../jquery/jquery.validate.js"></script>
-    <script src="../package/subblock.js"></script>
     <script src="settings.js?n=1"></script>
     <script src="warehouse.js?n=1"></script>
-    <script src="../package/package.js?n=1"></script>
+    <script src="../package/place.js?n=1"></script>
+    <script src="../package/subblock.js"></script>
+    <script src="../searchList/searchList.js?n=1"></script>
     <script src="main.js?n=1"></script>
 </body>
 
@@ -303,7 +320,7 @@
         </header>
 
         <!-- Тело сообщения -->
-         <!-- УБРАЛ <main role="main"> - 2 РАЗА ПОВТОРЯЕТСЯ -->
+        <main role="main">
 
             <header class="header__modal">
                 <div id="header" class="label-heading"> Подзаголовок id="header" </div>
@@ -324,7 +341,7 @@
 
             </section>
 
-         <!-- УБРАЛ <main role="main"> - 2 РАЗА ПОВТОРЯЕТСЯ -->
+        </main>
     </div>
 </dialog>
 

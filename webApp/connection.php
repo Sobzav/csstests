@@ -1,7 +1,18 @@
 <?php
 
-// подключаем логгер
+// -------------------------------------------------------
+// Логгер | Подключаем и настраиваем логгироавние
+// 
+
+// Инициализируем переменные для хранения ошибок
+$errCount = 0;
+$errDump = " | ";
+
+// Добавлять в отчет все ошибки PHP
+error_reporting(E_ALL & ~E_NOTICE);
+
 @require_once '../plog.php';
+
 
     // глобальные настройки для подключения к серверу mysql 
     // $db_host = '127.0.0.1:3306';    // адрес сервера 
@@ -9,8 +20,8 @@
     // $db_host = '172.20.10.3';
     $db_host = 'localhost:3306';
     $db_name = 'sobzav';            // имя базы данных
-    // $db_user = 'admin';             // имя пользователя
-    // $db_pass = 'admin';             // пароль
+    //$db_user = 'admin';             // имя пользователя
+    //$db_pass = 'admin';             // пароль
     //$db_name = 'u0959358_sobzav';            // имя базы данных для reg.ru
     //$db_user = 'u0959358_admin';             // имя пользователя для reg.ru
     //$db_pass = '1SobZav3@@@';             // пароль для reg.ru
@@ -25,15 +36,18 @@
 
     // проверяем ошибки подключения
     if ($mySqli->connect_errno) {
-        printf("Ошибка подключения: $mysqli->connect_errno");
-        plog("Ошибка подключения: $mysqli->connect_errno");
-        exit();
+        $errCount++;
+        $errDump .= "Ошибка подключения" .preg_replace("/[\r\n\']/m", "", $mySqli->error) . " | ";
+        plog("Server reply error: $errDump");
+        // exit();
     }
 
     // изменение набора символов на utf8
     if (!$mySqli->set_charset("utf8")) {
-        plog("Ошибка при загрузке набора символов utf8: $mySqli->error");
-        exit();
+        $errCount++;
+        $errDump .= "Ошибка подключения" .preg_replace("/[\r\n\']/m", "", $mySqli->error) . " | ";
+        plog("Server reply error: $errDump");
+        // exit();
     } else {
         plog("Текущий набор символов: $mySqli->character_set_name()");
     }

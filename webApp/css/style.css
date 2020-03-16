@@ -302,7 +302,7 @@ ul.dropdown-content {
     position: absolute;
     background-color: #C3C7C8;
     min-width: 100%;
-    z-index: 1;
+    z-index: 10;
     margin: 21px 0 0 0;
     max-height: 70vh; /* максимальная высота списка */
     overflow-y: auto; /* Полоса прокрутки */
@@ -312,7 +312,7 @@ ul.dropdown-content {
 ul.dropdown-content.drop-nowrap { white-space: nowrap; }  /* Запрет переноса, список расширяется вправо  */
 ul.dropdown-content.drop-norm { max-width: 100%; }  /* Ограничивает выпадающий список шириной родительского div (с инпутом и кнопкой) */
 ul.dropdown-content.drop-right { right: 0; }  /* По правому краю */
-ul.dropdown-content.drop-over-left { right: 100%; top: -325px; }  /* По левому краю */
+/*ul.dropdown-content.drop-over-left { right: 100%; top: -100%; max-height: 50vh;}  /* По левому краю */
 
 ul.dropdown-content.drop-maxwidth-300 { max-width: 300px;}  /* Триста! Но если родительский div будет больше, чем 300, то ограничение будет по размеру родительского */
 ul.dropdown-content.drop-maxwidth-500 { max-width: 500px;} 
@@ -320,7 +320,16 @@ ul.dropdown-content.drop-maxwidth-700 { max-width: 700px;}
 ul.dropdown-content.drop-maxwidth-900 { max-width: 900px;} 
 ul.dropdown-content.drop-maxwidth-1000 { max-width: 1000px;} 
 
-ul.dropdown-content.drop-right-middle { margin:0!important; left: 100%; }  /* Смещает список по правой стороне и по центру родительского div  */
+#subBlock0 ul.dropdown-content { right: 100%; top: -100%; max-height: 55vh; }
+#subBlock1 ul.dropdown-content { right: 100%; top: -100%; max-height: 45vh; }
+#subBlock2 ul.dropdown-content {right: 100%;bottom: 0;max-height: 55vh;}   
+#subBlock3 ul.dropdown-content {right: 100%;bottom: 0;max-height: 65vh;}  
+#subBlock4 ul.dropdown-content {right: 100%;bottom: 0;max-height: 70vh;} 
+#subBlock5 ul.dropdown-content, #subBlock6 ul.dropdown-content, #subBlock7 ul.dropdown-content {right: 100%;bottom: 0;max-height: 80vh;} 
+#subBlock8 ul.dropdown-content, #subBlock9 ul.dropdown-content {right: 100%;bottom: 0;max-height: 90vh;} 
+
+.section-sub ul.dropdown-content:nth-of-type(7), .section-sub ul.dropdown-content:nth-of-type(8) { right: 100%; top: -100%; max-height: 50vh; }
+/* ul.dropdown-content.drop-right-middle { margin:0!important; left: 100%; }  Смещает список по правой стороне и по центру родительского div  */
 
 /* Links inside the dropdown */
 .dropdown-content li {

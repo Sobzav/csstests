@@ -73,8 +73,8 @@ if ($result = $mySqli->query($query)) {
         $json[] = $row;
     }
 
-    plog("result:");
-    plog($json);
+    // plog("result:");
+    // plog($json);
 
     // отправляем массив строк из БД в формате json в JS
     echo json_encode($json);

@@ -15,8 +15,7 @@
 }
 html, body, body div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, caption, article, aside, figure, footer, header, menu, nav, section, time, mark, audio, video, details, summary {
 	border: 0;
-	font-size: 16px;
-	/* font-size: 100%; когда р-р шрифта зависит от польщовательских настроек */
+	font-size: 100%;
 	font-weight: normal;
 	/* vertical-align: baseline; */
 	background: transparent;

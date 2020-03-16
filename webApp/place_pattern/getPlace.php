@@ -10,73 +10,62 @@
 
 plog("");
 plog("|----------------------------------------------------------------|");
-plog("|                     getPackage.php                             |");
+plog("|                     getPlace.php                               |");
 
 
 
 // -------------------------------------------------------
 // Данные | Получаем данные от фронтэнда
 //
-$package_id = $_POST["package_id"];     // id запрошенного элемента
-$package_depth = $_POST["package_depth"];               // глубина чтения внутренних элементов
+$data_id = $_POST["data_id"];     // id запрошенного элемента
+$data_depth = $_POST["data_depth"];               // глубина чтения внутренних элементов
 
 
 
 // -------------------------------------------------------
 // Функция | Загружает внутренние элементы
 //
-function loadItems($mySqli, $id, $package_depth) {
+function loadItems($mySqli, $id, $data_depth) {
 
-    if ($package_depth <= 0) {
+    if ($data_depth <= 0) {
         return false;
     }
 
     plog("");
     plog("|----------------------------------------------------------------|");
-    plog("|                     getPackage.php > loadItems                 |");
+    plog("|                     getPlace.php > loadItems                   |");
 
     // Формируем запрос SELECT для получения внутренних элементов текущего
         $query = " 
             SELECT
-                place_prototype.sub_package_id,
-                place_prototype.inrow,
-                place_prototype.x,
-                place_prototype.y,
-                package.id,
-                package.code,
-                package.name,
-                package.material_id,
-                package.photo_id,
-                package.payload,
-                package.wx,
-                package.wy,
-                package.wz,
-                package.iwx,
-                package.iwy,
-                package.iwz,
-                package.color,
-                package.created,
-                package.updated,
-                package.deleted,
-                material.name as material_name
-            FROM
-                place_prototype
-            LEFT JOIN
-                package 
-            ON (
-                package.id = place_prototype.sub_package_id OR
-                package.id = null
-            )
-            LEFT JOIN
-                material 
-            ON (
-                package.material_id = material.id OR
-                package.material_id = null
-            )
-            WHERE place_prototype.package_id = $id
-            ORDER BY
-                place_prototype.y,
-                place_prototype.x;
+                place.id,
+                place.package_id as refId,
+                place.addr,
+                if(place.package_id is null, '', package.code) as code,
+                if(place.package_id is null, place.name, package.name) as name,
+                if(place.package_id is null, place.payload, package.payload) as payload,
+                place.x,
+                place.y,
+                if(place.package_id is null, place.wx, package.wx) as wx,
+                if(place.package_id is null, place.wy, package.wy) as wy,
+                if(place.package_id is null, place.wz, package.wz) as wz,
+                if(place.package_id is null, place.iwx, package.iwx) as iwx,
+                if(place.package_id is null, place.iwy, package.iwy) as iwy,
+                if(place.package_id is null, place.iwz, package.iwz) as iwz,
+                if(place.package_id is null, place.color, package.color) as color,
+                place.created,
+                place.updated,
+                place.deleted,
+                place.place_type_id,
+                place.place_status_id,
+                place.place_purpose_id,
+                place_picture.picture
+            FROM place_relation
+            LEFT JOIN place ON (place.id = place_relation.sub_place_id)
+            LEFT JOIN package ON (place.package_id = package.id)
+			LEFT JOIN place_picture ON (place.picture_id = place_picture.id)
+            WHERE place_relation.place_id = $id
+            ORDER BY place_relation.sub_place_id;
         ";
 
         // если внутренние элементы есть
@@ -91,7 +80,7 @@ function loadItems($mySqli, $id, $package_depth) {
             while($subRow = $subRows->fetch_array(MYSQLI_ASSOC)){
 
                 // загружаем внутренние элементы текущего
-                if($item = loadItems($mySqli, $subRow['id'], ($package_depth - 1))) {
+                if($item = loadItems($mySqli, $subRow['id'], ($data_depth - 1))) {
                     
                     // добавляем внутренние элементы в текущий элемент если они есть
                     $subRow["item"] = $item;
@@ -123,41 +112,34 @@ function loadItems($mySqli, $id, $package_depth) {
 // сохраняем запрос SELECT в строку
 $query = " 
     SELECT
-        package.id,
-        package.code,
-        package.name,
-        package.material_id,
-        package.photo_id,
-        package.payload,
-        package.wx,
-        package.wy,
-        package.wz,
-        package.iwx,
-        package.iwy,
-        package.iwz,
-        package.color,
-        package.created,
-        package.updated,
-        package.deleted,
-        package.depth,
-        package.turned,
-        material.name as material_name
-    FROM
-        package
-    LEFT JOIN
-        material 
-    ON (
-        package.material_id = material.id OR
-        package.material_id = null
-    )
-    LEFT JOIN
-        package_photo
-    ON (
-        package.photo_id = package_photo.id OR
-        package.photo_id = NULL
-    )
-    WHERE package.id = $package_id
-    ORDER BY package.code;
+        place.id,
+        place.package_id as refId,
+        place.addr,
+        if(place.package_id is null, '', package.code) as code,
+        if(place.package_id is null, place.name, package.name) as name,
+        if(place.package_id is null, place.payload, package.payload) as payload,
+        place.x,
+        place.y,
+        if(place.package_id is null, place.wx, package.wx) as wx,
+        if(place.package_id is null, place.wy, package.wy) as wy,
+        if(place.package_id is null, place.wz, package.wz) as wz,
+        if(place.package_id is null, place.iwx, package.iwx) as iwx,
+        if(place.package_id is null, place.iwy, package.iwy) as iwy,
+        if(place.package_id is null, place.iwz, package.iwz) as iwz,
+        if(place.package_id is null, place.color, package.color) as color,
+        place.created,
+        place.updated,
+        place.deleted,
+        place.place_type_id,
+        place.place_status_id,
+        place.place_purpose_id,
+        place_picture.picture
+    FROM place
+    LEFT JOIN package
+    ON (package.id = place.package_id)
+    LEFT JOIN place_picture
+    ON (place.picture_id = place_picture.id)
+    WHERE place.id = $data_id;
 ";
 
 plog("UPDATE:");
@@ -181,11 +163,11 @@ if ($result = $mySqli->query($query)) {
 
         // глубина чтения внутренних элементов
         // если не заданна, то берем из сохраненного значения 
-        $depth = (!$row["depth"]) ? $row["depth"] : $package_depth;
+        $depth = (!$row["depth"]) ? $row["depth"] : $data_depth;
         plog("depth: $depth");
 
         // загружаем внутренние элементы
-        if($item = loadItems($mySqli, $row['id'], ($package_depth - 1))) {
+        if($item = loadItems($mySqli, $row['id'], ($data_depth - 1))) {
 
             // добавляем внутренние элементы в текущий элемент если они есть
             $row["item"] = $item;
@@ -221,7 +203,7 @@ if ($result = $mySqli->query($query)) {
 $mySqli->close();
 
 
-plog("|                     getPackage.php                             |");
+plog("|                     getPlace.php                               |");
 plog("|----------------------------------------------------------------|");
 
 ?>

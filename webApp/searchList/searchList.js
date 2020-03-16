@@ -35,16 +35,19 @@ class SearchList {
 
         this._item0 = '';       // нулевой пункт списка, если не инициализирован, то не отображается
 
-        this._selectedId;       // id выбранного элемента
-        this._prevouseId;       // id предыдущего выбранного элемента
+        this._selectedId = 0;   // id выбранного элемента
+        this._prevouseId = 0;   // id предыдущего выбранного элемента
         this._selectedIndex;    // номер элемента выбранного в списке
 
-        this._searchResult;     // массив для хранения результатов поисковой выдачи
+        this._dataSet = [];        // массив для хранения результатов поисковой выдачи
 
         this._listFormat;       // формат вывода элементов списка вида ['code', '.|', 'name', '.|', 'wx', '.x', 'wy', '.x', 'wz'],  
         this._selectedFormat;   // формат вывода элементов списка вида ['code', '.|', 'name', '.|', 'wx', '.x', 'wy', '.x', 'wz'], 
         
         this._expanded = false; // когда список раскрыт, свойство содержит true
+
+        this._listener = null;  // метод, вызываемый, если привязано событие по addEventListener
+
 
         // -------------------------------------------------------
         // Сигналы | 
@@ -64,6 +67,18 @@ class SearchList {
 
         console.groupEnd();
     }
+
+
+
+    // -------------------------------------------------------
+    // Свойство | Модель данных, откуда поисок берет все данные
+    //
+    set dataSet(value) {
+        this._dataSet = null;
+        this._dataSet = value;
+    }
+
+    get dataSet() {return this._dataSet;}
 
 
 
@@ -114,6 +129,21 @@ class SearchList {
     }
 
     get item0() {return this._item0;}
+
+
+
+    // -------------------------------------------------------
+    // Свойство | id выбранного элемента - дублирует selectedId
+    //            сделано для dataHendler
+    //
+    set value(value) {
+        this._selectedId = value;
+        this.updateInput(value);
+        // посылаем event
+        this.sendEvents(value);
+    }
+
+    get value() {return this._selectedId;}
 
 
 
@@ -259,10 +289,7 @@ class SearchList {
             // Форматированная строка вывода для элемента списка
             li.innerHTML = this._item0;
             
-            if (this.onItem0) {
-
-                li.addEventListener('click', event => this.slotChange(event));
-            }
+            li.addEventListener('click', event => this.slotChange(event));
             
             // добавляем нулевой элемент в выпадающий список
             this._ul.appendChild(li);
@@ -303,7 +330,7 @@ class SearchList {
     requestToServer(target, type, url, dataType, data, successFunction, errorFunction, caller) {
         console.group("Class SearchList.requestToServer");
 
-        console.time();
+        // console.time();
         console.log('data: %o', data);
 
         // отправляем запрос серверу
@@ -318,7 +345,7 @@ class SearchList {
 
                 console.log('jsonResponce: %o', jsonResponce);
                 // console.log('textStatus: ' + textStatus);
-                console.timeEnd();
+                // console.timeEnd();
                 // console.log('jqXHR: %o', jqXHR);
 
                 // возвращаем ответ сервера
@@ -329,7 +356,7 @@ class SearchList {
             error: function(XMLHttpRequest, textStatus, jqXHR) {
 
                 console.warn('textStatus: ' + textStatus);
-                console.timeEnd();
+                // console.timeEnd();
                 console.warn('jqXHR: %o', jqXHR);
                 
                 // возвращаем ошибку
@@ -359,10 +386,7 @@ class SearchList {
             function(target, jsonResponce) {
                 
                 // сохраняем ответ сервера до новой загрузки
-                target._searchResult = jsonResponce;
-
-                // в ответе сервера массив записей 
-                target.updateList(jsonResponce);
+                target._data = jsonResponce;
 
                 if (successFunction) {successFunction(target, caller);}
             },
@@ -381,6 +405,39 @@ class SearchList {
 
     
     // -------------------------------------------------------
+    // Слот | Если нажата кнопка раскрытия списка
+    //
+    slotClick(event) {
+        console.group("class SearchList.slotClick");
+        // this.slotInputChange();
+        // return false;
+        if (this._expanded) {
+
+            this.collapse();
+        } else {
+
+            if (this._url) {
+                this.load(
+                    function(target, caller) {
+                        caller.expand();
+                    },
+
+                    function() {
+                    },
+
+                    this
+                );
+            } else {
+                this.updateList(this.dataSet);
+                this.expand();
+            }
+        }
+        console.groupEnd();
+    }
+
+
+
+// -------------------------------------------------------
     // Слот | Если изменился поисковый запрос
     //
     slotInputChange(event) {
@@ -388,16 +445,47 @@ class SearchList {
 
         this._searchQuery = this._input.value;
 
-        this.load(
-            function(target, caller) {
-                caller.expand();
-            },
+        if (this._url) {
+            this.load(
+                function(target, caller) {
+                    // в ответе сервера массив записей 
+                    target.updateList(target._data);
 
-            function() {
-            },
+                    caller.expand();
+                },
 
-            this
-        );
+                function() {
+                },
+
+                this
+            );
+        } else {
+
+            // фильтруем список
+            let data = this._dataSet.filter( row => {
+                let match = false;
+
+                // названия полей по которым выполняется поиск и фильтрация списка
+                let searchFields = ['code', 'name'];
+
+                // значения полей текущего элемента списка
+                // по которым выполняется поиск соединенные в одну строку
+                let values = searchFields.reduce( function(accumulator, currentValue) {
+                    return accumulator + row[currentValue];
+                }, '');
+
+                // создаем регулярное выражение на основе поискового запроса
+                let reg = new RegExp('\\.*' + this._searchQuery + '\\.*', 'gmi');
+
+                // ищем поисковый запрос в наборе значений полей
+                match = reg.test(values);
+                return match;
+            });
+
+            this.updateList(data);
+
+            this.expand();
+        }
 
         console.groupEnd();
     }
@@ -413,7 +501,8 @@ class SearchList {
 
         if (id > 0) {
 
-            var row = this._searchResult.find( row => row.id == id);
+            // ищем элемнт с задданным id в массиве
+            let row = this._dataSet.find( item => (item ? (item.id == id) : false));
             
             // если выбранный элемент есть
             if (row) {
@@ -421,25 +510,28 @@ class SearchList {
                 // отображаем выбранный элемент в input с учетом формтирования
                 this._input.value = this.formatedContent(row, this._selectedFormat);
             }
+
+            this._searchQuery = this._input.value;
         } else {
-
+            
             this._input.value = this._item0;
+            
+            this._searchQuery = this._defaultQuery;
         }
-
         console.groupEnd();
     }
 
 
 
     // -------------------------------------------------------
-    // Метод | Обновляет выбранный элемент и его отображаемое в input
+    // Метод | Обновляет выбранный элемент и его отображаемое в списке
     //
     updateSelected(id) {
         console.group("Class SearchList.updateSelected");
         console.log('selected id: %o', id);
 
         // ищем выбранный ранее элемент
-        var item = this._ul.querySelector("[class=\'selected\']");
+        var item = this._ul.querySelector(".selected");
         
         // если выбранный ранее есть
         if (item) {
@@ -449,7 +541,8 @@ class SearchList {
             
         if (id && (id > 0)) {
 
-            var row = this._searchResult.find( row => row.id == id);
+            // ищем элемнт с задданным id в массиве
+            var row = this._dataSet.find( item => (item ? (item.id == id) : false));
             console.log('selected row: %o', row);
             
             // ищем вновь выбранный элемент
@@ -472,14 +565,12 @@ class SearchList {
 
 
     // -------------------------------------------------------
-    // Слот | Если изменился выбранный элемент в списке
+    // Слот | Если пользователь кликнул на элемент списка,
+    //        выбранный элемент изменился
     //
     slotChange(event) {
         console.group("Class SearchList.slotChange");
-        console.log(event);
-
-        // очищаем поисковый запрос, что бы загрузить весь список
-        this._searchQuery = '';
+        console.log('event: %o', event);
 
         // id выбранного элемента
         var id = parseInt(event.target.value);
@@ -488,9 +579,13 @@ class SearchList {
         if (id > 0) {
 
             // сохраняем id предыдущего выбранного элемента
+            this._prevouseId = event.target.value;
+        } else {
+            
+            // сохраняем id предыдущего выбранного элемента
             this._prevouseId = this._selectedId;
         }
-
+        
         // сохраняем id выбранного элемента
         this._selectedId = event.target.value;
 
@@ -499,43 +594,32 @@ class SearchList {
 
         this.collapse();
 
-        if (id > 0) {
-
-            // передаем сигнал, что выбранный элемент изменился
-            if (this.onChange) {this.onChange(this._selectedId);}
-        } else {
-
-            // передаем сигнал, что выбран нулевой элемент
-            if (this.onItem0) {this.onItem0(0);}
-        }
+        // посылаем event
+        this.sendEvents(id);
 
         console.groupEnd();
     }
 
 
-
     // -------------------------------------------------------
-    // Слот | Если нажата кнопка раскрытия списка
+    // Метод | Посылает подписчикам event 
+    //         что выбранный элемент изменился
     //
-    slotClick(event) {
-        console.group("class SearchList.slotClick");
+    sendEvents(id) {
+        if (id > 0) {
 
-        if (this._expanded) {
-
-            this.collapse();
+            if (this._listener) {this._listener({target: this});}
+            
+                // передаем сигнал, что выбранный элемент изменился
+            if (this.onChange) {this.onChange(id);}
         } else {
 
-            this.load(
-                function(target, caller) {
-                    caller.expand();
-                },
+            if (this._listener) {this._listener({target: this});}
 
-                function() {
-                },
-
-                this
-            );
+            // передаем сигнал, что выбран нулевой элемент
+            if (this.onItem0) {this.onItem0(0);}
         }
+
         console.groupEnd();
     }
 
@@ -574,5 +658,18 @@ class SearchList {
             }, 300);
         }
         // console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Устанавливает addEventListener на событие change
+    //
+    addEventListener(event, listener) {
+        console.group("class SearchList.slotClick");
+        console.log('event: %o', event);
+        console.log('listener: %o', listener);
+        this._listener = listener;
+        console.groupEnd();
     }
 }

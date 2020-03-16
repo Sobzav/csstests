@@ -1,3 +1,4 @@
+var settings;
 const normalView = null;
 const turnedView = null;
 
@@ -81,9 +82,9 @@ const levelSettings = [
         {
             
             // уровень этажа
-            name: 'floor',
+            name: 'Уровень',
             id: 0,
-            canvasWx: 550,
+            canvasWx: 600,
             canvasWy: 1770,
             depth: 3,
             turned: 0,
@@ -94,10 +95,10 @@ const levelSettings = [
                 wy: 'wy',
                 wz: 'wz'
             },
-            active: false,
+            active: true,
             padding: 0,
             border: 0,
-            borderColor: '#000000',
+            borderColor: '#ff0000',
             autoFit: 'contain',
             item: {
 
@@ -113,7 +114,7 @@ const levelSettings = [
                 active: true,
                 padding: 20,
                 border: 0,
-                borderColor: '#000000',
+                borderColor: '#ff0000',
                 autoFit: 'none',
                 item: {
 
@@ -129,7 +130,7 @@ const levelSettings = [
                     active: true,
                     padding: 10,
                     border: 0,
-                    borderColor: '#000000',
+                    borderColor: '#ff0000',
                     showText: true,
                     autoFit: 'none',
                     item: {
@@ -158,11 +159,11 @@ const levelSettings = [
         // для уровня стеллажа
         {
 
-            name: 'rack',
+            name: 'Стеллаж',
             navItemDot: true,
             id: 0,
-            canvasWx: 550,
-            canvasWy: 700,
+            canvasWx: 600,
+            canvasWy: 800,
             depth: 3,
             disposition: {
                 x: 'x',
@@ -188,7 +189,7 @@ const levelSettings = [
                 padding: 0,
                 border: 0,
                 borderColor: '#000000',
-                showText: true,
+                showText: false,
                 autoFit: 'none',
                 active: true,
                 item: {
@@ -216,10 +217,10 @@ const levelSettings = [
         // для уровня полки
         {
 
-            name: 'shelf',
+            name: 'Полка',
             id: 0,
-            canvasWx: 550,
-            canvasWy: 700,
+            canvasWx: 600,
+            canvasWy: 800,
             depth: 2,
             disposition: {
                 x: 'x',
@@ -256,11 +257,11 @@ const levelSettings = [
         // для уровня лотка
         {
 
-            name: 'tray',
+            name: 'Лоток',
             navItemDot: true,
             id: 0,
-            canvasWx: 550,
-            canvasWy: 700,
+            canvasWx: 600,
+            canvasWy: 800,
             depth: 2,
             disposition: {
                 x: 'x',
@@ -297,10 +298,10 @@ const levelSettings = [
         // для уровня контейнера
         {
 
-            name: 'container',
+            name: 'Контейнер',
             id: 0,
-            canvasWx: 550,
-            canvasWy: 700,
+            canvasWx: 600,
+            canvasWy: 800,
             depth: 2,
             disposition: {
                 x: 'x',
