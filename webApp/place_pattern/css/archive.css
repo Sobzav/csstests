@@ -1,0 +1,13 @@
+/**********************************************/
+/************     НЕ ВЫБРАСЫВАТЬ     **********/
+/************       ПРИГОДИТСЯ       **********/
+/**********************************************/
+
+/*  1. ВЫПАДАЮЩИЕ СПИСКИ ТИП С РАЗНОЙ ВЫСОТОЙ - сохранено ради высоты, просчитанной для экрана 1920х1080 */
+#subBlock0 ul.dropdown-content { right: 100%; top: -100%; max-height: 55vh; }
+#subBlock1 ul.dropdown-content { right: 100%; top: -100%; max-height: 45vh; }
+#subBlock2 ul.dropdown-content {right: 100%;bottom: 0;max-height: 55vh;}   
+#subBlock3 ul.dropdown-content {right: 100%;bottom: 0;max-height: 65vh;}  
+#subBlock4 ul.dropdown-content {right: 100%;bottom: 0;max-height: 70vh;} 
+#subBlock5 ul.dropdown-content, #subBlock6 ul.dropdown-content, #subBlock7 ul.dropdown-content {right: 100%;bottom: 0;max-height: 80vh;} 
+#subBlock8 ul.dropdown-content, #subBlock9 ul.dropdown-content {right: 100%;bottom: 0;max-height: 90vh;} 

@@ -234,20 +234,25 @@ header.header__sub div {
 /***********************************************************/
 
 .dropbtn {
+    display: flex;
+    align-items: center;
     background-color: var(--color-input);
     color: white;
-    padding: 0 8px;
+    padding: 0 4px;
     border: none;
     cursor: pointer;
     margin: 0;
-    line-height: 21px;
-    /* vertical-align: top; */
+    /* line-height: 21px; */
 }
+/* input:disabled {color:var(--color-raven);} */
+.subInput .dropbtn:disabled svg, .archeTypeSelectInput:disabled svg, .subInput .dropbtn:disabled:hover svg, .archeTypeSelectInput:disabled:hover svg { fill: var(--color-raven); }
 
+.dropbtn svg {fill: #c8cdd2;display:inline-block;vertical-align:middle;}   /* eaeff5 */
+.dropbtn:hover svg { fill: #fff; }
 /* Dropdown button on hover & focus */
 .dropbtn:hover,
 .dropbtn:focus {
-    background-color: var(--color-input);
+    /* background-color: var(--color-input); */
 }
 
 .dropdown-input {
@@ -293,7 +298,7 @@ header.header__sub div {
 }
 
 /* чтобы кнопка справа прилипала к инпуту */
-.wide-100 .dropdown input {
+.wide-100 input, .dropdown input {
     margin: 0 !important;
 }
 
@@ -312,7 +317,7 @@ ul.dropdown-content {
 ul.dropdown-content.drop-nowrap { white-space: nowrap; }  /* Запрет переноса, список расширяется вправо  */
 ul.dropdown-content.drop-norm { max-width: 100%; }  /* Ограничивает выпадающий список шириной родительского div (с инпутом и кнопкой) */
 ul.dropdown-content.drop-right { right: 0; }  /* По правому краю */
-/*ul.dropdown-content.drop-over-left { right: 100%; top: -100%; max-height: 50vh;}  /* По левому краю */
+ul.dropdown-content.drop-over-left { right: 100%; top: -100%; max-height: 50vh;}  /* По левому краю и по верху инпута */
 
 ul.dropdown-content.drop-maxwidth-300 { max-width: 300px;}  /* Триста! Но если родительский div будет больше, чем 300, то ограничение будет по размеру родительского */
 ul.dropdown-content.drop-maxwidth-500 { max-width: 500px;} 
@@ -320,16 +325,9 @@ ul.dropdown-content.drop-maxwidth-700 { max-width: 700px;}
 ul.dropdown-content.drop-maxwidth-900 { max-width: 900px;} 
 ul.dropdown-content.drop-maxwidth-1000 { max-width: 1000px;} 
 
-#subBlock0 ul.dropdown-content { right: 100%; top: -100%; max-height: 55vh; }
-#subBlock1 ul.dropdown-content { right: 100%; top: -100%; max-height: 45vh; }
-#subBlock2 ul.dropdown-content {right: 100%;bottom: 0;max-height: 55vh;}   
-#subBlock3 ul.dropdown-content {right: 100%;bottom: 0;max-height: 65vh;}  
-#subBlock4 ul.dropdown-content {right: 100%;bottom: 0;max-height: 70vh;} 
-#subBlock5 ul.dropdown-content, #subBlock6 ul.dropdown-content, #subBlock7 ul.dropdown-content {right: 100%;bottom: 0;max-height: 80vh;} 
-#subBlock8 ul.dropdown-content, #subBlock9 ul.dropdown-content {right: 100%;bottom: 0;max-height: 90vh;} 
-
-.section-sub ul.dropdown-content:nth-of-type(7), .section-sub ul.dropdown-content:nth-of-type(8) { right: 100%; top: -100%; max-height: 50vh; }
-/* ul.dropdown-content.drop-right-middle { margin:0!important; left: 100%; }  Смещает список по правой стороне и по центру родительского div  */
+/* НАСТРОЙКА ВЫПАДАЮЩИХ СПИСКОВ ТИП - ВСЕ ВЫРОВНЕНЫ ПО ЛЕВОЙ СТОРОНЕ И ИМЕЮТ ВЫСОТУ 45vh. 1 И 2 ВЫПАДАЮТ ВНИЗ, ОСТАЛЬНЫЕ НАВЕРХ */
+#subBlock0 ul.dropdown-content, #subBlock1 ul.dropdown-content { right: 100%; top: -100%; max-height: 45vh; }
+#subBlock2 ul.dropdown-content, #subBlock3 ul.dropdown-content, #subBlock4 ul.dropdown-content, #subBlock5 ul.dropdown-content, #subBlock6 ul.dropdown-content, #subBlock7 ul.dropdown-content, #subBlock8 ul.dropdown-content, #subBlock9 ul.dropdown-content {right: 100%;bottom: 0;max-height: 50vh;}   
 
 /* Links inside the dropdown */
 .dropdown-content li {
@@ -748,8 +746,7 @@ button {
     margin: 0 6px;
     height: 21px;
     max-height: 30px;
-    line-height: 21px;
-
+    /* line-height: 21px; */
 }
 
 button.x-but, .plus-button {

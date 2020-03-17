@@ -10,7 +10,11 @@
     <!-- <link rel="stylesheet" type="text/css" href="..\css\table.css" /> -->
     <link rel="stylesheet" type="text/css" href="css\style.css" />
     <title> Адреса мест хранения </title>
-
+    <svg style="display:none;">
+        <symbol id="down" viewBox="0 0 16 16">
+            <polygon points="3.81 4.38 8 8.57 12.19 4.38 13.71 5.91 8 11.62 2.29 5.91 3.81 4.38" />
+        </symbol>
+    </svg>
 </head>
 
 <body class="">
@@ -33,7 +37,7 @@
                         <input class="wide-100" type="text" placeholder="Поиск.." id="myInput">
                         <ul id="packList" class="dropdown-content hidden" tabindex="0">
                         </ul>
-                        <button class="dropbtn">&#9013</button>
+                        <button class="dropbtn"><svg width="16px" height="16px" aria-hidden="true"><use xlink:href="#down"></use></svg></button>
                     </div>
 
                     <!-- END Выпадающий список элементов -->

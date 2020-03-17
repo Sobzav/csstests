@@ -48,7 +48,7 @@ function shadeColor (color = "#000000", percent = 0) {
 var dataSet = [];
 
 const dataModel = {
-    id: 0,
+    id: 'null',
     name: '',
     code: '',
     iwx: 0,
@@ -110,24 +110,22 @@ const dataModel = {
 
 
 // -------------------------------------------------------
-// Функция | Копирования объекта
+// Функция | Копирования объекта, возвращает новый объект
+//           С заданным id, который будет копией data
 //
-function copyData(data, key) {
-    console.group("sortDataBy ", key);
+function copyData(data, id) {
+    console.group("copyData ", data);
 
-    var first = true;
-    for(let index in data) {
-        let prev = data[index];
-        first = false;
-        if (!first) {
-            if (data[index][key] < prev[key]) {
-                let buff = Object.assign({}, data[index][key]);
-                data[index][key] = Object.assign({}, prev[key]);
-                prev[key] = Object.assign({}, buff);
-            }
-        }
+    let _copy = {};
+                    
+    // обновляем данные в dataSet
+    for(let key in dataModel) {
+        _copy[key] = data[key] ? data[key] : dataModel[key];   
     }
+    _copy.id = id;
+
     console.groupEnd();
+    return _copy;
 };
 
 
@@ -138,18 +136,19 @@ function copyData(data, key) {
 function sortDataBy(data, key) {
     console.group("sortDataBy ", key);
 
-    var first = true;
-    for(let index in data) {
-        let prev = data[index];
-        first = false;
-        if (!first) {
-            if (data[index][key] < prev[key]) {
-                let buff = Object.assign({}, data[index][key]);
-                data[index][key] = Object.assign({}, prev[key]);
-                prev[key] = Object.assign({}, buff);
-            }
-        }
-    }
+    // var first = true;
+    // let prevId;
+    // for(let index in data) {
+    //     if (!first) {
+    //         if (data[index][key] < prev[key]) {
+    //             let buff = copyData(data[index], data[index].id);
+    //             data[index] = copyData(prev, prev.id);
+    //             prev = copyData(buff, buff.id);
+    //         }
+    //     }
+    //     prev = copyData(data[index], data[index].id);
+    //     first = false;
+    // }
     console.groupEnd();
 };
 
@@ -223,17 +222,16 @@ function sortDataBy(data, key) {
             function(jsonResponce) {
                     
                 if (parseInt(jsonResponce.errCount) > 0) {
+                    alert('Ошибка: ' + jsonResponce.errDump);
                 } else {
                     let data = jsonResponce.data;
+                    
                     // передаем загруженные данные 
                     for(var index in data) {
-                        dataSet[data[index].id] = {};
-                        for(let key in dataModel) {
-                            dataSet[data[index].id][key] = data[index][key] ? data[index][key] : dataModel[key];
-                        }
+                        dataSet[data[index].id] = copyData(data[index], data[index].id);
                     }
                     // делаем сортировку элементов
-                    sortDataBy(dataSet, 'code');
+                    // sortDataBy(dataSet, 'code');
                 }
 
                 successFunction(jsonResponce);
@@ -242,6 +240,11 @@ function sortDataBy(data, key) {
             // если запрос серверу вернул ошибку
             function(XMLHttpRequest, textStatus) {
                 
+                if (parseInt(XMLHttpRequest.errCount) > 0) {
+                    alert('Ошибка: ' + XMLHttpRequest.errDump);
+                } else {
+                    alert('Ошибка: ' + textStatus);
+                }
                 errorFunction(XMLHttpRequest, textStatus);
             },
         );   
@@ -290,28 +293,25 @@ function saveData(data, successFunction, errorFunction, context) {
                 // ответ сервера
                 var result = jsonResponce; //JSON.parse(jsonResponce);
 
-                if (result.id) {
+                if (parseInt(result.errCount) > 0) {
+                    alert('Ошибка: ' + result.errDump);
+                } else {
+                    if (result.id) {
 
-                    console.log('result.id: %o', result.id);
-
-                    //если элемент новый
-                    // if (target.new) {
-                        
-                    //     // обновляем id элемента
-                    //     target._id = result.data_id ? parseInt(result.data_id) : 0;
-                        
-                    //     // снимаем статус "new"
-                    //     target._new = false;
-                    // }
-                    // помечаем что элемент сохранен
+                        console.log('result.id: %o', result.id);
+                    }
+                    successFunction(result);
                 }
-                // target.changed = false;    
-                successFunction(result);
             },
             // если запрос серверу вернул ошибку
             function(XMLHttpRequest, textStatus) {
                 console.log('Сервер вернул ошибку: %o', XMLHttpRequest);
                 
+                if (parseInt(XMLHttpRequest.errCount) > 0) {
+                    alert('Ошибка: ' + XMLHttpRequest.errDump);
+                } else {
+                    alert('Ошибка: ' + textStatus);
+                }
                 errorFunction(XMLHttpRequest, textStatus);
             },
             context
@@ -371,22 +371,10 @@ class DataHendler {
         } else {
             console.warn('Модель данных получила пустой целевой объект')
         }
-
         console.groupEnd();
     }
 
     get target() {return this._target;}
-
-
-
-    // -------------------------------------------------------
-    // Свойство | Флаг, указывающий на то что данные были изменены
-    //
-    set changed(value) {
-        this._changed = value;
-    }
-
-    get changed() {return this._changed;}
 
 
 
@@ -420,8 +408,8 @@ class DataHendler {
         }
 
         // копируем все поля из целевого объекта в модель данных
-        for(let key in target) {
-            this.data[key] = target[key];
+        for(let key in dataModel) {
+            this.data[key] = target[key] ? target[key] : dataModel[key];
         }
 
         // сбрасываем флаг changed
@@ -510,7 +498,7 @@ class DataHendler {
                 },
                 
                 get: function() {
-                    console.log("name: ", name , self.bind[name].type);
+                    console.log("name: ", name , self.bind[name].type, this['_' + name]);
                     return self.parseValue(this['_' + name], self.bind[name].type);
                 },   
                 
@@ -760,7 +748,7 @@ class PlacePattern {
         this._mouseOver = false;    // когда указатель мыши над элементом true
         this._selected = false;     // статуса ВЫБРАН / НЕ ВЫБРАН 
         this._changed = true;       // если true, то элемент был изменен
-        this._new = true;           // если true, то элемент новый и его нет в базе данных
+        this._new = false;          // если true, то элемент новый и его нет в базе данных
 
         this.onChange;
 
@@ -776,6 +764,7 @@ class PlacePattern {
     set id(value) {
         this._id = value;
         this.dh.target = dataSet[value];
+        this._new = false;
         this.update();
     }
 
@@ -805,7 +794,7 @@ class PlacePattern {
             'wz',
             'wxs1',
             'wys2',
-            'wzs3',
+            'wzs3'
             // archetype_id: 0,
         ];
 
@@ -1223,21 +1212,16 @@ class PlacePattern {
 
 
     // -------------------------------------------------------
-    // Метод | Обновляем элемент и все его содержимое
+    // Метод | Создаем новый элемент, копированием всех свойств из  dataModel
     //
     createNew() {
         console.group("class PlacePattern.createNew");
 
-        if (this.dh.data) {
-
-            for(let key in dataModel) {
-                this.dh.data[key] = dataModel[key];
-            }
-            this._new = true;
-        }
-
+        this._id = 0;
+        this.dh.target = copyData(dataModel, 0);
+        this._new = true;
+             
         this.update();
-        console.log('this: %o', this);
         console.groupEnd();
     }
 

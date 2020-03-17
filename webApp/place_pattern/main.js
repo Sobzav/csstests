@@ -419,7 +419,11 @@ window.addEventListener("load", () => {
         setStatus('Сохранение данных', 0, 3000);
 
         // если выделенный элемент существует
-        if (pack) {
+        let exists = dataSet.find( function(item) {
+            return item ? (item.code == selectedItem.dh.data.code) : false;
+        });
+
+        if (!exists || !selectedItem.new) {
 
             // setDomElementsEnabled('#btnApply', false);
             // setDomElementsEnabled('#btnBack', false);
@@ -430,41 +434,39 @@ window.addEventListener("load", () => {
                 // если успешно
                 function(result) {
         
-                    if (result.data && (parseInt(result.data.id) > 0)) {
-                        // добавляем новый элемент в набор dataSet
-                        dataSet[result.data.id] = {};
-                        // обновляем данные в dataSet
-                        for(let key in dataModel) {
-                            dataSet[result.data.id][key] = selectedItem[key] ? selectedItem[key] : dataModel[key];   
-                        }
+                    if (selectedItem.new && result.data && (parseInt(result.data.id) > 0)) {
                 
+                        selectedItem.new = false;
+                        selectedItem.changed = false;
+                        
                         // присваиваем новый id после сохранения
-                        dataSet[result.data.id].id = result.data.id;
+                        selectedItem.dh.data.id = String(result.data.id);
+                        
+                        // добавляем новый элемент в набор dataSet
+                        dataSet[result.data.id] = selectedItem.dh.data;
 
                         // делаем сортировку элементов в dataSet
-                        sortDataBy(dataSet, 'code');
+                        // sortDataBy(dataSet, 'code');
 
                         packList.selectedId = result.data.id;
-
-                        setSelectedItem(result.data.id);
-        
-                        selectedItem.dh.changed = false;
+                        setSelectedItem(result.data.id)
 
                         // показываем сообщение в statusbar
                         setStatus('Сохранено', 100, 5000);
                     }
                         
-                    setDomElementsEnabled('#btnApply', true);
-                    setDomElementsEnabled('#btnBack', true);
+                    setDomElementsEnabled('#btnApply, #btnBack', true);
                 },
                 
                 // если сервер вернулошибку
                 function(XMLHttpRequest, textStatus) {
                     
-                    setDomElementsEnabled('#btnApply', true);
-                    setDomElementsEnabled('#btnBack', true);
+                    setDomElementsEnabled('#btnApply, #btnBack', true);
                 }
             );
+        } else {
+            alert('Элемент с таким обозначением уже существует.');
+            setDomElementsEnabled('#btnApply, #btnBack', true);
         }
         console.groupEnd();
     }
@@ -684,7 +686,7 @@ window.addEventListener("load", () => {
                 
                 // если элемент был изменен
                 console.log('selectedItem.dh.changed: %o', selectedItem.dh.changed);
-                if (selectedItem.dh.changed) {
+                if (selectedItem.changed) {
                     
                     // Предлагаем пользователю сохранить изменения
                     var reply = messageBox('Тип "' + selectedItem.code + '" был изменен, хотите сохранить?');

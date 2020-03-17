@@ -8,7 +8,15 @@
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <title> Упаковка </title>
-
+      <!-- SVG SPRITE - 2 ИКОНКИ ГАЛОЧКА ВНИЗ И USER -->
+    <svg style="display:none;">
+        <symbol id="down" viewBox="0 0 16 16">
+            <polygon points="3.81 4.38 8 8.57 12.19 4.38 13.71 5.91 8 11.62 2.29 5.91 3.81 4.38" />
+        </symbol>
+        <symbol id="users" viewBox="0 0 16 16">
+            <path d="M8,0a8,8,0,1,0,8,8A8,8,0,0,0,8,0ZM8,15a7,7,0,0,1-5.19-2.32,2.71,2.71,0,0,1,1.7-1,13.11,13.11,0,0,0,1.29-.28,2.32,2.32,0,0,0,.94-.34,1.17,1.17,0,0,0-.27-.7h0A3.61,3.61,0,0,1,5.15,7.49,3.18,3.18,0,0,1,8,4.07a3.18,3.18,0,0,1,2.86,3.42,3.6,3.6,0,0,1-1.32,2.88h0a1.13,1.13,0,0,0-.27.69,2.68,2.68,0,0,0,.93.31,10.81,10.81,0,0,0,1.28.23,2.63,2.63,0,0,1,1.78,1A7,7,0,0,1,8,15Z" /> 
+         </symbol>
+    </svg>
 </head>
 
 <body class="">
@@ -33,7 +41,7 @@
                     <input class="wide-100" type="text" placeholder="Поиск..">
                     <ul id="packList" class="dropdown-content hidden" tabindex="0">
                     </ul>
-                    <button class="dropbtn">&#9013</button>
+                    <button class="dropbtn"><svg width="16px" height="16px" aria-hidden="true"><use xlink:href="#down"></use></svg></button>
                 </div>
 
                 <div>
@@ -104,7 +112,8 @@
                             <input class="archeTypeSelectInput wide-100" type="text" placeholder="Поиск..">
                             <ul id="patternPackList" class="dropdown-content drop-right hidden" tabindex="0">
                             </ul>
-                            <button class="archeTypeSelectInput dropbtn">&#9013</button>
+                            <!-- <button class="archeTypeSelectInput dropbtn">&#9013</button> -->
+                            <button class="archeTypeSelectInput dropbtn"><svg width="16px" height="16px" aria-hidden="true"><use xlink:href="#down"></use></svg></button>
                         </div>
                         <!-- END Выпадающий список элементов -->
                     </div>
@@ -213,7 +222,8 @@
                                     <input size="6" class="subInput dropdown-input" type="text" placeholder="Тип">
                                     <ul id="packList_" class="dropdown-content hidden" tabindex="0">
                                     </ul>
-                                    <button class="subInput dropbtn">&#9013</button>
+                                    <button class="subInput dropbtn"><svg width="16px" height="16px" aria-hidden="true"><use xlink:href="#down"></use></svg></button>
+                                    <!-- <button class="subInput dropbtn">&#9013</button> -->
                                 </div>
                             </div>
 

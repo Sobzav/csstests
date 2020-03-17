@@ -152,6 +152,7 @@ class SearchList {
     //
     set selectedId(value) {
         this._selectedId = value;
+        this.updateList(this.dataSet);  // для обновления всего списка перед сменой выделенного в случае нового элемента в dataSet
         this.updateInput(value);
     }
 
@@ -247,9 +248,15 @@ class SearchList {
     // Метод | Раскрывает список поисковой выдачи
     // 
     expand() {
-        // console.groupCollapsed("Class SearchList.updateList");
+        // console.groupCollapsed("Class SearchList.expand");
 
+        // раскрываем список
         this._ul.classList.remove("hidden");
+
+        // прокручиваем к выбранному элементу
+        let li = this._ul.querySelector(".selected");
+
+        this._ul.scrollTop = (li.offsetTop - 60);
 
         this._expanded = true;
         // console.groupEnd();
@@ -261,12 +268,64 @@ class SearchList {
     // Метод | Сворачивает список поисковой выдачи
     // 
     collapse() {
-        // console.groupCollapsed("Class SearchList.updateList");
+        // console.groupCollapsed("Class SearchList.collapse");
 
         this._ul.classList.add("hidden");
 
         this._expanded = false;
         // console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Метод | Сортирует выпадающий список поисковой выдачи
+    //
+    sortListBy(key) {
+        console.group("Class SearchList.sortListBy");
+
+        // получаем все элементы выпадающего списка
+        let items = this._ul.getElementsByTagName('li');
+        console.log('items: %o', items);
+
+        // первый элемент из сортируемого списка
+        let first = this._item0 ? 1 : 0;
+
+        for (let i  = first; i < (items.length - 1); i++) {
+
+            let m = i;  // индекс элемента с минимальным key
+            for (let j = i + 1; j < items.length; j++) {
+                if (this.dataSet[items[j].value][key] < this.dataSet[items[m].value][key]) {
+                    m = j;
+                }
+            }
+
+            // если нашли элемент с меньшим key
+            if (m != i) {
+                // меняем местами элементы с индексами i <> m
+
+                // удаляем event у элементов
+                items[m].removeEventListener('click', event => this.slotChange(event));
+                items[i].removeEventListener('click', event => this.slotChange(event));
+
+                // запоминаем элемент с индексом m
+                let mValue = items[m].value;
+                let mInnerHTML = items[m].innerHTML;
+
+                // переставляем элемент с индексом i в элемент с индексом m
+                items[m].value = items[i].value;
+                items[m].innerHTML = items[i].innerHTML;
+                
+                // вставляем запомненный элемент с индексом m в элемент с индексом i
+                items[i].value = mValue;
+                items[i].innerHTML = mInnerHTML;
+
+                // добавляем event элементам
+                items[m].addEventListener('click', event => this.slotChange(event));
+                items[i].addEventListener('click', event => this.slotChange(event));
+            }
+        }
+        console.groupEnd();
     }
 
 
@@ -309,6 +368,9 @@ class SearchList {
             // добавляем новый элемент в выпадающий список
             this._ul.appendChild(li);
         });
+
+        // сортируем список
+        this.sortListBy('code');
 
         // Обновляем выбранный элемент в выпадающем списке
         this.updateSelected(this._selectedId);
@@ -386,7 +448,7 @@ class SearchList {
             function(target, jsonResponce) {
                 
                 // сохраняем ответ сервера до новой загрузки
-                target._data = jsonResponce;
+                target.dataSet = jsonResponce;
 
                 if (successFunction) {successFunction(target, caller);}
             },
@@ -449,7 +511,7 @@ class SearchList {
             this.load(
                 function(target, caller) {
                     // в ответе сервера массив записей 
-                    target.updateList(target._data);
+                    target.updateList(target.dataSet);
 
                     caller.expand();
                 },
@@ -462,7 +524,7 @@ class SearchList {
         } else {
 
             // фильтруем список
-            let data = this._dataSet.filter( row => {
+            let dataSet = this._dataSet.filter( row => {
                 let match = false;
 
                 // названия полей по которым выполняется поиск и фильтрация списка
@@ -482,7 +544,7 @@ class SearchList {
                 return match;
             });
 
-            this.updateList(data);
+            this.updateList(dataSet);
 
             this.expand();
         }
@@ -606,6 +668,7 @@ class SearchList {
     //         что выбранный элемент изменился
     //
     sendEvents(id) {
+        console.group("class SearchList.sendEvents");
         if (id > 0) {
 
             if (this._listener) {this._listener({target: this});}

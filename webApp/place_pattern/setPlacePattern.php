@@ -229,7 +229,11 @@ $data_id = updatePlace($mySqli, $data);
 if ($errCount == 0) {
 
     // возвращаем id сохраненного элемента
-    $jsonText = array('id' => $data_id);
+    $jsonText = (object)array( 
+        'data' => (object) array(
+            'id' => $data_id
+        )
+    );
 
     echo json_encode($jsonText);
 } else {
