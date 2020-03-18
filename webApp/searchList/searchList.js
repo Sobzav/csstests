@@ -668,7 +668,7 @@ class SearchList {
     //         что выбранный элемент изменился
     //
     sendEvents(id) {
-        console.group("class SearchList.sendEvents");
+        // console.group("class SearchList.sendEvents");
         if (id > 0) {
 
             if (this._listener) {this._listener({target: this});}
@@ -683,7 +683,7 @@ class SearchList {
             if (this.onItem0) {this.onItem0(0);}
         }
 
-        console.groupEnd();
+        // console.groupEnd();
     }
 
 

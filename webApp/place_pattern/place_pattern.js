@@ -67,7 +67,8 @@ const dataModel = {
     bycoordinates: 0,
     color: 0,
     depth: 0,
-    turned: 0,
+    turnedx: 0,
+    turnedy: 0,
     deleted: 'null',
     sub1_id: 'null',
     inrow1: 0,
@@ -114,7 +115,7 @@ const dataModel = {
 //           С заданным id, который будет копией data
 //
 function copyData(data, id) {
-    console.group("copyData ", data);
+    // console.group("copyData ", data);
 
     let _copy = {};
                     
@@ -124,7 +125,7 @@ function copyData(data, id) {
     }
     _copy.id = id;
 
-    console.groupEnd();
+    // console.groupEnd();
     return _copy;
 };
 
@@ -133,8 +134,8 @@ function copyData(data, id) {
 // -------------------------------------------------------
 // Функция | Сортировки массива объектов - dataSet
 //
-function sortDataBy(data, key) {
-    console.group("sortDataBy ", key);
+// function sortDataBy(data, key) {
+//     console.group("sortDataBy ", key);
 
     // var first = true;
     // let prevId;
@@ -149,8 +150,8 @@ function sortDataBy(data, key) {
     //     prev = copyData(data[index], data[index].id);
     //     first = false;
     // }
-    console.groupEnd();
-};
+//     console.groupEnd();
+// };
 
 
 
@@ -225,7 +226,7 @@ function sortDataBy(data, key) {
                     alert('Ошибка: ' + jsonResponce.errDump);
                 } else {
                     let data = jsonResponce.data;
-                    
+
                     // передаем загруженные данные 
                     for(var index in data) {
                         dataSet[data[index].id] = copyData(data[index], data[index].id);
@@ -382,7 +383,7 @@ class DataHendler {
     // Свойство | Модель данных
     //
     setDataModel(target) {
-        console.group("Class DataHendler.set dataMonel");
+        console.group("Class DataHendler.setDataModel");
         
         // очищаем модель данных
         this.data = null;
@@ -413,7 +414,7 @@ class DataHendler {
         }
 
         // сбрасываем флаг changed
-        this._changed = false;
+        this.data['changed'] = '';
 
         console.groupEnd();
     }
@@ -424,7 +425,7 @@ class DataHendler {
     // Метод | Добавляет новую связь domElement <=> target.name
     //
     setDataBind(selector, name, type, event) {
-        console.group("Class DataHendler.setBind");
+        // console.group("Class DataHendler.setBind");
 
         // настраиваем domElement в зависимости от type
         var domElement;
@@ -439,11 +440,12 @@ class DataHendler {
         }
 
         // если domElement не найден, выводим сообщение и не связываем event
-        if (domElement) {
+        if (domElement && event) {
             // связываем event элемента в DOM с обработчиком
             domElement.addEventListener(event, e => this.slotElementChange(e));
         } else {
-            console.warn('Не найден элемент с селектором ' + selector);
+            if (!event) {console.warn('К элементу с селектором ' + selector + ' не создан event');}
+            if (!domElement) {console.warn('Связь ' + name + ' создана без элемента в DOM');}
         }
 
         // добавляем связь если ее нет
@@ -456,8 +458,8 @@ class DataHendler {
                 domElement: domElement,
             };
         }
-        console.log("bind.keys: ", Object.keys(this.bind));
-        console.log("this.bind: ", this.bind[name]);
+        // console.log("bind.keys: ", Object.keys(this.bind));
+        // console.log("this.bind: ", this.bind[name]);
 
 
         // Добавляем свойство name в dataModel
@@ -467,7 +469,7 @@ class DataHendler {
             self = this;
 
             // сылка на целевой объект 
-            var target = this._target;
+            // var target = this._target;
 
             Object.defineProperty(this.data, name, {
                 
@@ -476,36 +478,44 @@ class DataHendler {
                     // обновляем значение во внутренней переменой dataModel
                     this['_' + name] = newValue;
 
-                    // обновляем значение в целевом объекте
                     // console.log("target[name]: " + target[name]);
                     // console.log("newValue: " + newValue);
-                    // target[name] = newValue;
                     // console.log("target: %o", target);
                     // console.log("target[name]: " + target[name]);
-
                     // console.log("domElement: ", domElement);
                     // console.log("name: ", name);
-                        
+                    
                     // если значение было изменено из целевого обюъекта
                     if (domElement) {
-
-                        if (String(domElement.value) !== String(newValue)) {
-                            // обновляем его в domElement
-                            domElement.value = self.parseValueToView(newValue, self.bind[name].type);
-                            // console.log("domElement.value: ", domElement.value);
+                        
+                        switch(domElement.type) {
+                            
+                            case 'checkbox':
+                                if (domElement.checked !== self.parseValueToView(newValue, self.bind[name].type)) {
+                                    
+                                    // обновляем его в domElement
+                                    domElement.checked = self.parseValueToView(newValue, self.bind[name].type);
+                                }
+                                break;
+                            default:
+                                if (String(domElement.value) !== String(newValue)) {
+                                    
+                                    // обновляем его в domElement
+                                    domElement.value = self.parseValueToView(newValue, self.bind[name].type);
+                                }
                         }
                     }
                 },
                 
                 get: function() {
-                    console.log("name: ", name , self.bind[name].type, this['_' + name]);
+                    // console.log("name: ", name , self.bind[name].type, this['_' + name]);
                     return self.parseValue(this['_' + name], self.bind[name].type);
                 },   
                 
                 configurable: false
             });
         }
-        console.groupEnd();
+        // console.groupEnd();
     }
 
 
@@ -523,7 +533,7 @@ class DataHendler {
         this.data[bind.name] = this.parseDomElementValue(event.target, bind.type);
 
         // устанавливаем флаг, что набор данных изменен
-        this._changed = true;
+        this.data['changed'] = 'изменен';
 
         // вызываем метод по изменению, если привязан
         if (this.onChange) {this.onChange(event);}
@@ -537,7 +547,14 @@ class DataHendler {
     //
     parseDomElementValue(domElement, type) {
 
-        return this.parseValueFromView(domElement.value, type);
+        switch(domElement.type) {
+                            
+            case 'checkbox':
+                return this.parseValueFromView(domElement.checked, type);
+                break;
+            default:
+                return this.parseValueFromView(domElement.value, type);
+        }
     }
 
 
@@ -580,6 +597,8 @@ class DataHendler {
 
         let parsed;
         switch(type) {
+            case 'bool':
+                return (value == true) ? 1 : 0;
             case 'int':
                 parsed = parseInt(value, 10);
                 return isNaN(parsed) ? 0 : parsed;
@@ -610,6 +629,9 @@ class DataHendler {
 
         let parsed;
         switch(type) {
+            case 'bool':
+                parsed = parseInt(value, 10);
+                return (parsed > 0) ? true : false;
             case 'int':
                 parsed = parseInt(value, 10);
                 return (isNaN(parsed) || (parsed == 0)) ? '' : parsed;
@@ -740,14 +762,13 @@ class PlacePattern {
 
         // поведенческие свойства элемента
         //
-        this._inRow = 0;            // элемент встает в один ряд с предыдущим 
-        this._depth = 0;            // количество уровней внутренних элементов
-        this._turned = 0;           // элемент отображается повернутым
+        // this._inRow = 0;            // элемент встает в один ряд с предыдущим 
+        // this._depth = 0;            // количество уровней внутренних элементов
+        // this._turned = 0;           // элемент отображается повернутым
         this._hidden = true;        // если true, то элемент невидимый
         this._active = false;       // если true, то элемент будет реагировать на указатель мыши
         this._mouseOver = false;    // когда указатель мыши над элементом true
         this._selected = false;     // статуса ВЫБРАН / НЕ ВЫБРАН 
-        this._changed = true;       // если true, то элемент был изменен
         this._new = false;          // если true, то элемент новый и его нет в базе данных
 
         this.onChange;
@@ -1043,59 +1064,32 @@ class PlacePattern {
     clear(clearCanvas) {
 
         let x, y, wx, wy;
+        
+        this._ctx.save();
 
         // если надо очистить всю область canvas
         if (clearCanvas) {
 
             x = 0;
             y = 0;
-            wx = this._canvas.width;
-            wy = this._canvas.height;
+            wx = this._ctx.canvas.width;
+            wy = this._ctx.canvas.height;
         } else {
 
             x = this._viewBox.x + this.dh.data[this._disposition.x];
             y = this._viewBox.y + this.dh.data[this._disposition.y];
             wx = this.dh.data[this._disposition.wx];
             wy = this.dh.data[this._disposition.wy];
+
+            this._ctx.scale(1/this._scale, 1/this._scale);
         }
 
-        this._ctx.save();
-        this._ctx.scale(1/this._scale, 1/this._scale);
-
         this._ctx.clearRect(x, y, wx, wy);
-
         this._ctx.restore();
     }
 
 
 
-    // -------------------------------------------------------
-    // Метод | Делает элемент невидимым
-    //
-    hide() {
-        if (!this._hidden) {
-
-            this._hidden = true;
-            
-            // стираем элемент
-            this.clear(true);
-        }
-    }
-
-
-
-    // -------------------------------------------------------
-    // Метод | Делает элемент видимым
-    //
-    show() {
-        this._hidden = false;
-        
-        // рисуем элемент
-        this.draw();
-    }
-    
-
-    
     // -------------------------------------------------------
     // Метод | Рисуем рамку если есть ._border > 0
     //         Закрашиваем прямоугольник на 
@@ -1176,37 +1170,22 @@ class PlacePattern {
     // Метод | Вызывает метод рисования прямоугольника с нужными параметрами
     //
     draw() {
-            // console.log("class PlacePattern.draw{ id=" + this._id);
 
-            this.drawCube(
-            // window.requestAnimationFrame(() => this.drawCube(
-                this._viewBox,
-                this.dh.data[this._disposition.x],
-                this.dh.data[this._disposition.y],
-                this.dh.data[this._disposition.wx],
-                this.dh.data[this._disposition.wy],
-                this.dh.data['i' + this._disposition.wx],
-                this.dh.data['i' + this._disposition.wy],
-                this.dh.data.color,
-                this.selected,
-                this._ctx,
-                this._scale,
-                this.dh.data.code
-            );
-            // console.log("class PlacePattern.draw }");
-    }
-
-
-
-    // -------------------------------------------------------
-    // Метод | Перерисовывает ячейку на <canvas>
-    //
-    reDraw() {
-        if (!this._hidden) {
-
-            this.clear();
-            this.draw();
-        }
+        this.drawCube(
+        // window.requestAnimationFrame(() => this.drawCube(
+            this._viewBox,
+            this.dh.data[this._disposition.x],
+            this.dh.data[this._disposition.y],
+            this.dh.data[this._disposition.wx],
+            this.dh.data[this._disposition.wy],
+            this.dh.data['i' + this._disposition.wx],
+            this.dh.data['i' + this._disposition.wy],
+            this.dh.data.color,
+            this.selected,
+            this._ctx,
+            this._scale,
+            this.dh.data.code
+        );
     }
 
 
@@ -1236,7 +1215,7 @@ class PlacePattern {
         if (this.dh.data) {
 
             // настройки отображения
-            this.settings = this.dh.data.turned ? this.turnedView : this.normalView;
+            this.settings = this.dh.data.turnedy ? this.turnedView : this.normalView;
 
             // масштабируем элемент в размеры viewBox;
             this.autoScale();
@@ -1259,98 +1238,153 @@ class PlacePattern {
 
     updateItems() {
         console.group("class PlacePattern.updateItems");
-        console.log('dataSet: %o', dataSet);
 
         // массив внутренних типов
         let iType = [];
 
-        // перебираем типы внутренних элементов
-        for(let index = 1; index <= this.iTypeCount; index++) {
-            let id = parseInt(this.dh.data['sub' + index + '_id'] ? this.dh.data['sub' + index + '_id'] : null);
-            if (id && this.dh.data['x' + index] && this.dh.data['y' + index]) {
+        if (!(this.dh.data.bycoordinates > 0)) {
 
-                iType[index] = {
-                    id:      id,                            // идентификатор типа внутреннего элемента
-                    inrow:   parseInt(dataSet[ id ]['inrow' + index]),  // флаг объединения типов внутренних элементов в ряд 
-                    x:       this.dh.data['x' + index],     // количество по горизонтали
-                    y:       this.dh.data['y' + index],     // количество по вертикали
-                    wx:      parseInt(dataSet[ id ]['wx']),           // ширина внутреннего элемента
-                    wy:      parseInt(dataSet[ id ]['wy'])            // высота внутреннего элемента
-                };
-                console.log('iType: %o', iType);
+            // перебираем типы внутренних элементов
+            for(let index = 1; index <= this.iTypeCount; index++) {
+                let id = parseInt(this.dh.data['sub' + index + '_id'] ? this.dh.data['sub' + index + '_id'] : null);
+                if (id && this.dh.data['x' + index] && this.dh.data['y' + index]) {
+
+                    iType[index] = {
+                        id:      id,                            // идентификатор типа внутреннего элемента
+                        inrow:   parseInt(this.dh.data['inrow' + index]),  // флаг объединения типов внутренних элементов в ряд 
+                        x:       this.dh.data['x' + index],     // количество по горизонтали
+                        y:       this.dh.data['y' + index],     // количество по вертикали
+                        wx:      parseInt(dataSet[ id ]['wx']),           // ширина внутреннего элемента
+                        wy:      parseInt(dataSet[ id ]['wy'])            // высота внутреннего элемента
+                    };
+                    // console.log('iType: %o', iType);
+                }
             }
-        }
 
-        // массив рядов внутренних элементов
-        let rows = [];
-        let rowIndex = 0;   // индекс ряда от 0
+            // массив рядов внутренних элементов
+            let wy = [];
+            let count = 0;
+            let rows = [];
+            let prevInrow = false;
+            let rowIndex = -1;   // индекс ряда от 0
+            let parentWx = this.dh.data[this._settings.item.disposition.wx];    // вирина элемента - контейнера
 
-        // перебираем типы внутрениих элементов и делаем массив рядов
-        iType.forEach( (item, index) => {
-            let id = this.dh.data['sub' + index + '_id'] ? this.dh.data['sub' + index + '_id'] : null;
-            if (id) {
-                if (item.inRow) {
+            // перебираем типы внутрениих элементов и делаем массив рядов
+            iType.forEach( (item, index) => {
+                let id = this.dh.data['sub' + index + '_id'] ? this.dh.data['sub' + index + '_id'] : null;
+                if (id) {
+                    if (item.inrow > 0) {
 
-                    rowIndex++; // индекс ряда от 0
-                } else {
-                    for(let y = 1; y <= item.y; y++) {
+                        rowIndex += prevInrow ? 0 : 1; // увеличиваем индекс ряда, если предыдущий был не в ряд
+
                         let rowWx = dataSet[ id ][this._settings.item.disposition.wx] * item.x; // суммараная ширина элементов ряда
-                        rows[rowIndex] = {
-                            id:     item.id,                // идентификатор типа внутр. эл-ов ряда
-                            count:  item.x,                 // количество элементов в ряду
-                            wx:     rowWx,                          // суммараная ширина элементов ряда
-                            wy:     parseInt(dataSet[ id ][this._settings.item.disposition.wy], 10),  // высота элементов ряда
-                            dx:     (this.dh.data.wx - rowWx) / item.x // расстояние между элементами ряда
-                        };
-                        rowIndex++; // индекс ряда от 0
+                        count += item.x;                 // количество элементов в ряду
+                        wy.push(parseInt(dataSet[ id ][this._settings.item.disposition.wy], 10));  // высоты элементов рядов
+                        
+                        if (!prevInrow) {rows[rowIndex] = {id: [], count: [], wx: 0};}
+                        rows[rowIndex].id.push(item.id);    // идентификатор типа внутр. эл-ов ряда
+                        rows[rowIndex].count.push(item.x);         // суммараная ширина элементов ряда
+                        rows[rowIndex].wx += rowWx;         // суммараная ширина элементов ряда
+                        rows[rowIndex].wy = Math.max.apply(null, wy);   // высота самых высоких элементов рядов
+                        rows[rowIndex].dx = (parentWx - rows[rowIndex].wx) / (count + 1);  // расстояние между элементами ряда
+
+                        prevInrow = true;
+                    } else {
+                        wy = [];
+                        count = 0;
+                        for(let y = 1; y <= item.y; y++) {
+
+                            rowIndex++; // индекс ряда от 0
+
+                            let rowWx = dataSet[ id ][this._settings.item.disposition.wx] * item.x; // суммараная ширина элементов ряда
+                            
+                            rows[rowIndex] = {
+                                id:     [item.id],                    // идентификатор типа внутр. эл-ов ряда
+                                count:  [item.x],                     // количество элементов в ряду
+                                wx:     rowWx,                      // суммараная ширина элементов ряда
+                                wy:     parseInt(dataSet[ id ][this._settings.item.disposition.wy], 10),  // высота элементов ряда
+                                dx:     (parentWx - rowWx) / (item.x + 1) // расстояние между элементами ряда
+                            };
+                        }
+                        prevInrow = false;
                     }
                 }
-            }
-        }, this);
+            }, this);
 
-        if (rows.length > 0) {
-            let wyTotal = rows.reduce( function(dyTotal, row) {return dyTotal + row.wy}, 0);    // суммарная высота рядов внутр. эл-ов
+            if (rows.length > 0) {
+                let wyTotal = rows.reduce( function(dyTotal, row) {return dyTotal + row.wy}, 0);    // суммарная высота рядов внутр. эл-ов
 
-            let y = 0;
+                let y = 0;
 
-            let dy = (this.dh.data[this._settings.item.disposition.wy] - wyTotal) / (rows.length + 1);
+                let dy = (this.dh.data[this._settings.item.disposition.wy] - wyTotal) / (rows.length + 1);  // расстояние между рядами
 
-            // рисуем внутренние элементы
-            for(let rowIndex = 0; rowIndex < rows.length; rowIndex++) {    // перебор рядов от 0
-                
-                let x = 0;
+                // рисуем внутренние элементы
+                for(let rowIndex = 0; rowIndex < rows.length; rowIndex++) {    // перебор рядов от 0
+                    
+                    let x = 0;
 
-                let dx = (this.dh.data[this._settings.item.disposition.wx] - rows[rowIndex].wx) / (rows[rowIndex].count + 1);  // расстояние между элементами ряда
+                    y += dy;   // координата y текжего ряда
 
-                y += dy;   // координата y текжего ряда
-                
-                for(let itemIndex = 0; itemIndex < rows[rowIndex].count; itemIndex++) {    // перебор элементов ряда
+                    rows[rowIndex].id.forEach( (id, i) => {   // id - i-ый тип в ряде, i - индекс типа в ряде
+                        
+                        for(let itemIndex = 0; itemIndex < rows[rowIndex].count[i]; itemIndex++) {    // перебор элементов ряда
 
-                    x += dx;   // координата x текущего элемента ряда
-                
-                    this.drawCube(
-                    // window.requestAnimationFrame(() => this.drawCube(
-                        {x: this.dh.data.x, y: this.dh.data.y,
-                            wx: this.dh.data[this._settings.item.disposition.wx],
-                            wy: this.dh.data[this._settings.item.disposition.wy]
-                        },
-                        x,
-                        y,
-                        dataSet[rows[rowIndex].id][this._settings.item.disposition.wx],
-                        dataSet[rows[rowIndex].id][this._settings.item.disposition.wy],
-                        dataSet[rows[rowIndex].id]['i' + this._settings.item.disposition.wx],
-                        dataSet[rows[rowIndex].id]['i' + this._settings.item.disposition.wy],
-                        dataSet[rows[rowIndex].id].color,
-                        this.selected,
-                        this._ctx,
-                        this._scale,
-                        dataSet[rows[rowIndex].id].code,
-                    );
-                    // console.log("class PlacePattern.draw }");
+                            x += rows[rowIndex].dx;   // координата x текущего элемента ряда
+                        
+                            let yOffset = (rows[rowIndex].wy - dataSet[id][this._settings.item.disposition.wy]) / 2;
 
-                    x += parseInt(dataSet[rows[rowIndex].id][this._settings.item.disposition.wx]);
+                            this.drawCube(
+                            // window.requestAnimationFrame(() => this.drawCube(
+                                {
+                                    x: this.dh.data.x, y: this.dh.data.y,
+                                    wx: this.dh.data[this._settings.item.disposition.wx],
+                                    wy: this.dh.data[this._settings.item.disposition.wy]
+                                },
+                                x,
+                                y + yOffset,
+                                dataSet[id][this._settings.item.disposition.wx],
+                                dataSet[id][this._settings.item.disposition.wy],
+                                dataSet[id]['i' + this._settings.item.disposition.wx],
+                                dataSet[id]['i' + this._settings.item.disposition.wy],
+                                dataSet[id].color,
+                                this.selected,
+                                this._ctx,
+                                this._scale,
+                                dataSet[id].code,
+                            );
+                            x += parseInt(dataSet[id][this._settings.item.disposition.wx]);
+                        }
+                    });
+                    y += rows[rowIndex].wy;
                 }
-                y += rows[rowIndex].wy;
+            }
+        } else {
+
+            // перебираем типы внутренних элементов
+            for(let index = 1; index <= this.iTypeCount; index++) {
+                let id = parseInt(this.dh.data['sub' + index + '_id'] ? this.dh.data['sub' + index + '_id'] : null);
+                if (id && this.dh.data['x' + index] && this.dh.data['y' + index]) {
+
+                    this.drawCube(
+                        // window.requestAnimationFrame(() => this.drawCube(
+                            {
+                                x: this.dh.data.x, y: this.dh.data.y,
+                                wx: this.dh.data[this._settings.item.disposition.wx],
+                                wy: this.dh.data[this._settings.item.disposition.wy]
+                            },
+                            this.dh.data['x' + index],
+                            this.dh.data['y' + index],
+                            dataSet[id][this._settings.item.disposition.wx],
+                            dataSet[id][this._settings.item.disposition.wy],
+                            dataSet[id]['i' + this._settings.item.disposition.wx],
+                            dataSet[id]['i' + this._settings.item.disposition.wy],
+                            dataSet[id].color,
+                            this.selected,
+                            this._ctx,
+                            this._scale,
+                            dataSet[id].code,
+                    );
+                }
             }
         }
         console.groupEnd();

@@ -293,7 +293,7 @@ header.header__sub div {
 }
 
 .wide-100 .dropdown {
-    margin: 0 8px;
+    margin: 0 5px 0 5px;
     height:  21px;
 }
 
@@ -594,9 +594,14 @@ label {
 /*                           INPUT                           */
 /*************************************************************/
 
-input, select {
+input, select, button {
     height: 21px;
+    border-radius: 0;
 }
+input[type=checkbox] {}
+
+label.right {padding-left:4px;}
+label.left {padding-right:4px;}
 
 
 /*************************************************************/
@@ -743,7 +748,8 @@ button {
     border: 1px solid var(--color-black);
     font-size: inherit;
     padding: 0 14px;
-    margin: 0 6px;
+    /* margin: 0 6px; */
+    margin: 0 0 0 6px;
     height: 21px;
     max-height: 30px;
     /* line-height: 21px; */
@@ -771,6 +777,7 @@ button.plus-button {font-size: 10px;}
 
 #btnEdit {
     width: 144px;
+    margin-left: 0;
 }
 
 .inputLabel {
@@ -809,8 +816,9 @@ button.plus-button {font-size: 10px;}
 
 
 section.section__main div {
-    /* padding: 0 12px; */
+    padding: 0 6px 0 0px;
 }
+section.section__main div:last-of-type {padding:0;}
 
 section.section__main div:nth-child(2) {
     /* margin: 0 0 0 24px; */
@@ -831,17 +839,19 @@ section.section__main div:nth-child(2) {
     margin: 0 8px;
 }
 
-.section__main button,
+/* .section__main button,
 .section__main div:last-child {
     margin: 0;
-}
+} */
+
+.section__main button:last-of-type() {margin: 0 0 0 -5px!important;}
 
 .section__main div {
     /* Все div внутри section__main - flex */
     display: flex;
 }
 
-.section__main div label {
+.section__main div label, .section__main div input.label-twin {
     font-family: 'CoreSansDS35Regular';
     font-size: 15px;
     /* vertical-align: middle; */
@@ -893,12 +903,20 @@ section.section__main div:nth-child(2) {
 }
 
 /* Статус-бар */
-.status-bar .status-label {
+.status-bar .status-label, .status-bar input.label-twin {
     vertical-align: middle;
     text-align: start;
     padding-left: 24px;
     padding-right: 24px;
     color: var(--color-chiffon);
+}
+
+.status-bar input.label-twin {
+    background-color: transparent;
+    padding: 0 5px;
+    border:0px;
+    overflow: visible;
+    width:120px;
 }
 
 .status-bar .status-label-changed {

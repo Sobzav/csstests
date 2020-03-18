@@ -1,0 +1,63 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-chiffon: #F3FDBD;
+    --color-raven: #6B727B;
+    --color-crBrown: #474443;
+    --color-chateauGrey: #97A1AA;
+    --color-black: #000000;
+    --color-white: #ffffff;
+    --color-tr: transparent;
+    /* Цвета модальных окн */
+    --color-info: #90cdf4;
+    --color-alert: #fc8181;
+    /* --color-alert: #fefcbf; */
+    --color-disabled: #2d3748;
+}
+html,
+body {
+    font-family: 'CoreSansDS25Light';
+    background-color: #AAA8A9;
+}
+
+body,
+.gridContainer,
+.gridContainer--whouse {
+    min-height: 100vh;
+    max-height: 100%;
+}
+
+.gridContainer,
+.gridContainer--whouse {
+    display: grid;
+    background-color: var(--color-raven);
+    /* margin: 0 1.5rem; по левой стороне */
+    margin: 0 auto;
+    /* по центру */
+    padding: 0 25px;
+    /* width: max-content; */
+    width: 1200px;
+}
+
+
+/* Default table styles for this demo */
+table {
+    border-collapse: collapse;
+    text-align: left;
+    width: 100%;
+}
+table tr {
+}
+table th, table td {
+    border: 1px solid var(--color-chateauGrey);
+    padding: 3px 3px;
+}
+table td a{
+    border: 1px solid;
+    margin-left: 2px;
+    margin-right: 2px;
+}

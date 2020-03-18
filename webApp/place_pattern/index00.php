@@ -8,11 +8,14 @@
     <link rel="stylesheet" type="text/css" href="..\css\style.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" />
     <title> Упаковка </title>
-    <!-- SVG SPRITE - ИКОНКА ГАЛОЧКА ВНИЗ -->
+      <!-- SVG SPRITE - 2 ИКОНКИ ГАЛОЧКА ВНИЗ И USER -->
     <svg style="display:none;">
         <symbol id="down" viewBox="0 0 16 16">
             <polygon points="3.81 4.38 8 8.57 12.19 4.38 13.71 5.91 8 11.62 2.29 5.91 3.81 4.38" />
         </symbol>
+        <symbol id="users" viewBox="0 0 16 16">
+            <path d="M8,0a8,8,0,1,0,8,8A8,8,0,0,0,8,0ZM8,15a7,7,0,0,1-5.19-2.32,2.71,2.71,0,0,1,1.7-1,13.11,13.11,0,0,0,1.29-.28,2.32,2.32,0,0,0,.94-.34,1.17,1.17,0,0,0-.27-.7h0A3.61,3.61,0,0,1,5.15,7.49,3.18,3.18,0,0,1,8,4.07a3.18,3.18,0,0,1,2.86,3.42,3.6,3.6,0,0,1-1.32,2.88h0a1.13,1.13,0,0,0-.27.69,2.68,2.68,0,0,0,.93.31,10.81,10.81,0,0,0,1.28.23,2.63,2.63,0,0,1,1.78,1A7,7,0,0,1,8,15Z" /> 
+         </symbol>
     </svg>
 </head>
 
@@ -33,39 +36,37 @@
             <div class="wide-100">
 
                 <label class="" for="packList"> Тип </label>
-                <!-- <input class="label-twin" id="" name="" value="Тип"> -->
+
                 <div class="dropdown wide-100" tabindex="0">
                     <input class="wide-100" type="text" placeholder="Поиск..">
                     <ul id="packList" class="dropdown-content hidden" tabindex="0">
                     </ul>
-                    <button class="dropbtn"><svg width="16px" height="16px" aria-hidden="true">
-                            <use xlink:href="#down"></use>
-                        </svg></button>
+                    <button class="dropbtn"><svg width="16px" height="16px" aria-hidden="true"><use xlink:href="#down"></use></svg></button>
                 </div>
 
                 <div>
                     <button class="" id="btnEdit"> Редактировать </button>
                 </div>
             </div>
-        </section>
+        </section> 
         <!-- END FIRST VAR  -->
 
         <!-- Sub-TOP - панель редактирования элемента - SECOND VAR -->
         <section class="section__main hidden" id="editPanel">
-            <div class="wide-100">
-                <div>
-                    <label class="" for="inpCode"> Обозначение </label>
-                    <input class="mainInput" size="4" type="text" id="inpCode" name="package_code">
-                </div>
-                <div class="input-flex">
-                    <label class="" for="inpName"> Наименование </label>
-                    <input class="mainInput" type="text" id="inpName" name="package_name">
-                </div>
-
-                <div>
-                    <button class="" id="btnBack"> Назад </button>
-                </div>
+        <div class="wide-100">
+            <div>
+                <label class="" for="inpCode"> Обозначение </label>
+                <input class="mainInput" size="4" type="text" id="inpCode" name="package_code">
             </div>
+            <div class="input-flex">
+                <label class="" for="inpName"> Наименование </label>
+                <input class="mainInput" type="text" id="inpName" name="package_name">
+            </div>
+
+            <div>
+                <button class="" id="btnBack"> Назад </button>
+            </div>
+</div>
         </section>
         <!-- END SECOND VAR -->
 
@@ -112,10 +113,7 @@
                             <ul id="patternPackList" class="dropdown-content drop-right hidden" tabindex="0">
                             </ul>
                             <!-- <button class="archeTypeSelectInput dropbtn">&#9013</button> -->
-                            <button class="archeTypeSelectInput dropbtn"><svg width="16px" height="16px"
-                                    aria-hidden="true">
-                                    <use xlink:href="#down"></use>
-                                </svg></button>
+                            <button class="archeTypeSelectInput dropbtn"><svg width="16px" height="16px" aria-hidden="true"><use xlink:href="#down"></use></svg></button>
                         </div>
                         <!-- END Выпадающий список элементов -->
                     </div>
@@ -124,23 +122,20 @@
                     <!-- Flex 3х1 для отображения inputs для ввода Размеров прямоугольника -->
                     <div class="section-general__flex">
                         <div class="">
-                            <label class="left" for="inpSizeWx"> Ширина </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWx" name="package_wx"
-                                pattern=“[0-9]+” required>
+                            <label class="" for="inpSizeWx"> Ширина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWx" name="package_wx" pattern=“[0-9]+” required>
                             <label class="" for="sizeWx"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpSizeWy"> Высота </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWy" name="package_wy"
-                                pattern=“[0-9]+” required>
+                            <label class="" for="inpSizeWy"> Высота </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWy" name="package_wy" pattern=“[0-9]+” required>
                             <label class="" for="sizeWy"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpSizeWz"> Глубина </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWz" name="package_wz"
-                                pattern=“[0-9]+” required>
+                            <label class="" for="inpSizeWz"> Глубина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpSizeWz" name="package_wz" pattern=“[0-9]+” required>
                             <label class="" for="inpSizeWz"> мм </label>
                         </div>
                     </div>
@@ -149,30 +144,27 @@
 
                     <div class="section-general__flex">
                         <div class="">
-                            <label class="left" for="inpInternalSizeWx"> Ширина </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWx" name="package_iwx"
-                                pattern=“[0-9]+” required>
+                            <label class="" for="inpInternalSizeWx"> Ширина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWx" name="package_iwx" pattern=“[0-9]+” required>
                             <label class="" for="sizeWx"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpInternalSizeWy"> Высота </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWy" name="package_iwy"
-                                pattern=“[0-9]+” required>
+                            <label class="" for="inpInternalSizeWy"> Высота </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWy" name="package_iwy" pattern=“[0-9]+” required>
                             <label class="" for="sizeWy"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpInternalSizeWz"> Глубина </label>
-                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWz" name="package_iwz"
-                                pattern=“[0-9]+” required>
+                            <label class="" for="inpInternalSizeWz"> Глубина </label>
+                            <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWz" name="package_iwz" pattern=“[0-9]+” required>
                             <label class="" for="inpInternalSizeWz"> мм </label>
                         </div>
                     </div>
 
                     <div class="section-general__flex">
                         <div class="">
-                            <label class="left" for="color"> Цвет: </label>
+                            <label class="" for="color"> Цвет: </label>
                             <input class="mainInput" type="color" id="inpColor" name="package_color">
                         </div>
 
@@ -196,13 +188,12 @@
                         <div class="">
                             <div class="inputBlock">
                                 <input class="mainInput" type="checkbox" id="checkBoxHasContent">
-                                <label class="label-heading" for="checkBoxHasContent"> Внутренние
-                                    прямоугольники:&nbsp;</label>
+                                <label class="label-heading" for="checkBoxHasContent"> Внутренние прямоугольники:&nbsp;</label>
                                 <label class="label-heading" type="text" id="inpTotal"> 0 </label>
                                 <label class="label-heading" for="inpTotal"> шт </label>
 
                                 <!-- чекбокс - внутренние элементы заданы по координатам -->
-                                <input class="subInput" type="checkbox" id="checkBoxByCoordinares">
+                                <input class="mainInput" type="checkbox" id="checkBoxByCoordinares">
                                 <label class="label-heading" for="checkBoxByCoordinares"> По координатам</label>
                             </div>
                         </div>
@@ -212,54 +203,49 @@
                         <!-- внутреннее содержимое -->
                         <!-- блок внутренних прямоугольников -->
 
-                        <div class="section-sub__grid--7x2">
-                            <div class="div1"><label class="" id="subLabel_"> 1. </label></div>
-                            <div class="div2">
-                                <label class="left" for="inpSizeWx_">Ширина</label>
+                        <div class="section-sub__grid--5x2">
+                            <div class="nmbr"><label class="" id="subLabel_"> 1. </label></div>
+                            <div class="frst">
+                                <label class="" for="inpSizeWx_">Ширина</label>
                                 <input class="disabled" size="5" type="text" id="inpSizeWx_">
-                                <label class="right" for="inpSizeWx_">мм</label>
+                                <label class="" for="inpSizeWx_">мм</label>
                             </div>
 
-                            <div class="div3">
-                                <label class="left" for="inpSizewY_">Высота</label>
+                            <div class="scnd">
+                                <label class="" for="inpSizewY_">Высота</label>
                                 <input class="disabled" size="5" type="text" id="inpSizeWy_">
-                                <label class="right" for="inpSizewY_">мм</label>
+                                <label class="" for="inpSizewY_">мм</label>
                             </div>
 
-                            <div class="div4 subInput dropdown wide-100" tabindex="0">
+                            <div class="thrd subInput dropdown wide-100" tabindex="0">
                                 <div class="dropdown wide-100" tabindex="0">
                                     <input size="6" class="subInput dropdown-input" type="text" placeholder="Тип">
                                     <ul id="packList_" class="dropdown-content hidden" tabindex="0">
                                     </ul>
-                                    <button class="subInput dropbtn"><svg width="16px" height="16px" aria-hidden="true">
-                                            <use xlink:href="#down"></use>
-                                        </svg></button>
+                                    <button class="subInput dropbtn"><svg width="16px" height="16px" aria-hidden="true"><use xlink:href="#down"></use></svg></button>
                                     <!-- <button class="subInput dropbtn">&#9013</button> -->
                                 </div>
                             </div>
 
-                            <div class="div5">
-                                <input class="subInput" type="checkbox" id="checkBoxInRow_">
-                                <label class="right" for="checkBoxInRow_"> В ряд</label>
+                            <div class="checkbox">
+                            <input class="subInput" type="checkbox" id="checkBoxInRow_">
+                                <label class="" for="checkBoxInRow_"> В ряд</label>
                             </div>
 
                             <!-- Second grid Line -->
-                            <div class="div6">
-                                <button class="subInput" id="btnTurn_"> Повернуть </button>
-                            </div>
-                            <div class="div7">
-                                <label class="left subInputLabelY" for="inpNy_"> Количество<br>по вертикали </label>
-                                <input class="subInput" size="5" type="text" id="inpNy_">
-                                <label class="right" for="inpNy_"> шт </label>
+                            <div class="frth">
+                                <label class="" for="inpNy_"> Количество<br>по вертикали </label>
+                                <input class="subInput" size="1" type="text" id="inpNy_">
+                                <label class="" for="inpNy_"> шт </label>
                             </div>
 
-                            <div class="div8">
-                                <label class="left subInputLabelX" for="inpNx_"> Количество<br>по горизонтали </label>
-                                <input class="subInput" size="5" type="text" id="inpNx_" name="package_wx_">
-                                <label class="right" for="inpNx_"> шт </label>
+                            <div class="ffth">
+                                <label class="" for="inpNx_"> Количество<br>по горизонтали </label>
+                                <input class="subInput" size="1" type="text" id="inpNx_" name="package_wx_">
+                                <label class="" for="inpNx_"> шт </label>
                             </div>
 
-                            <div class="div9">
+                            <div class="ffth1">
                                 <label class="summ" for="inpTotal_"> Всего = </label>
                                 <label class="summ" type="text" id="inpTotal_" name="package_total_"> 0 </label>
                                 <!-- <label class="my-1 mx-1" for="inpTotal4"> шт </label> -->
@@ -271,7 +257,9 @@
 
 
                 </section>
+                <section class="section__subsumm">
 
+                </section>
             </div>
             <!--right item-->
 
@@ -283,16 +271,13 @@
         <!-- Строка статуса -->
         <section class="status-bar">
             <div class="">
-                <input class="label-twin" disabled="" id="lblStatusEdit" value="">
+                <label class="status-label" id="lblStatusEdit"> </label>
                 <label class="status-label"> | </label>
-                <input class="label-twin" disabled="" id="lblStatusChanged" value="">
-                <!-- <input class="status-label-changed" id="lblStatusChanged" type="text"> </input> -->
+                <label class="status-label-changed" id="lblStatusChanged"> </label>
                 <label class="status-label"> | </label>
-                <input class="label-twin" disabled="" id="lblStatus" value="">
-                <!-- <label class="status-label" id="lblStatus"> </label> -->
+                <label class="status-label" id="lblStatus"> </label>
                 <label class="status-label"> | </label>
-                <input class="label-twin label-width-200" disabled="" id="lblStatusInfo" value="">
-                <!-- <label class="status-label" id="lblStatusInfo"> </label> -->
+                <label class="status-label" id="lblStatusInfo"> </label>
                 <label hidden class="status-label"> | </label>
             </div>
         </section>

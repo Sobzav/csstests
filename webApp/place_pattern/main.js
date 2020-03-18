@@ -143,20 +143,6 @@ window.addEventListener("load", () => {
     }
 
 
-    // -------------------------------------------------------
-    // Функция | Создает елемент в DOM по названию тэга
-    //
-    function domCreateElement(tagName) {
-        // console.group("main.domCreateElement");
-        
-        var item = document.createElement(tagName);
-        
-        // console.log("elment: %o", item);
-        // console.groupEnd();    
-        return item;
-    }
-
-
 
     // -------------------------------------------------------
     // ЭЛЕМЕНТЫ DOM | Объявляем константы связи с элементами страницы и/или формы
@@ -176,10 +162,12 @@ window.addEventListener("load", () => {
     const inpVolume = domElementById("inpVolume");
     const inpVolumeUnit = domElementById("inpVolumeUnit");
     const checkBoxHasContent = domElementById("checkBoxHasContent");
+    const checkBoxByCoordinares = domElementById("checkBoxByCoordinares");
     const btnEdit = domElementById("btnEdit");
     const btnBack = domElementById("btnBack");
     const btnCopy = domElementById("btnCopy");
-    const btnTurn = domElementById("btnTurn");
+    const btnTurnByX = domElementById("btnTurnByX");
+    const btnTurnByY = domElementById("btnTurnByY");
     const btnApply = domElementById("btnApply");
     const lblStatus = domElementById("lblStatus");
     const lblStatusEdit = domElementById("lblStatusEdit");
@@ -213,7 +201,7 @@ window.addEventListener("load", () => {
     canvas.height = settings.canvasWy * 2;
 
     // Делает все инпуты недоступными для редактирования
-    setDomElementsEnabled('.disabled, .mainInput, .subInput, .archeTypeSelectInput, #btnTurn, #btnApply, #btnCopy, #btnEdit');
+    setDomElementsEnabled('.disabled, .mainInput, .subInput, .archeTypeSelectInput, #btnTurnByX, #btnTurnByY, #btnApply, #btnCopy, #btnEdit');
 
 
     // выпадающий список для выбора текущего элемента из базы данных
@@ -239,6 +227,7 @@ window.addEventListener("load", () => {
     // patternPackList.onItem0 = (event) => packNew(event);
 
     // если в списке базовых элеменотов выбран не нулевой
+    patternPackList.onItem0 = (id) => setArchetypeId(id);
     patternPackList.onChange = (id) => setArchetypeId(id);
 
 
@@ -258,8 +247,9 @@ window.addEventListener("load", () => {
                 item.dataHendler = dataHendler;
                 item.packList.dataSet = dataSet;
                 dataHendler.setDataBind(item.packList, 'sub' + (index + 1)+ '_id', 'list', 'change');
-                dataHendler.setDataBind('#' + item._inpNx.id, 'x' + (index + 1), 'float', 'input');
-                dataHendler.setDataBind('#' + item._inpNy.id, 'y' + (index + 1), 'float', 'input');
+                dataHendler.setDataBind('#' + item._inpNx.id, 'x' + (index + 1), 'int', 'input');
+                dataHendler.setDataBind('#' + item._inpNy.id, 'y' + (index + 1), 'int', 'input');
+                dataHendler.setDataBind('#' + item._checkBox.id, 'inrow' + (index + 1), 'bool', 'change');
             });
             console.log('data: %o', dataSet)     
         },
@@ -282,7 +272,10 @@ window.addEventListener("load", () => {
     dataHendler.setDataBind('#inpInternalSizeWy', 'iwy', 'int', 'input');
     dataHendler.setDataBind('#inpInternalSizeWz', 'iwz', 'int', 'input');
     dataHendler.setDataBind('#inpColor', 'color', 'color', 'input');
-    dataHendler.setDataBind('', 'turned', 'int', 'input');
+    dataHendler.setDataBind('', 'turnedx', 'int', 'input');
+    dataHendler.setDataBind('', 'turnedy', 'int', 'input');
+    dataHendler.setDataBind('#checkBoxByCoordinares', 'bycoordinates', 'bool', 'change');
+    dataHendler.setDataBind('#lblStatusChanged', 'changed', 'text', '');
 
 
     // создаем placePattern
@@ -434,27 +427,26 @@ window.addEventListener("load", () => {
                 // если успешно
                 function(result) {
         
+                    console.log('pack: %o', pack);
                     if (selectedItem.new && result.data && (parseInt(result.data.id) > 0)) {
                 
                         selectedItem.new = false;
-                        selectedItem.changed = false;
                         
                         // присваиваем новый id после сохранения
                         selectedItem.dh.data.id = String(result.data.id);
                         
                         // добавляем новый элемент в набор dataSet
                         dataSet[result.data.id] = selectedItem.dh.data;
-
+                        
                         // делаем сортировку элементов в dataSet
                         // sortDataBy(dataSet, 'code');
-
+                        
                         packList.selectedId = result.data.id;
                         setSelectedItem(result.data.id)
-
-                        // показываем сообщение в statusbar
-                        setStatus('Сохранено', 100, 5000);
                     }
-                        
+                    // показываем сообщение в statusbar
+                    setStatus('Сохранено', 100, 5000);
+                    selectedItem.dh.data.changed = '';
                     setDomElementsEnabled('#btnApply, #btnBack', true);
                 },
                 
@@ -479,27 +471,15 @@ window.addEventListener("load", () => {
     //
 
 
-    // Привязываем событие нажатия кнопок
+    // Привязываем события
     btnEdit.addEventListener('click', eventBtnEditClicked);
     btnBack.addEventListener('click', eventBtnBackClicked);
-    btnTurn.addEventListener('click', eventBtnTurnClicked);   
+    btnTurnByX.addEventListener('click', eventBtnTurnByXClicked);   
+    btnTurnByY.addEventListener('click', eventBtnTurnByYClicked);   
     btnCopy.addEventListener('click', eventBtnCopyClicked);   
     btnApply.addEventListener('click', eventBtnSaveClicked);
-
-    // Привязываем событие изменение checkbox "объект имеет содержимое"
     checkBoxHasContent.addEventListener('change', eventCheckBoxHasContentChanged);
-
-    // Привязываем событие изменения свойств элемента
-    inpCodeEdit.addEventListener('input', eventItemChanged);
-    inpName.addEventListener('input', eventItemChanged);
-    inpPayload.addEventListener('input', eventItemChanged);
-    inpSizeWx.addEventListener('input', eventItemChanged);
-    inpSizeWy.addEventListener('input', eventItemChanged);
-    inpSizeWz.addEventListener('input', eventItemChanged);
-    inpInternalSizeWx.addEventListener('input', eventItemChanged);
-    inpInternalSizeWy.addEventListener('input', eventItemChanged);
-    inpInternalSizeWz.addEventListener('input', eventItemChanged);
-    inpColor.addEventListener('input', eventItemChanged);          
+    checkBoxByCoordinares.addEventListener('change', checkBoxByCoordinaresChanged);
 
     // Привязываем события клика на элементе
     canvas.addEventListener("click", eventClick);
@@ -659,18 +639,17 @@ window.addEventListener("load", () => {
     //           в режим редактирования и обратно
     //           - Сохраняем эелемент если он был изменен
     //
-    function setEditMode(editMode) {
+    function setEditMode(value) {
         console.group('main.setEditMode');
-        
         console.log('selectedItem: %o', selectedItem);
         
+        editMode = value;
+
         if (selectedItem.dh.data) { // && (selectedItem.dh.data.id > 0)
             console.log('set editMode to: %o', editMode);
             
             if (editMode) {
-            
                 // включаем режим редактирования [ РЕДАКТИРОВАТЬ ]
-                editMode = true;
 
                 // показываем поле для воода типа
                 editPanel.classList.remove('hidden');
@@ -682,11 +661,10 @@ window.addEventListener("load", () => {
             } else {
                 
                 // отключаем режим редактирования [ НАЗАД ]
-                editMode = false;
                 
                 // если элемент был изменен
-                console.log('selectedItem.dh.changed: %o', selectedItem.dh.changed);
-                if (selectedItem.changed) {
+                console.log('selectedItem.dh.data.changed: %o', selectedItem.dh.data.changed);
+                if (selectedItem.dh.data.changed) {
                     
                     // Предлагаем пользователю сохранить изменения
                     var reply = messageBox('Тип "' + selectedItem.code + '" был изменен, хотите сохранить?');
@@ -722,11 +700,13 @@ window.addEventListener("load", () => {
                 
                 lblStatusEdit.value = '';
             }       
-            // делаем инпуты доступными / блокируем делаем инпуты
+            // делаем инпуты доступными / блокируем
             setDomElementsEnabled('#btnApply', editMode);
-            setDomElementsEnabled('#btnTurn', editMode);
+            setDomElementsEnabled('#btnTurnByX', editMode);
+            setDomElementsEnabled('#btnTurnByY', editMode);
             setDomElementsEnabled('#btnCopy', !editMode);
             setDomElementsEnabled('.mainInput', editMode && !(selectedItem.dh.data.archetype_id > 0));
+            setDomElementsEnabled('#inpCode, #inpName', editMode);
             setDomElementsEnabled('#inpColor', editMode);
             setDomElementsEnabled('.archeTypeSelectInput', editMode);
             setDomElementsEnabled('.subInput', editMode && selectedItem.dh.data.archetype_id > 0);
@@ -765,12 +745,31 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
-    // Обработка события нажатия кнопки "Повернуть отображение"
+    // Обработка события нажатия кнопки "Повернуть отображение по оси X"
     //
-    function eventBtnTurnClicked() {
-        console.group('eventBtnTurnClicked');
+    function eventBtnTurnByXClicked() {
+        console.group('eventBtnTurnByXClicked');
                 
-        selectedItem.dh.data.turned = selectedItem.dh.data.turned ? 0 : 1;
+        selectedItem.dh.data.turnedx = selectedItem.dh.data.turnedx ? 0 : 1;
+
+        selectedItem.dh.data.changed = 'изменен';
+
+        selectedItem.update();
+        
+        console.groupEnd();
+    }
+
+
+
+    // -------------------------------------------------------
+    // Обработка события нажатия кнопки "Повернуть отображение по оси Y"
+    //
+    function eventBtnTurnByYClicked() {
+        console.group('eventBtnTurnByYClicked');
+                
+        selectedItem.dh.data.turnedy = selectedItem.dh.data.turnedy ? 0 : 1;
+
+        selectedItem.dh.data.changed = 'изменен';
 
         selectedItem.update();
         
@@ -805,68 +804,6 @@ window.addEventListener("load", () => {
         console.groupEnd();
     }
     
-
-
-    // -------------------------------------------------------
-    // Слот | Обработка события изменения характеристик элемента
-    //
-    function eventItemChanged(e) {
-        console.group('main.eventItemChanged {');
-        return false;
-        // получаем выделенный элемент
-        var pack = selectedItem;
-
-        // если выделенный элемент есть
-        if (pack) {
-
-            // обновляем все характеристики выбранного элемента 
-            switch(e.target.id) {
-                case 'inpCodeEdit':
-                    pack.code = e.target.value;
-                    // if (e.target.value !== "") {
-                        // pack.listItem.innerText = pack.code;
-                    // }
-                    break;
-                case 'inpName':
-                    pack.name = e.target.value;
-                    break;
-                case 'inpPayload':
-                    pack.payload = e.target.value;
-                    break;
-                case 'inpColor':
-                    pack.color = e.target.value;
-                    break;
-                case 'inpSizeWx':
-                    pack.wx = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
-                    subBlock.updatePack();
-                    break;
-                case 'inpSizeWy':
-                    pack.wy = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
-                    subBlock.updatePack();
-                    break;
-                case 'inpSizeWz':
-                    pack.wz = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
-                    subBlock.updatePack();
-                    break;
-                case 'inpInternalSizeWx':
-                    pack.iwx = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
-                    subBlock.updatePack();
-                    break;
-                case 'inpInternalSizeWy':
-                    pack.iwy = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
-                    subBlock.updatePack();
-                    break;
-                case 'inpInternalSizeWz':
-                    pack.iwz = parseInt(e.target.value) ? parseInt(e.target.value) : 0;
-                    subBlock.updatePack();
-                    break;
-            }            
-            
-            inpVolume.innerHTML = packVolume(pack);
-        } 
-        console.groupEnd();
-    }
-
 
 
     // -------------------------------------------------------
@@ -919,16 +856,33 @@ window.addEventListener("load", () => {
 
 
     // -------------------------------------------------------
-    // Функция |  Обновляет статус элемента "Изменен"
+    // Слот | Событие изменение checkbox "по координатам"
     //
-    // function packShowStatusChanged(pack) {
-    //     console.group('packShowStatusChanged');
+    function checkBoxByCoordinaresChanged(e) {
+        console.group('main.checkBoxByCoordinaresChanged');
 
-    //     // выводим статус что элемент изменен
-    //     lblStatusChanged.innerText = ((selectedItem.dh.changed) ? "Изменен" : "");
+        // если установлена галка по координатам
+        if (e.target.checked) {
 
-    //     console.groupEnd();
-    // }
+            // меняем тексты полей внутренних элементов
+            let itemsX = document.getElementsByClassName('subInputLabelX');
+            let itemsY = document.getElementsByClassName('subInputLabelY');
+            for (let i  = 0; i < itemsX.length; i++) {
+                itemsX[i].innerHTML = "Координата<br>X";
+                itemsY[i].innerHTML = "Координата<br>Y";
+            }
+        } else {
+            
+            // меняем тексты полей внутренних элементов
+            let itemsX = document.getElementsByClassName('subInputLabelX');
+            let itemsY = document.getElementsByClassName('subInputLabelY');
+            for (let i  = 0; i < itemsX.length; i++) {
+                itemsX[i].innerHTML = "Количество<br>по горизонтали";
+                itemsY[i].innerHTML = "Количество<br>по вертикали";
+            }
+        }
+        console.groupEnd();
+    }
 
 
 
@@ -966,11 +920,16 @@ window.addEventListener("load", () => {
         console.group('main.setArchetypeId');
         console.log('id: %o', id);
 
-        selectedItem.archetype_id = id;
+        if (id > 0) {
+            selectedItem.archetype_id = id;
+        }
         
-        // selectedItem.update();
+        checkBoxHasContent.checked = parseInt(selectedItem.dh.data.archetype_id) ? true : false;
 
-        // console.log('pack = %o', selectedItem);
+        setDomElementsEnabled('.mainInput', editMode && !(id > 0));
+        setDomElementsEnabled('.subInput', editMode && selectedItem.dh.data.archetype_id > 0);
+        setDomElementsEnabled('#inpCode, #inpName, #inpColor', editMode);
+
         console.groupEnd();
     }
 });
