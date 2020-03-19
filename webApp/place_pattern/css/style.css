@@ -2,6 +2,7 @@
     /* grid-template-rows: 32px 30px min-content; */
     min-height: 100vh;
     max-height: 100%;
+    grid-columns: 1fr;
 }
 .gridContainer, .gridContainer div {}
 
