@@ -46,7 +46,7 @@ body {
 
 .gridContainer {
     min-height: 100vh;
-    /* max-height: 100%; */
+    max-height: 100%;
 }
 .gridContainer div {}
 
@@ -571,7 +571,7 @@ header.header-top div.menu-name {
 
 label {
     font-family: 'CoreSansDS25Light';
-    font-size: 14px;
+    /* font-size: 14px; */
     white-space: nowrap;
     cursor: default;
 }
@@ -595,13 +595,14 @@ label {
 /*************************************************************/
 
 input, select, button {
-    height: 21px;
+    /* height: 21px; */
     border-radius: 0;
 }
 input[type=checkbox] {}
 
-label.right {padding-left:4px;}
-label.left {padding-right:4px;}
+/* left и right пока не работают - стоят ноли */
+label.right {padding-left:0px;} 
+label.left {padding-right:0px;}
 
 
 /*************************************************************/
@@ -816,7 +817,7 @@ button.plus-button {font-size: 10px;}
 
 
 section.section__main div {
-    padding: 0 6px 0 0px;
+    /* padding: 0 6px 0 0px; */
 }
 section.section__main div:last-of-type {padding:0;}
 
@@ -864,7 +865,6 @@ section.section__main div:nth-child(2) {
     display: grid;
 }
 
-.section-sub__grid--5x2>div,
 .section-general__grid--3x2>div {
     display: flex;
     align-items: center;

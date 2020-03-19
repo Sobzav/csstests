@@ -1,20 +1,25 @@
-.gridContainer { grid-template-columns: 1fr; }
+.gridContainer { grid-template-columns: 1fr;}
 .local-grid {
     display: grid;
     grid-column: 1 / -1;
     grid-template-rows: [header] 32px [search] 35px [header-table] 0px [row-table] auto [footer] 25px;
 }
-.local-grid, .local-grid header, .section__search, .table table, table caption, thead, tbody, .table, footer { max-width:1150px; }
 
 header.header-top { grid-row: header; }
 .section__search { grid-row: search; }
+
 .table table thead tr th { grid-row: header-table; }
+
 .table { grid-row: row-table; }
+
 footer { grid-row: footer; }
+
+
 header.header-top, header.header-top div {
     /* border: none !important; */
     color: #fff;
 }
+
 /* СЕКЦИЯ MAIN С КДАССОМ TABLE (НЕ САМА ТАБЛИЦА) */
 .local-grid main.table {
     /* position: absolute; /*- ЕСЛИ РАСКОММЕНТИРОВАТЬ, ТАБЛИЦА РАСТЯНЕТСЯ НА ВСЮ ШИРИНУ ЭКРАНА*/
@@ -25,74 +30,67 @@ header.header-top, header.header-top div {
     text-align: center;
     overflow: auto;
 }
-/********** ПРИЛИПАЮЩАЯ ПОИСКОВАЯ СТРОКА **************/
+
+/********** ПОИСКОВАЯ СТРОКА **************/
 .section__search {
     display:grid;
     position: sticky;
-    position: -webkit-sticky; /* Safari */
-    -khtml-margin-start: 0px;
+    position: -webkit-sticky; /* Safari */ 
     top:0;
     background-color: var(--color-raven);
     padding:5px 0;
+    /* height: 35px; */
     align-items: start;
     z-index:1;
 }
 .section__search div * {height: 25px;} /* высота всех элементов внутри строки поиска */
 .section__search, .section__search label, .section__search input {display:flex;}
 .section__search label {font-size: 15px; align-self:center;}
+/* переделка wide-100 в search */
 
 .section__search .dropdown {
     margin: 0 5px 0 5px;
     height:  21px;
 }
+
 .section__search input, .dropdown input {
     margin: 0 !important;
 }
 .section__search {flex: 1 0 auto;}
-
-/******** ТАБЛИЦА *********/
-
-/*   01. ГРАНИЦЫ с ЦВЕТОМ и ШИРИНОЙ - раскомментировать стр. 56 и 57, закомментировать 60 */
-/* table {border-collapse: collapse;}
-thead tr th, td {border: 1px solid var(--color-raven);} */
-
-/*  02. ГРАНИЦЫ только с шириной (ЦВЕТ ГРАНИЦЫ = цвету подложки */
-table {border-collapse: separate; border-spacing: 1px 1px;}
+/**************************/
 
 table {
     grid-row: row-table; /* строчка грида, которую занимает таблица */
-    width: 1150px;
-
+    width: 100%;
+    /*border-collapse: collapse; /* Убираем границы */
+    /* box-shadow: 0px 5px 20px rgba(0,0,0,.5); ТЕНЬ - только когда таблица растянута на всю ширину (20 строка) */
 }
 
-/* Название таблицы */
-table caption { text-transform: uppercase; font-size: 28px; font-weight: bold; color: #fff; padding: 10px 0;} 
-
-/* ПРИЛИПАЮЩАЯ Строка заголовков */
-thead tr th {
+table caption { text-transform: uppercase; font-size: 28px; font-weight: bold; color: #fff; padding: 10px 0;} /* Название таблицы */
+thead tr th {  /* прилипающая Строка заголовков */
     position: sticky;
-    position: -webkit-sticky; /* Safari  */
-    -khtml-margin-start: -300px;
+    position: -webkit-sticky; /* Safari */ 
     overflow-wrap: break-word;
     word-wrap: break-word;
-    word-break: break-word;
+    word-break: break-all;
     background-clip: padding-box;
-    top: 34px;
+    top: 30px;
+    border-right: 1px dotted #6B727B;
     background-color: #828a92;
     font-weight: normal;
     color: white;
-    border-style: none;
     height: 50px;
     max-height: 50px;
     min-height: 50px;
-    font-size: 9px;
+    border-collapse: collapse;
 }
 
 th:first-child {
     padding-left: 5px;
 }
+
 th:last-child {
-    border: 0px;
+    border: 0;
 }
 tr {
     height: 25px;
@@ -101,10 +99,13 @@ td {
     color: #000;
     background-color: #97A1AA;
     background-clip: padding-box;
-    font-size: 9px;
-    padding: 0 2px;
-    border-spacing: 0;
 }
+tr td:last-child {padding-right:3px;}
+tr td:first-child {padding-left:3px;}
+tr:nth-child(even) td {
+    background: #a4afb9;
+}
+
 /* если поставить не background-color, а background, границы у ячеек c разным цветом начинают иметь разную толщину */
 tr:nth-child(even) td {
     background-color: #a4afb9;

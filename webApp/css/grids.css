@@ -6,7 +6,7 @@
     display: flex;
     flex-wrap: nowrap;
     flex-direction: row;
-    margin: 0 0 25px 0;
+    margin: 0 0 10px 0;
 }
 
 
@@ -88,11 +88,11 @@
 }
 .section-general .title {
     font-family: 'CoreSansDS35Regular';
-    font-size: 1.1rem;
+    font-size: 18px;
     display: flex;
-    margin-left: 1em;
-    margin-top: 0.8em;
-    margin-bottom: 0.3em;
+    margin-left: 16px;
+    margin-top: 10px;
+    margin-bottom: 12px;
 }
 
 
@@ -224,7 +224,7 @@
 /* Настройка grid 5x2 для правой секции sub Ширина-Высота-количество */
 /* ================================================================= */
 .section-sub {
-    margin-bottom: 1.3rem;
+    /* margin-bottom: 14px; */
 }
 
 .section-sub__grid--5x2 {
