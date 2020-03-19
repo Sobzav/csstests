@@ -71,8 +71,8 @@
         <section class="section__main">
 
             <div class="links">
-                <p><a  href="http://sobzav.ru/webApp/warehouse/">Склад</a> </p>
-            <p><a  href="http://sobzav.ru/webApp/package/">Место хранения</a></p></div>
+            <p><a  href="http://sobzav.ru/webApp/warehouse/">Склад</a> </p>
+            <p><a  href="http://sobzav.ru/webApp/place_pattern/">Место хранения</a></p></div>
            
         </section>
 

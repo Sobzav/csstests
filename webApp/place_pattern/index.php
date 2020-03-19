@@ -124,21 +124,21 @@
                     <!-- Flex 3х1 для отображения inputs для ввода Размеров прямоугольника -->
                     <div class="section-general__flex">
                         <div class="">
-                            <label class="left" for="inpSizeWx"> Ширина </label>
+                            <label class="" for="inpSizeWx"> Ширина </label>
                             <input class="h-11 mainInput" size="5" type="text" id="inpSizeWx" name="package_wx"
                                 pattern=“[0-9]+” required>
                             <label class="" for="sizeWx"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpSizeWy"> Высота </label>
+                            <label class="" for="inpSizeWy"> Высота </label>
                             <input class="h-11 mainInput" size="5" type="text" id="inpSizeWy" name="package_wy"
                                 pattern=“[0-9]+” required>
                             <label class="" for="sizeWy"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpSizeWz"> Глубина </label>
+                            <label class="" for="inpSizeWz"> Глубина </label>
                             <input class="h-11 mainInput" size="5" type="text" id="inpSizeWz" name="package_wz"
                                 pattern=“[0-9]+” required>
                             <label class="" for="inpSizeWz"> мм </label>
@@ -149,21 +149,21 @@
 
                     <div class="section-general__flex">
                         <div class="">
-                            <label class="left" for="inpInternalSizeWx"> Ширина </label>
+                            <label class="" for="inpInternalSizeWx"> Ширина </label>
                             <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWx" name="package_iwx"
                                 pattern=“[0-9]+” required>
                             <label class="" for="sizeWx"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpInternalSizeWy"> Высота </label>
+                            <label class="" for="inpInternalSizeWy"> Высота </label>
                             <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWy" name="package_iwy"
                                 pattern=“[0-9]+” required>
                             <label class="" for="sizeWy"> мм </label>
                         </div>
 
                         <div class="">
-                            <label class="left" for="inpInternalSizeWz"> Глубина </label>
+                            <label class="" for="inpInternalSizeWz"> Глубина </label>
                             <input class="h-11 mainInput" size="5" type="text" id="inpInternalSizeWz" name="package_iwz"
                                 pattern=“[0-9]+” required>
                             <label class="" for="inpInternalSizeWz"> мм </label>

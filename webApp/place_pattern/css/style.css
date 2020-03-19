@@ -23,24 +23,19 @@ main {padding: 0px; align-items: start;}
     margin:0 10px 0 30px;
 }
 
-.section-sub__grid--5x2 .checkbox label {
-padding-left: 4px;
-}
 
 .section-sub {
-
+    margin-top: 1.3rem;
 }
 /* ================================================================= */
 /* Настройка grid 7x2 для правой секции sub Ширина-Высота-количество с КНОПКОЙ ПОВЕРНУТЬ */
 /* ================================================================= */
-.section-sub {
-    margin-top: 1.3rem;
-}
 
 .section-sub__grid--7x2 {
     display: grid;
     /* background-color: green; */
     grid-template-columns: 12px 1fr repeat(3, 0.8fr) 1fr 0.7fr;
+    /* grid-template-columns: 12px 110px repeat(3, 88px) 110px 77px; */
     grid-template-rows: repeat(2, 1fr);
     grid-column-gap: 0;
     grid-row-gap: 0.1rem;
@@ -50,7 +45,6 @@ padding-left: 4px;
     align-self: center;
 }
 .section-sub__grid--7x2 div input, .section-sub__grid--7x2 div label { align-self: center;}
-/* .section-sub__grid--7x2 .div7 label, .section-sub__grid--7x2 .div8 label {    text-align: end;} */
 
 .section-sub__grid--7x2 .div1 { grid-area: 1 / 1 / 2 / 2; justify-self: start; }
 .section-sub__grid--7x2 .div2 { grid-area: 1 / 2 / 2 / 4; justify-self: center; }
@@ -62,15 +56,6 @@ padding-left: 4px;
 .section-sub__grid--7x2 .div8 {grid-area: 2 / 5 / 3 / 7;justify-self: end;text-align: end; }
 .section-sub__grid--7x2 .div9 { grid-area: 2 / 7 / 3 / 8; justify-self: end; padding-right:10px; }
 
-/* Added пробел после цифры в таблице */
-.nmbr label {
-    padding-right: 0.5rem;
-}
-
-/* Added пробел для ячейки Всего */
-.sxth label.summ {
-    padding: 0 0.1rem;
-}
 
 
 .section__main {

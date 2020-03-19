@@ -181,3 +181,13 @@ Key Code
 
 .section-sub__grid--5x2 .sxth {}
 .section-sub__grid--5x2 .sxth label {}
+
+/* Added пробел после цифры в таблице */
+.nmbr label {
+    padding-right: 0.5rem;
+}
+
+/* Added пробел для ячейки Всего */
+.sxth label.summ {
+    padding: 0 0.1rem;
+}
